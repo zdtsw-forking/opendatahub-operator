@@ -18,6 +18,7 @@ package dscinitialization
 
 import (
 	"context"
+	"fmt"
 
 	"errors"
 
@@ -26,6 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	ctrl "sigs.k8s.io/controller-runtime"
+
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/event"
@@ -42,6 +44,10 @@ import (
 	dsci "github.com/opendatahub-io/opendatahub-operator/apis/dscinitialization/v1alpha1"
 	"github.com/opendatahub-io/opendatahub-operator/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/pkg/deploy"
+)
+
+const (
+	finalizerName = "dscinitialization.opendatahub.io/finalizer"
 )
 
 // DSCInitializationReconciler reconciles a DSCInitialization object
@@ -74,6 +80,26 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	} else if err != nil {
 		r.Log.Error(err, "Failed to retrieve DSCInitialization resource.", "DSCInitialization", req.Namespace, "Request.Name", req.Name)
 		return ctrl.Result{}, err
+	}
+
+	// Check if the instance is being deleted
+	if instance.DeletionTimestamp != nil {
+		fmt.Printf("Finalization DSCInitialization start deleting instance 'default' by %v!", finalizerName)
+		if containsFinalizer(instance, finalizerName) {
+			// excited part!
+			if err := r.cleanupCRDInstances(ctx); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			// Remove the finalizer
+			instance.Finalizers = removeFinalizer(instance, finalizerName)
+
+			// Update finalizer list
+			if err := r.Update(ctx, instance); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
 	}
 
 	// Start reconciling

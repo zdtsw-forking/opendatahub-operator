@@ -314,3 +314,43 @@ func (r *DSCInitializationReconciler) createOdhCommonConfigMap(dscInit *dsci.DSC
 	}
 	return nil
 }
+
+// containsFinalizer checks if the given finalizer is present in the object's finalizers list.
+func containsFinalizer(obj metav1.Object, finalizer string) bool {
+	for _, f := range obj.GetFinalizers() {
+		if f == finalizer {
+			return true
+		}
+	}
+	return false
+}
+
+// cleanupCRDInstances performs the cleanup logic for DSCInitialization's instance
+func (r *DSCInitializationReconciler) cleanupCRDInstances(ctx context.Context) error {
+	instance := &dsci.DSCInitialization{}
+	if err := r.Client.Get(ctx, types.NamespacedName{Name: "default"}, instance); err != nil {
+		if apierrs.IsNotFound(err) {
+			r.Log.Info("Cannot find DSCInitialization instance 'default', already deleted?")
+			return nil
+		}
+		return err
+	}
+
+	if err := r.Client.Delete(ctx, instance); err != nil {
+		r.Log.Error(err, "Unable to delete DSCInitialization instance 'default'")
+	}
+	return nil
+}
+
+// removeFinalizer removes the given finalizer from the object's finalizers list.
+func removeFinalizer(obj metav1.Object, finalizer string) []string {
+	finalizers := obj.GetFinalizers()
+	for _, f := range finalizers {
+		if f != finalizer {
+			finalizers = append(finalizers, f)
+			break
+		}
+	}
+	obj.SetFinalizers(finalizers)
+	return finalizers
+}
