@@ -64,21 +64,8 @@ type DataScienceClusterReconciler struct {
 func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Reconciling DataScienceCluster resources", "Request.Namespace", req.Namespace, "Request.Name", req.Name)
 
-	// Return if multiple instances of DataScienceCluster exist
-	instanceList := &dsc.DataScienceClusterList{}
-	err := r.Client.List(context.TODO(), instanceList)
-	if err != nil && apierrs.IsNotFound(err) {
-		return ctrl.Result{}, nil
-	} else if err != nil {
-		return ctrl.Result{}, err
-	}
-	if len(instanceList.Items) > 1 {
-		message := fmt.Sprintf("only one instance of DataScienceCluster object is allowed. Update existing instance on namespace %s and name %s", req.Namespace, req.Name)
-		r.reportError(err, &instanceList.Items[0], ctx, message)
-		return ctrl.Result{}, fmt.Errorf(message)
-	}
-
-	instance := &instanceList.Items[0]
+	// Return if multiple instances of DataScienceCluster exist but shouldn not be
+	instance := DataScienceClusterInstance().Items[0]
 
 	// Start reconciling
 	if instance.Status.Conditions == nil {

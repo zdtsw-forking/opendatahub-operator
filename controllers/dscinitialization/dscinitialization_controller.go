@@ -42,6 +42,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	dsci "github.com/opendatahub-io/opendatahub-operator/apis/dscinitialization/v1alpha1"
+	dsc "github.com/opendatahub-io/opendatahub-operator/apis/datasciencecluster/v1alpha1"
+
 	"github.com/opendatahub-io/opendatahub-operator/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/pkg/deploy"
 )
@@ -84,6 +86,11 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 
 	// Check if the instance is being deleted
 	if instance.DeletionTimestamp != nil {
+		// TODO: 
+		if err := dsc.cleanupCRDInstances() {
+			fmt.Errorf("Cannot delete DSCInitialization's instances until DataScienceCluster's instances are cleaned up")
+			return ctrl.Result{}, err
+		}
 		fmt.Printf("Finalization DSCInitialization start deleting instance 'default' by %v!", finalizerName)
 		if containsFinalizer(instance, finalizerName) {
 			// excited part!
