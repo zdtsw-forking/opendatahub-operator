@@ -66,7 +66,7 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 	r.Log.Info("Reconciling DataScienceCluster resources", "Request.Namespace", req.Namespace, "Request.Name", req.Name)
 
 	// Return if multiple instances of DataScienceCluster exist but shouldn not be
-	instance := DataScienceClusterInstance().Items[0]
+	instance := r.getDataScienceClusterInstances(ctx).Items[0]
 
 	// Start reconciling
 	if instance.Status.Conditions == nil {

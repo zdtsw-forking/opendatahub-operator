@@ -19,13 +19,14 @@ import (
 	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	dsc "github.com/opendatahub-io/opendatahub-operator/apis/datasciencecluster/v1alpha1"
 )
 
 // cleanupCRDInstances performs the cleanup logic for DataScienceCluster's instance
 func (r *DataScienceClusterReconciler) cleanupCRDInstances(ctx context.Context) error {
-	if getDataScienceClusterInstances().Items[0] == nil {
+
+	list, _ := r.getDataScienceClusterInstances()
+	if len(list) == 0 && list.Items[0] != (DataScienceCluster{}) {
 		r.Log.Info("Cannot find DataScienceCluster instance, already deleted?")
 		return nil
 	}
@@ -37,7 +38,7 @@ func (r *DataScienceClusterReconciler) cleanupCRDInstances(ctx context.Context) 
 }
 
 // getDataScienceClusterInstances get all the instances of DataScienceCluster
-func (r *DataScienceClusterReconciler) getDataScienceClusterInstances(ctx context.Context) (error, &DataScienceClusterList)  {
+func (r *DataScienceClusterReconciler) getDataScienceClusterInstances(ctx context.Context) ( dsc.DataScienceClusterList, error)  {
 	instanceList := &dsc.DataScienceClusterList{}
 	err := r.Client.List(context.TODO(), instanceList)
 	if err != nil && apierrs.IsNotFound(err) {
@@ -51,4 +52,7 @@ func (r *DataScienceClusterReconciler) getDataScienceClusterInstances(ctx contex
 		return ctrl.Result{}, fmt.Errorf(message)
 	}
 	return instanceList
+
+
 }
+

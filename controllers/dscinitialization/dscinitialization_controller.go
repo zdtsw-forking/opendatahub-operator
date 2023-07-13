@@ -86,8 +86,7 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 
 	// Check if the instance is being deleted
 	if instance.DeletionTimestamp != nil {
-		// TODO: 
-		if err := dsc.cleanupCRDInstances() {
+		if err := &dsc.cleanupCRDInstances(); err != nil {
 			fmt.Errorf("Cannot delete DSCInitialization's instances until DataScienceCluster's instances are cleaned up")
 			return ctrl.Result{}, err
 		}
