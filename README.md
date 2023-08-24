@@ -123,19 +123,19 @@ components. At a given time, ODH supports only **one** instance of the CR, which
       spec:
         components:
           codeflare:
-            enabled: true
+            managementState: Managed
           dashboard:
-            enabled: true
+            managementState: Managed
           datasciencepipelines:
-            enabled: true
+            managementState: Managed
           kserve:
-            enabled: true
+            managementState: Managed
           modelmeshserving:
-            enabled: true
+            managementState: Managed
           ray:
-            enabled: true
+            managementState: Managed
           workbenches:
-            enabled: true 
+            managementState: Managed
     ```
 2. Enable only Dashboard and Workbenches
 
@@ -147,9 +147,9 @@ components. At a given time, ODH supports only **one** instance of the CR, which
       spec:
         components:
           dashboard:
-            enabled: true
+            managementState: Managed
           workbenches:
-            enabled: true 
+            managementState: Managed
     ```
 
 **Note:** Default value for a component is `false`.

@@ -11,7 +11,7 @@ metadata:
     olm.skipRange: '>=1.0.0 <2.0.0'
     operatorframework.io/initialization-resource: |-
       {
-        "apiVersion": "datasciencecluster.opendatahub.io/v1alpha1",
+        "apiVersion": "datasciencecluster.opendatahub.io/v1",
         "kind": "DataScienceCluster",
         "metadata": {
           "name": "default",
@@ -26,25 +26,25 @@ metadata:
         "spec": {
           "components": {
             "codeflare": {
-              "enabled": false
+              "managementState": "Removed"
             },
             "dashboard": {
-              "enabled": true
+              "managementState": "Managed"
             },
             "datasciencepipelines": {
-              "enabled": true
+              "managementState": "Managed"
             },
             "kserve": {
-              "enabled": false
+              "managementState": "Removed"
             },
             "modelmeshserving": {
-              "enabled": true
+              "managementState": "Managed"
             },
             "ray": {
-              "enabled": false
+              "managementState": "Removed"
             },
             "workbenches": {
-              "enabled": true
+              "managementState": "Managed"
             }
           }
         }
