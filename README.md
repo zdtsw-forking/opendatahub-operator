@@ -116,7 +116,7 @@ components. At a given time, ODH supports only **one** instance of the CR, which
 
 1. Enable all components
     ```console
-      apiVersion: datasciencecluster.opendatahub.io/v1alpha1
+      apiVersion: datasciencecluster.opendatahub.io/v1
       kind: DataScienceCluster
       metadata:
         name: example
@@ -140,7 +140,7 @@ components. At a given time, ODH supports only **one** instance of the CR, which
 2. Enable only Dashboard and Workbenches
 
     ```console
-      apiVersion: datasciencecluster.opendatahub.io/v1alpha1
+      apiVersion: datasciencecluster.opendatahub.io/v1
       kind: DataScienceCluster
       metadata:
         name: example

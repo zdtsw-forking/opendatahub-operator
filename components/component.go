@@ -8,7 +8,8 @@ import (
 )
 
 type Component struct {
-	// Set to "managed" to enable the component, and to "removed" to disable it.
+	// Set to "Managed" to enable the component, and to "Removed" to disable it.
+	// +kubebuilder:validation:Enum=Managed;Removed
 	ManagementState operatorv1.ManagementState `json:"managementState,omitempty"`
 	// Add any other common fields across components below
 }

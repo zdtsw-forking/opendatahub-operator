@@ -1,4 +1,4 @@
-apiVersion: operators.coreos.com/v1
+apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
@@ -76,7 +76,7 @@ metadata:
           }
         },
         {
-          "apiVersion": "datasciencecluster.opendatahub.io/v1alpha1",
+          "apiVersion": "datasciencecluster.opendatahub.io/v1",
           "kind": "DataScienceCluster",
           "metadata": {
             "labels": {
@@ -172,7 +172,7 @@ metadata:
     olm.skipRange: '>=1.0.0 <2.0.0'
     operatorframework.io/initialization-resource: |-
       {
-        "apiVersion": "datasciencecluster.opendatahub.io/v1alpha1",
+        "apiVersion": "datasciencecluster.opendatahub.io/v1",
         "kind": "DataScienceCluster",
         "metadata": {
           "name": "default",
@@ -220,6 +220,15 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
+    - description: DataScienceCluster is the Schema for the datascienceclusters API
+      displayName: Data Science Cluster
+      kind: DataScienceCluster
+      name: datascienceclusters.datasciencecluster.opendatahub.io
+      specDescriptors:
+      - description: Override and fine tune specific component configurations.
+        displayName: Components
+        path: components
+      version: v1
     - description: DataScienceCluster is the Schema for the datascienceclusters API
       displayName: Data Science Cluster
       kind: DataScienceCluster
