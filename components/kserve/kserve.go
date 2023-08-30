@@ -10,6 +10,8 @@ import (
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/common"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	operatorv1 "github.com/openshift/api/operator/v1"
+
+	dsci "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 )
 
 const (
@@ -46,7 +48,7 @@ func (d *Kserve) GetComponentName() string {
 // Verifies that Kserve implements ComponentInterface
 var _ components.ComponentInterface = (*Kserve)(nil)
 
-func (d *Kserve) ReconcileComponent(owner metav1.Object, cli client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string) error {
+func (d *Kserve) ReconcileComponent(owner metav1.Object, cli client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string, _ dsci.Platform) error {
 	enabled := managementState == operatorv1.Managed
 
 	// Update image parameters

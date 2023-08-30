@@ -2,6 +2,7 @@
 package workbenches
 
 import (
+	dsci "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/common"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -38,18 +39,13 @@ func (w *Workbenches) SetImageParamsMap(imageMap map[string]string) map[string]s
 // Verifies that Dashboard implements ComponentInterface
 var _ components.ComponentInterface = (*Workbenches)(nil)
 
-func (w *Workbenches) ReconcileComponent(owner metav1.Object, cli client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string) error {
+func (w *Workbenches) ReconcileComponent(owner metav1.Object, cli client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string, platform dsci.Platform) error {
 	enabled := managementState == operatorv1.Managed
 
 	// Set default notebooks namespace
 	// Create rhods-notebooks namespace in managed platforms
-	platform, err := deploy.GetPlatform(cli)
-	if err != nil {
-		return err
-	}
-
 	if enabled {
-		if platform == deploy.SelfManagedRhods || platform == deploy.ManagedRhods{
+		if platform == deploy.SelfManagedRhods || platform == deploy.ManagedRhods {
 			err := common.CreateNamespace(cli, "rhods-notebooks")
 			if err != nil {
 				// no need to log error as it was already logged in createOdhNamespace
@@ -57,7 +53,7 @@ func (w *Workbenches) ReconcileComponent(owner metav1.Object, cli client.Client,
 			}
 		}
 		// Update Default rolebinding
-		err = common.UpdatePodSecurityRolebinding(cli, []string{"notebook-controller-service-account"}, namespace)
+		err := common.UpdatePodSecurityRolebinding(cli, []string{"notebook-controller-service-account"}, namespace)
 		if err != nil {
 			return err
 		}
@@ -69,7 +65,7 @@ func (w *Workbenches) ReconcileComponent(owner metav1.Object, cli client.Client,
 		}
 	}
 
-	err = deploy.DeployManifestsFromPath(owner, cli, ComponentName,
+	err := deploy.DeployManifestsFromPath(owner, cli, ComponentName,
 		notebookControllerPath,
 		namespace,
 		scheme, enabled)

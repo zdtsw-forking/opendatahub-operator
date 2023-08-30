@@ -7,6 +7,7 @@ import (
 	"context"
 	"strings"
 
+	dsci "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/common"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -52,15 +53,10 @@ func (d *Dashboard) GetComponentName() string {
 // Verifies that Dashboard implements ComponentInterface
 var _ components.ComponentInterface = (*Dashboard)(nil)
 
-func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string) error {
+func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string, platform dsci.Platform) error {
 	enabled := managementState == operatorv1.Managed
 
 	// TODO: Add any additional tasks if required when reconciling component
-
-	platform, err := deploy.GetPlatform(cli)
-	if err != nil {
-		return err
-	}
 
 	if enabled {
 		if platform == deploy.OpenDataHub || platform == "" {
@@ -80,14 +76,14 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 		if platform == deploy.SelfManagedRhods || platform == deploy.ManagedRhods {
 			// Replace admin group
 			if platform == deploy.SelfManagedRhods {
-				err = common.ReplaceStringsInFile(PathODHDashboardConfig+"/odhdashboardconfig.yaml", map[string]string{
+				err := common.ReplaceStringsInFile(PathODHDashboardConfig+"/odhdashboardconfig.yaml", map[string]string{
 					"<admin_groups>": "rhods-admins",
 				})
 				if err != nil {
 					return err
 				}
 			} else if platform == deploy.ManagedRhods {
-				err = common.ReplaceStringsInFile(PathODHDashboardConfig+"/odhdashboardconfig.yaml", map[string]string{
+				err := common.ReplaceStringsInFile(PathODHDashboardConfig+"/odhdashboardconfig.yaml", map[string]string{
 					"<admin_groups>": "dedicated-admins",
 				})
 				if err != nil {
@@ -96,7 +92,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 			}
 
 			// Create ODHDashboardConfig if it doesn't exist already
-			err = deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
+			err := deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
 				PathODHDashboardConfig,
 				namespace,
 				scheme, enabled)
@@ -137,7 +133,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 
 	// Deploy odh-dashboard manifests
 	if platform == deploy.OpenDataHub || platform == "" {
-		err = deploy.DeployManifestsFromPath(owner, cli, ComponentName,
+		err := deploy.DeployManifestsFromPath(owner, cli, ComponentName,
 			Path,
 			namespace,
 			scheme, enabled)
@@ -146,7 +142,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 		}
 	} else if platform == deploy.SelfManagedRhods || platform == deploy.ManagedRhods {
 		// Apply authentication overlay
-		err = deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
+		err := deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
 			PathSupported,
 			namespace,
 			scheme, enabled)
@@ -158,7 +154,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 	// ISV handling
 	switch platform {
 	case deploy.SelfManagedRhods:
-		err = deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
+		err := deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
 			PathISVSM,
 			namespace,
 			scheme, enabled)
@@ -175,7 +171,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 		consolelinkDomain := consoleRoute.Spec.Host[domainIndex+1:]
 		err = common.ReplaceStringsInFile(PathConsoleLink, map[string]string{
 			"<rhods-dashboard-url>": "https://rhods-dashboard-" + namespace + "." + consolelinkDomain,
-			"<section-title>": "OpenShift Self Managed Services",
+			"<section-title>":       "OpenShift Self Managed Services",
 		})
 		if err != nil {
 			return fmt.Errorf("error replacing with correct dashboard url for ConsoleLink: %v", err)
@@ -189,7 +185,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 		}
 		return err
 	case deploy.ManagedRhods:
-		err = deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
+		err := deploy.DeployManifestsFromPath(owner, cli, ComponentNameSupported,
 			PathISVAddOn,
 			namespace,
 			scheme, enabled)
@@ -206,7 +202,7 @@ func (d *Dashboard) ReconcileComponent(owner metav1.Object, cli client.Client, s
 		consolelinkDomain := consoleRoute.Spec.Host[domainIndex+1:]
 		err = common.ReplaceStringsInFile(PathConsoleLink, map[string]string{
 			"<rhods-dashboard-url>": "https://rhods-dashboard-" + namespace + "." + consolelinkDomain,
-			"<section-title>": "OpenShift Managed Services",
+			"<section-title>":       "OpenShift Managed Services",
 		})
 		if err != nil {
 			return fmt.Errorf("Error replacing with correct dashboard url for ConsoleLink: %v", err)

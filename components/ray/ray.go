@@ -8,6 +8,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	dsci "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 )
 
 const (
@@ -35,7 +37,7 @@ func (d *Ray) GetComponentName() string {
 // Verifies that Ray implements ComponentInterface
 var _ components.ComponentInterface = (*Ray)(nil)
 
-func (d *Ray) ReconcileComponent(owner metav1.Object, client client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string) error {
+func (d *Ray) ReconcileComponent(owner metav1.Object, client client.Client, scheme *runtime.Scheme, managementState operatorv1.ManagementState, namespace string, manifestsUri string, _ dsci.Platform) error {
 	enabled := managementState == operatorv1.Managed
 
 	// Update image parameters

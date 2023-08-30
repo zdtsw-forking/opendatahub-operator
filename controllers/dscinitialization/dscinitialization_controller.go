@@ -127,8 +127,8 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return reconcile.Result{}, err
 	}
 
-	// Get platform
-	platform, err := deploy.GetPlatform(r.Client)
+	// Get and set platform value to DSCI status
+	instance.Status.ClusterInfo.Platform, err = deploy.GetPlatform(r.Client)
 	if err != nil {
 		r.Log.Error(err, "Failed to determine platform (managed vs self-managed)")
 		return reconcile.Result{}, err
@@ -142,9 +142,9 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	//}
 
 	// Apply Rhods specific configs
-	if platform == deploy.ManagedRhods || platform == deploy.SelfManagedRhods {
+	if instance.Status.ClusterInfo.Platform == deploy.ManagedRhods || instance.Status.ClusterInfo.Platform == deploy.SelfManagedRhods {
 		//Apply osd specific permissions
-		if platform == deploy.ManagedRhods {
+		if instance.Status.ClusterInfo.Platform == deploy.ManagedRhods {
 			err = deploy.DeployManifestsFromPath(instance, r.Client, "osd",
 				deploy.DefaultManifestPath+"/osd-configs",
 				r.ApplicationsNamespace, r.Scheme, true)
@@ -181,7 +181,7 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 
 	// If monitoring enabled
 	if instance.Spec.Monitoring.ManagementState == operatorv1.Managed {
-		switch platform {
+		switch instance.Status.ClusterInfo.Platform {
 		case deploy.SelfManagedRhods:
 			r.Log.Info("Monitoring enabled, won't apply changes", "cluster", "Self-Managed RHODS Mode")
 			err := r.configureCommonMonitoring(instance)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	dsci "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	addonv1alpha1 "github.com/openshift/addon-operator/apis/addons/v1alpha1"
 	ofapi "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -13,21 +14,19 @@ import (
 
 const (
 	// ManagedRhods defines expected addon catalogsource
-	ManagedRhods Platform = "managed-odh"
+	ManagedRhods dsci.Platform = "managed-odh"
 	// SelfManagedRhods defines display name in csv
-	SelfManagedRhods Platform = "Red Hat OpenShift Data Science"
+	SelfManagedRhods dsci.Platform = "Red Hat OpenShift Data Science"
 	// OpenDataHub defines display name in csv
-	OpenDataHub Platform = "Open Data Hub Operator"
+	OpenDataHub dsci.Platform = "Open Data Hub Operator"
 )
-
-type Platform string
 
 // Function isSelfManaged to check if has CSV in cluster
 // when CSV displayname contains OpenDataHub, return 'OpenDataHub,nil' => high priority
 // when CSV displayname contains SelfManagedRhods, return 'SelfManagedRhods,nil'
 // when in dev mode, if could not find CSV (deploy by olm), return "", nil
 // otherwise return "",err
-func isSelfManaged(cli client.Client) (Platform, error) {
+func isSelfManaged(cli client.Client) (dsci.Platform, error) {
 	clusterCsvs := &ofapi.ClusterServiceVersionList{}
 	err := cli.List(context.TODO(), clusterCsvs)
 	if err != nil {
@@ -47,7 +46,7 @@ func isSelfManaged(cli client.Client) (Platform, error) {
 }
 
 // Funcion isManagedRHODS check if CRD adddons exists and contain string ManagedRhods
-func isManagedRHODS(cli client.Client) (Platform, error) {
+func isManagedRHODS(cli client.Client) (dsci.Platform, error) {
 	addonCRD := &apiextv1.CustomResourceDefinition{}
 
 	err := cli.Get(context.TODO(), client.ObjectKey{Name: "addons.managed.openshift.io"}, addonCRD)
@@ -70,7 +69,7 @@ func isManagedRHODS(cli client.Client) (Platform, error) {
 	}
 }
 
-func GetPlatform(cli client.Client) (Platform, error) {
+func GetPlatform(cli client.Client) (dsci.Platform, error) {
 	// First check if its addon installation to return 'ManagedRhods, nil'
 	platform, err := isManagedRHODS(cli)
 	if err == nil && platform == ManagedRhods {

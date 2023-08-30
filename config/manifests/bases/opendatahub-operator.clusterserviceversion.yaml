@@ -57,15 +57,6 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: DataScienceCluster is the Schema for the datascienceclusters API
-      displayName: Data Science Cluster
-      kind: DataScienceCluster
-      name: datascienceclusters.datasciencecluster.opendatahub.io
-      specDescriptors:
-      - description: Override and fine tune specific component configurations.
-        displayName: Components
-        path: components
-      version: v1
     - description: DSCInitialization is the Schema for the dscinitializations API
       displayName: DSC Initialization
       kind: DSCInitialization
@@ -87,6 +78,15 @@ spec:
           resource
         displayName: Conditions
         path: conditions
+      version: v1
+    - description: DataScienceCluster is the Schema for the datascienceclusters API
+      displayName: Data Science Cluster
+      kind: DataScienceCluster
+      name: datascienceclusters.datasciencecluster.opendatahub.io
+      specDescriptors:
+      - description: Override and fine tune specific component configurations.
+        displayName: Components
+        path: components
       version: v1
   description: This will be replaced by Kustomize
   displayName: Open Data Hub Operator

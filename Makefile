@@ -4,6 +4,7 @@
 # - use the VERSION as arg of the bundle target (e.g make bundle VERSION=0.0.2)
 # - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
 IMAGE_OWNER ?= opendatahub
+# VERSION ?= 2.8.30-1
 VERSION ?= 2.1.0
 # IMAGE_TAG_BASE defines the opendatahub.io namespace and part of the image name for remote images.
 # This variable is used to construct full image tags for bundle and catalog images.
@@ -12,7 +13,7 @@ VERSION ?= 2.1.0
 # opendatahub.io/opendatahub-operator-bundle:$VERSION and opendatahub.io/opendatahub-operator-catalog:$VERSION.
 IMAGE_TAG_BASE ?= quay.io/$(IMAGE_OWNER)/opendatahub-operator
 # Update IMG to a variable, to keep it consistent across versions for OpenShift CI
-IMG ?= REPLACE_IMAGE
+IMG ?= REPLACE_IMAGE #$(IMAGE_TAG_BASE):dev-$(VERSION) #REPLACE_IMAGE
 # BUNDLE_IMG defines the image:tag used for the bundle.
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)

@@ -185,6 +185,14 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
                 type: array
+              clusterInfo:
+                description: Cluster related env value list
+                properties:
+                  platform:
+                    default: opendatahub
+                    description: Current running platform
+                    type: string
+                type: object 
             type: object
         type: object
     served: true
