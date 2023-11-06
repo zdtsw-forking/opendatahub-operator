@@ -392,10 +392,13 @@ func SubscriptionExists(cli client.Client, namespace string, name string) (bool,
 	return true, nil
 }
 
-// OperatorExists checks if an Operator with 'operatorPrefix' is installed.
-// Return true if found it, false if not.
-// TODO: if we need to check exact version of the operator installed, can append vX.Y.Z later.
-func OperatorExists(cli client.Client, operatorPrefix string) (bool, error) {
+// OperatorExists checks if Operator(list) with 'operatorPrefix' is installed.
+// Return true if found all operators, false if any not found.
+// If we need to check exact version of the operator installed, can append vX.Y.Z later.
+func OperatorExists(cli client.Client, componentName string, operatorPrefixList ...string) (bool, error) {
+	expectedOps := len(operatorPrefixList)
+	var i int
+
 	opConditionList := &ofapiv2.OperatorConditionList{}
 	if err := cli.List(context.TODO(), opConditionList); err != nil {
 		if !apierrs.IsNotFound(err) { // real error to run List()
@@ -403,13 +406,18 @@ func OperatorExists(cli client.Client, operatorPrefix string) (bool, error) {
 		}
 	} else {
 		for _, opCondition := range opConditionList.Items {
-			if strings.HasPrefix(opCondition.Name, operatorPrefix) {
-				return true, nil
+			for _, operatorPrefix := range operatorPrefixList {
+				if strings.HasPrefix(opCondition.Name, operatorPrefix) {
+					i++
+				}
 			}
 		}
+		if expectedOps == i {
+			return true, nil
+		}
 	}
-
-	return false, nil
+	return false, fmt.Errorf("please install all dependent operators %s before enabling %s component",
+		operatorPrefixList, componentName)
 }
 
 // TODO : Add function to cleanup code created as part of pre install and post install task of a component
