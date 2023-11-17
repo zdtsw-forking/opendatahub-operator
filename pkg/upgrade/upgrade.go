@@ -445,6 +445,7 @@ func deleteDeployments(cli client.Client) error {
 	}
 	// filter deployment which has the new label to limit that we do not over kill other deployment
 	// this logic can be used even when upgrade from v2.4 to v2.5 without remove it
+	deploymentsToDelete := []appsv1.Deployment{}
 	for _, deployment := range deployments.Items {
 		selectorLabels := deployment.Spec.Selector.MatchLabels
 		for label := range selectorLabels {
@@ -453,7 +454,35 @@ func deleteDeployments(cli client.Client) error {
 				continue
 			}
 		}
+		deploymentsToDelete = append(deploymentsToDelete, deployment)
 		multiErr = multierror.Append(multiErr, cli.Delete(context.TODO(), &deployment, []client.DeleteOption{}...))
+	}
+
+	// check that all Deployments have been deleted before continuing
+	for _, deployment := range deploymentsToDelete {
+		counter := 0
+		for {
+			counter++
+			err = cli.Get(context.TODO(), types.NamespacedName{
+				Namespace: deployment.Namespace,
+				Name:      deployment.Name,
+			}, &deployment)
+
+			if apierrs.IsNotFound(err) {
+				// Deployment is deleted, break the loop
+				break
+			} else if err != nil {
+				// Other error, add it to the list
+				multiErr = multierror.Append(multiErr, err)
+				break
+			} else if counter > 10 {
+				// If the deployment is not deleted in 10 loop waits, return error
+				multiErr = multierror.Append(multiErr,
+					fmt.Errorf("deployment %v was not deleted within the timeout period", deployment.Name))
+				break
+			}
+			time.Sleep(2 * time.Second)
+		}
 	}
 
 	return multiErr.ErrorOrNil()
