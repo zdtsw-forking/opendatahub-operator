@@ -442,13 +442,19 @@ func deleteDeployments(cli client.Client) error {
 	err := cli.List(context.TODO(), deployments, listOpts)
 	if err != nil {
 		return err
-	} else {
-		for _, deployment := range deployments.Items {
-			err = cli.Delete(context.TODO(), &deployment, []client.DeleteOption{}...)
-			if err != nil {
-				multiErr = multierror.Append(multiErr, err)
+	}
+	// filter deployment which has the new label to limit that we do not over kill other deployment
+	// this logic can be used even when upgrade from v2.4 to v2.5 without remove it
+	for _, deployment := range deployments.Items {
+		selectorLabels := deployment.Spec.Selector.MatchLabels
+		for label := range selectorLabels {
+			if strings.Contains(label, "app.opendatahub.io/") {
+				// this deployment has the new label, this is a v2 to v2 upgrade
+				continue
 			}
 		}
+		multiErr = multierror.Append(multiErr, cli.Delete(context.TODO(), &deployment, []client.DeleteOption{}...))
 	}
+
 	return multiErr.ErrorOrNil()
 }
