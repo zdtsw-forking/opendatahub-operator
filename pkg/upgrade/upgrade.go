@@ -205,7 +205,7 @@ func CreateDefaultDSC(cli client.Client, _ deploy.Platform) error {
 				Kueue: kueue.Kueue{
 					Component: components.Component{ManagementState: operatorv1.Removed},
 				},
-				TrustyAI: trustyai.TrustyAI{
+				TrustyAI: &trustyai.TrustyAI{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
 				ModelRegistry: modelregistry.ModelRegistry{

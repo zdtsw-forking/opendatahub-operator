@@ -128,7 +128,7 @@ func setupDSCInstance(name string) *dsc.DataScienceCluster {
 						ManagementState: operatorv1.Managed,
 					},
 				},
-				TrustyAI: trustyai.TrustyAI{
+				TrustyAI: &trustyai.TrustyAI{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},

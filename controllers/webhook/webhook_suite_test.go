@@ -233,7 +233,7 @@ func newDSC(name string, namespace string) *dsc.DataScienceCluster {
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				TrustyAI: trustyai.TrustyAI{
+				TrustyAI: &trustyai.TrustyAI{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},

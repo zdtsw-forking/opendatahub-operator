@@ -312,7 +312,7 @@ func (tc *testContext) testAllApplicationCreation(t *testing.T) error { //nolint
 	t.Run("Validate TrustyAI", func(t *testing.T) {
 		// speed testing in parallel
 		t.Parallel()
-		err = tc.testApplicationCreation(&(tc.testDsc.Spec.Components.TrustyAI))
+		err = tc.testApplicationCreation((tc.testDsc.Spec.Components.TrustyAI))
 		if tc.testDsc.Spec.Components.TrustyAI.ManagementState == operatorv1.Managed {
 			require.NoError(t, err, "error validating application %v when enabled", tc.testDsc.Spec.Components.TrustyAI.GetComponentName())
 		} else {

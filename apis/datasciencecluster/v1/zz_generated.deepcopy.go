@@ -22,6 +22,7 @@ limitations under the License.
 package v1
 
 import (
+	"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
 	conditionsv1 "github.com/openshift/custom-resource-status/conditions/v1"
 	corev1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -38,7 +39,11 @@ func (in *Components) DeepCopyInto(out *Components) {
 	in.Kueue.DeepCopyInto(&out.Kueue)
 	in.CodeFlare.DeepCopyInto(&out.CodeFlare)
 	in.Ray.DeepCopyInto(&out.Ray)
-	in.TrustyAI.DeepCopyInto(&out.TrustyAI)
+	if in.TrustyAI != nil {
+		in, out := &in.TrustyAI, &out.TrustyAI
+		*out = new(trustyai.TrustyAI)
+		(*in).DeepCopyInto(*out)
+	}
 	in.ModelRegistry.DeepCopyInto(&out.ModelRegistry)
 }
 

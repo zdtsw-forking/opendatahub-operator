@@ -71,7 +71,7 @@ type Components struct {
 	Ray ray.Ray `json:"ray,omitempty"`
 
 	// TrustyAI component configuration.
-	TrustyAI trustyai.TrustyAI `json:"trustyai,omitempty"`
+	TrustyAI *trustyai.TrustyAI `json:"trustyai,omitempty"`
 
 	// ModelRegistry component configuration.
 	ModelRegistry modelregistry.ModelRegistry `json:"modelregistry,omitempty"`
