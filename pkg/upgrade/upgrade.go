@@ -181,34 +181,34 @@ func CreateDefaultDSC(cli client.Client, _ deploy.Platform) error {
 		},
 		Spec: dsc.DataScienceClusterSpec{
 			Components: dsc.Components{
-				Dashboard: dashboard.Dashboard{
+				Dashboard: &dashboard.Dashboard{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
-				Workbenches: workbenches.Workbenches{
+				Workbenches: &workbenches.Workbenches{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
-				ModelMeshServing: modelmeshserving.ModelMeshServing{
+				ModelMeshServing: &modelmeshserving.ModelMeshServing{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
-				DataSciencePipelines: datasciencepipelines.DataSciencePipelines{
+				DataSciencePipelines: &datasciencepipelines.DataSciencePipelines{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
-				Kserve: kserve.Kserve{
+				Kserve: &kserve.Kserve{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
-				CodeFlare: codeflare.CodeFlare{
+				CodeFlare: &codeflare.CodeFlare{
 					Component: components.Component{ManagementState: operatorv1.Removed},
 				},
-				Ray: ray.Ray{
+				Ray: &ray.Ray{
 					Component: components.Component{ManagementState: operatorv1.Removed},
 				},
-				Kueue: kueue.Kueue{
+				Kueue: &kueue.Kueue{
 					Component: components.Component{ManagementState: operatorv1.Removed},
 				},
 				TrustyAI: &trustyai.TrustyAI{
 					Component: components.Component{ManagementState: operatorv1.Managed},
 				},
-				ModelRegistry: modelregistry.ModelRegistry{
+				ModelRegistry: &modelregistry.ModelRegistry{
 					Component: components.Component{ManagementState: operatorv1.Removed},
 				},
 			},

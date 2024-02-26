@@ -48,6 +48,13 @@ func (t *TrustyAI) OverrideManifests(_ string) error {
 	return nil
 }
 
+func (t *TrustyAI) GetManagementState() operatorv1.ManagementState {
+	if t.ManagementState != "" {
+		return t.ManagementState
+	}
+	return operatorv1.Removed
+}
+
 func (t *TrustyAI) GetComponentName() string {
 	return ComponentName
 }

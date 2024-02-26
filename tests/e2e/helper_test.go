@@ -85,27 +85,27 @@ func setupDSCInstance(name string) *dsc.DataScienceCluster {
 		Spec: dsc.DataScienceClusterSpec{
 			Components: dsc.Components{
 				// keep dashboard as enabled, because other test is rely on this
-				Dashboard: dashboard.Dashboard{
+				Dashboard: &dashboard.Dashboard{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},
 				},
-				Workbenches: workbenches.Workbenches{
+				Workbenches: &workbenches.Workbenches{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},
 				},
-				ModelMeshServing: modelmeshserving.ModelMeshServing{
+				ModelMeshServing: &modelmeshserving.ModelMeshServing{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				DataSciencePipelines: datasciencepipelines.DataSciencePipelines{
+				DataSciencePipelines: &datasciencepipelines.DataSciencePipelines{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},
 				},
-				Kserve: kserve.Kserve{
+				Kserve: &kserve.Kserve{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},
@@ -113,17 +113,17 @@ func setupDSCInstance(name string) *dsc.DataScienceCluster {
 						ManagementState: operatorv1.Unmanaged,
 					},
 				},
-				CodeFlare: codeflare.CodeFlare{
+				CodeFlare: &codeflare.CodeFlare{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				Ray: ray.Ray{
+				Ray: &ray.Ray{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},
 				},
-				Kueue: kueue.Kueue{
+				Kueue: &kueue.Kueue{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},
@@ -133,7 +133,7 @@ func setupDSCInstance(name string) *dsc.DataScienceCluster {
 						ManagementState: operatorv1.Managed,
 					},
 				},
-				ModelRegistry: modelregistry.ModelRegistry{
+				ModelRegistry: &modelregistry.ModelRegistry{
 					Component: components.Component{
 						ManagementState: operatorv1.Managed,
 					},

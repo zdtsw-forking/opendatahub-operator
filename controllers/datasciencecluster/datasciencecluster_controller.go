@@ -216,8 +216,10 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 	var componentErrors *multierror.Error
 
 	for _, component := range allComponents {
-		if instance, err = r.reconcileSubComponent(ctx, instance, component); err != nil {
-			componentErrors = multierror.Append(componentErrors, err)
+		if component != nil {
+			if instance, err = r.reconcileSubComponent(ctx, instance, component); err != nil {
+				componentErrors = multierror.Append(componentErrors, err)
+			}
 		}
 	}
 
@@ -263,7 +265,12 @@ func (r *DataScienceClusterReconciler) reconcileSubComponent(ctx context.Context
 ) (*dsc.DataScienceCluster, error) {
 	componentName := component.GetComponentName()
 
+	if componentName == "trustyai" {
+		fmt.Printf("component %s is config in DSC we try run GetManagementState\n", componentName)
+	}
+
 	enabled := component.GetManagementState() == v1.Managed
+
 	// First set conditions to reflect a component is about to be reconciled
 	instance, err := r.updateStatus(ctx, instance, func(saved *dsc.DataScienceCluster) {
 		message := "Component is disabled"
@@ -481,13 +488,12 @@ func getAllComponents(c *dsc.Components) ([]components.ComponentInterface, error
 
 	definedComponents := reflect.ValueOf(c).Elem()
 	for i := 0; i < definedComponents.NumField(); i++ {
-		c := definedComponents.Field(i)
+		c := definedComponents.Field(i) //
 		if c.CanAddr() {
-			component, ok := c.Addr().Interface().(components.ComponentInterface)
+			component, ok := c.Interface().(components.ComponentInterface)
 			if !ok {
 				return allComponents, errors.New("this is not a pointer to ComponentInterface")
 			}
-
 			allComponents = append(allComponents, component)
 		}
 	}

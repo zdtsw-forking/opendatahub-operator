@@ -37,8 +37,12 @@ type Component struct {
 	DevFlags *DevFlags `json:"devFlags,omitempty"`
 }
 
+// if do not explicitly set component when create DSC, treat as Removed.
 func (c *Component) GetManagementState() operatorv1.ManagementState {
-	return c.ManagementState
+	if c.ManagementState != "" {
+		return c.ManagementState
+	}
+	return operatorv1.Removed
 }
 
 func (c *Component) Cleanup(_ client.Client, _ *dsciv1.DSCInitializationSpec) error {
@@ -48,6 +52,10 @@ func (c *Component) Cleanup(_ client.Client, _ *dsciv1.DSCInitializationSpec) er
 
 func (c *Component) SetImageParamsMap(imageMap map[string]string) map[string]string {
 	return imageMap
+}
+
+func (c *Component) IsNilComponent() bool {
+	return c == nil
 }
 
 // DevFlags defines list of fields that can be used by developers to test customizations. This is not recommended
@@ -87,6 +95,7 @@ type ComponentInterface interface {
 	SetImageParamsMap(imageMap map[string]string) map[string]string
 	OverrideManifests(platform string) error
 	UpdatePrometheusConfig(cli client.Client, enable bool, component string) error
+	IsNilComponent() bool
 }
 
 // UpdatePrometheusConfig update prometheus-configs.yaml to include/exclude <component>.rules

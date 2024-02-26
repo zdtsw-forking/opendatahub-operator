@@ -198,37 +198,37 @@ func newDSC(name string, namespace string) *dsc.DataScienceCluster {
 		},
 		Spec: dsc.DataScienceClusterSpec{
 			Components: dsc.Components{
-				Dashboard: dashboard.Dashboard{
+				Dashboard: &dashboard.Dashboard{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				Workbenches: workbenches.Workbenches{
+				Workbenches: &workbenches.Workbenches{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				ModelMeshServing: modelmeshserving.ModelMeshServing{
+				ModelMeshServing: &modelmeshserving.ModelMeshServing{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				DataSciencePipelines: datasciencepipelines.DataSciencePipelines{
+				DataSciencePipelines: &datasciencepipelines.DataSciencePipelines{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				Kserve: kserve.Kserve{
+				Kserve: &kserve.Kserve{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				CodeFlare: codeflare.CodeFlare{
+				CodeFlare: &codeflare.CodeFlare{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},
 				},
-				Ray: ray.Ray{
+				Ray: &ray.Ray{
 					Component: components.Component{
 						ManagementState: operatorv1.Removed,
 					},

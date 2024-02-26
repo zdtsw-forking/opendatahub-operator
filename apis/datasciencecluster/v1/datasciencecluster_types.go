@@ -42,39 +42,39 @@ type DataScienceClusterSpec struct {
 
 type Components struct {
 	// Dashboard component configuration.
-	Dashboard dashboard.Dashboard `json:"dashboard,omitempty"`
+	Dashboard *dashboard.Dashboard `json:"dashboard,omitempty"`
 
 	// Workbenches component configuration.
-	Workbenches workbenches.Workbenches `json:"workbenches,omitempty"`
+	Workbenches *workbenches.Workbenches `json:"workbenches,omitempty"`
 
 	// ModelMeshServing component configuration.
 	// Does not support enabled Kserve at the same time
-	ModelMeshServing modelmeshserving.ModelMeshServing `json:"modelmeshserving,omitempty"`
+	ModelMeshServing *modelmeshserving.ModelMeshServing `json:"modelmeshserving,omitempty"`
 
 	// DataServicePipeline component configuration.
 	// Require OpenShift Pipelines Operator to be installed before enable component
-	DataSciencePipelines datasciencepipelines.DataSciencePipelines `json:"datasciencepipelines,omitempty"`
+	DataSciencePipelines *datasciencepipelines.DataSciencePipelines `json:"datasciencepipelines,omitempty"`
 
 	// Kserve component configuration.
 	// Require OpenShift Serverless and OpenShift Service Mesh Operators to be installed before enable component
 	// Does not support enabled ModelMeshServing at the same time
-	Kserve kserve.Kserve `json:"kserve,omitempty"`
+	Kserve *kserve.Kserve `json:"kserve,omitempty"`
 
 	// Kueue component configuration.
-	Kueue kueue.Kueue `json:"kueue,omitempty"`
+	Kueue *kueue.Kueue `json:"kueue,omitempty"`
 
 	// CodeFlare component configuration.
 	// If CodeFlare Operator has been installed in the cluster, it should be uninstalled first before enabled component.
-	CodeFlare codeflare.CodeFlare `json:"codeflare,omitempty"`
+	CodeFlare *codeflare.CodeFlare `json:"codeflare,omitempty"`
 
 	// Ray component configuration.
-	Ray ray.Ray `json:"ray,omitempty"`
+	Ray *ray.Ray `json:"ray,omitempty"`
 
 	// TrustyAI component configuration.
 	TrustyAI *trustyai.TrustyAI `json:"trustyai,omitempty"`
 
 	// ModelRegistry component configuration.
-	ModelRegistry modelregistry.ModelRegistry `json:"modelregistry,omitempty"`
+	ModelRegistry *modelregistry.ModelRegistry `json:"modelregistry,omitempty"`
 }
 
 // DataScienceClusterStatus defines the observed state of DataScienceCluster.
