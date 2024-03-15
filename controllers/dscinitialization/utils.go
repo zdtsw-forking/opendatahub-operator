@@ -23,6 +23,7 @@ import (
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/upgrade"
+	//securityv1 "github.com/openshift/api/security/v1"
 )
 
 var (
@@ -49,6 +50,9 @@ func (r *DSCInitializationReconciler) createOdhNamespace(ctx context.Context, ds
 				cluster.ODHGeneratedNamespaceLabel:   "true",
 				"pod-security.kubernetes.io/enforce": "baseline",
 			},
+			// Annotations: map[string]string{
+			// 	securityv1.RequiredSCCAnnotation: "restricted-v2",
+			// },
 		},
 	}
 
