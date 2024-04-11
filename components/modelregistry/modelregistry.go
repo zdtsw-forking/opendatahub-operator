@@ -10,12 +10,14 @@ import (
 
 	"github.com/go-logr/logr"
 	operatorv1 "github.com/openshift/api/operator/v1"
+	conditionsv1 "github.com/openshift/custom-resource-status/conditions/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components"
+	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 )
@@ -63,7 +65,7 @@ func (m *ModelRegistry) GetComponentName() string {
 }
 
 func (m *ModelRegistry) ReconcileComponent(ctx context.Context, cli client.Client, logger logr.Logger,
-	owner metav1.Object, dscispec *dsciv1.DSCInitializationSpec, platform cluster.Platform, _ bool) error {
+	owner metav1.Object, dscispec *dsciv1.DSCInitializationSpec, platform cluster.Platform, _ bool) (conditionsv1.Condition, error) {
 	l := m.ConfigComponentLogger(logger, ComponentName, dscispec)
 	var imageParamMap = map[string]string{
 		"IMAGES_MODELREGISTRY_OPERATOR": "RELATED_IMAGE_ODH_MODEL_REGISTRY_OPERATOR_IMAGE",
@@ -76,17 +78,17 @@ func (m *ModelRegistry) ReconcileComponent(ctx context.Context, cli client.Clien
 	if enabled {
 		// return error if ServiceMesh is not enabled, as it's a required feature
 		if dscispec.ServiceMesh == nil || dscispec.ServiceMesh.ManagementState != operatorv1.Managed {
-			return errors.New("ServiceMesh needs to be set to 'Managed' in DSCI CR, it is required by Model Registry")
+			return status.UpdateFailedCondition(ComponentName, errors.New("ServiceMesh needs to be set to 'Managed' in DSCI CR, it is required by Model Registry"))
 		}
 
 		if err := m.createDependencies(ctx, cli, dscispec); err != nil {
-			return err
+			return status.UpdateFailedCondition(ComponentName, err)
 		}
 
 		if m.DevFlags != nil {
 			// Download manifests and update paths
 			if err := m.OverrideManifests(ctx, platform); err != nil {
-				return err
+				return status.UpdateFailedCondition(ComponentName, err)
 			}
 		}
 
@@ -96,7 +98,7 @@ func (m *ModelRegistry) ReconcileComponent(ctx context.Context, cli client.Clien
 				"DEFAULT_CERT": DefaultModelRegistryCert,
 			}
 			if err := deploy.ApplyParams(Path, imageParamMap, extraParamsMap); err != nil {
-				return fmt.Errorf("failed to update image from %s : %w", Path, err)
+				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to update image from %s : %w", Path, err))
 			}
 		}
 
@@ -104,24 +106,23 @@ func (m *ModelRegistry) ReconcileComponent(ctx context.Context, cli client.Clien
 		// We do not delete this namespace even when ModelRegistry is Removed or when operator is uninstalled.
 		_, err := cluster.CreateNamespace(ctx, cli, "odh-model-registries")
 		if err != nil {
-			return err
+			return status.UpdateFailedCondition(ComponentName, err)
 		}
 	} else {
-		err := m.removeDependencies(ctx, cli, dscispec)
-		if err != nil {
-			return err
+		if err := m.removeDependencies(ctx, cli, dscispec); err != nil {
+			return status.UpdateFailedCondition(ComponentName, err)
 		}
 	}
 
 	// Deploy ModelRegistry Operator
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, dscispec.ApplicationsNamespace, m.GetComponentName(), enabled); err != nil {
-		return err
+		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", Path, err))
 	}
 	l.Info("apply manifests done")
 
 	// Create additional model registry resources, componentEnabled=true because these extras are never deleted!
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path+"/extras", dscispec.ApplicationsNamespace, m.GetComponentName(), true); err != nil {
-		return err
+		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", Path, err))
 	}
 	l.Info("apply extra manifests done")
 
@@ -129,22 +130,23 @@ func (m *ModelRegistry) ReconcileComponent(ctx context.Context, cli client.Clien
 	if platform == cluster.ManagedRhods {
 		if enabled {
 			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 10, 1); err != nil {
-				return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
+				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
 			}
 			l.Info("deployment is done, updating monitoring rules")
 		}
 		if err := m.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
+			return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", Path, err))
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 			dscispec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
-			return err
+			return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", Path, err))
 		}
 		l.Info("updating SRE monitoring done")
 	}
-	return nil
+
+	return status.GetDefaultComponentCondition(ComponentName), nil
 }
 
 func (m *ModelRegistry) createDependencies(ctx context.Context, cli client.Client, dscispec *dsciv1.DSCInitializationSpec) error {
