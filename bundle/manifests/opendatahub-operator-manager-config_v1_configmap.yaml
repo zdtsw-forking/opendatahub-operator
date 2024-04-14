@@ -24,4 +24,6 @@ data:
     # leaderElectionReleaseOnCancel: true
 kind: ConfigMap
 metadata:
+  annotations:
+    service.beta.openshift.io/inject-cabundle: "true"
   name: opendatahub-operator-manager-config

@@ -11,8 +11,9 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: webhook-service
   namespace: system
-  annotations:
-    service.beta.openshift.io/serving-cert-secret-name: opendatahub-operator-controller-webhook-cert
+  # Wen: dont think we need annoation on service
+  # annotations:
+  #   service.beta.openshift.io/serving-cert-secret-name: opendatahub-operator-controller-webhook-cert
 spec:
   ports:
     - port: 443

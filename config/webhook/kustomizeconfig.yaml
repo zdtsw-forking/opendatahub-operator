@@ -21,5 +21,6 @@ namespace:
   path: webhooks/clientConfig/service/namespace
   create: true
 
-varReference:
-- path: metadata/annotations
+# wen: we do not use var not sure why we need this
+# varReference:
+# - path: metadata/annotations

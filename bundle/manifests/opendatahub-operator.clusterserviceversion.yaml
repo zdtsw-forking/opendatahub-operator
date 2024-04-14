@@ -1680,6 +1680,7 @@ spec:
             metadata:
               annotations:
                 kubectl.kubernetes.io/default-container: manager
+                service.beta.openshift.io/inject-cabundle: "true"
               labels:
                 control-plane: controller-manager
             spec:
