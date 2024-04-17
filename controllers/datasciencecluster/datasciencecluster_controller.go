@@ -75,7 +75,9 @@ type DataScienceClusterConfig struct { //nolint:golint,revive
 }
 
 const (
-	finalizerName = "datasciencecluster.opendatahub.io/finalizer"
+	finalizerName   = "datasciencecluster.opendatahub.io/finalizer"
+	defaultDSCName  = "default-dsc"
+	defaultDSCIName = "default-dsci"
 )
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -241,7 +243,7 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 		instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(saved *dsc.DataScienceCluster) {
 			status.SetCompleteCondition(&saved.Status.Conditions, status.ReconcileCompletedWithComponentErrors,
 				fmt.Sprintf("DataScienceCluster resource reconciled with component errors: %v", componentErrors))
-			saved.Status.Phase = status.PhaseReady
+			saved.Status.Phase = status.PhaseError
 		})
 		if err != nil {
 			r.Log.Error(err, "failed to update DataScienceCluster conditions with incompleted reconciliation")
@@ -428,7 +430,7 @@ func (r *DataScienceClusterReconciler) SetupWithManager(mgr ctrl.Manager) error 
 		Owns(&corev1.ServiceAccount{}, builder.WithPredicates(saPredicates)).
 		Watches(&source.Kind{Type: &dsci.DSCInitialization{}}, handler.EnqueueRequestsFromMapFunc(r.watchDataScienceClusterForDSCI)).
 		Watches(&source.Kind{Type: &corev1.ConfigMap{}}, handler.EnqueueRequestsFromMapFunc(r.watchDataScienceClusterResources), builder.WithPredicates(configMapPredicates)).
-		Watches(&source.Kind{Type: &apiextensionsv1.CustomResourceDefinition{}}, handler.EnqueueRequestsFromMapFunc(r.watchDataScienceClusterResources),
+		Watches(&source.Kind{Type: &apiextensionsv1.CustomResourceDefinition{}}, handler.EnqueueRequestsFromMapFunc(r.watchDataScienceClusterArgo),
 			builder.WithPredicates(argoWorkflowCRDPredicates)).
 		// this predicates prevents meaningless reconciliations from being triggered
 		WithEventFilter(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{})).
@@ -446,12 +448,12 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterForDSCI(a client.O
 	case len(instanceList.Items) == 1:
 		requestName = instanceList.Items[0].Name
 	case len(instanceList.Items) == 0:
-		requestName = "default-dsc"
+		requestName = defaultDSCName
 	default:
 		return nil
 	}
 	// When DSCI CR gets created, trigger reconcile function
-	if a.GetObjectKind().GroupVersionKind().Kind == "DSCInitialization" || a.GetName() == "default-dsci" {
+	if a.GetObjectKind().GroupVersionKind().Kind == "DSCInitialization" || a.GetName() == defaultDSCIName {
 		return []reconcile.Request{{
 			NamespacedName: types.NamespacedName{Name: requestName},
 		}}
@@ -469,7 +471,7 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterResources(a client
 	case len(instanceList.Items) == 1:
 		requestName = instanceList.Items[0].Name
 	case len(instanceList.Items) == 0:
-		requestName = "default-dsc"
+		requestName = defaultDSCName
 	default:
 		return nil
 	}
@@ -489,13 +491,6 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterResources(a client
 		return nil
 	}
 
-	// Trigger reconcile function when DSCInitialization from Missing to Valid
-	if a.GetObjectKind().GroupVersionKind().Kind == "DSCInitialization" {
-		return []reconcile.Request{{
-			NamespacedName: types.NamespacedName{Name: requestName},
-		}}
-	}
-
 	return nil
 }
 
@@ -506,10 +501,30 @@ var argoWorkflowCRDPredicates = predicate.Funcs{
 			labelList := e.Object.GetLabels()
 			// CRD to be deleted with label "app.opendatahub.io/datasciencepipeline":"true", should not trigger reconcile
 			if value, exist := labelList[labels.ODH.Component(datasciencepipelines.ComponentName)]; exist && value == "true" {
+				// turn dsp component to removed
 				return false
 			}
 		}
 		// CRD to be deleted either not with label or label value is not "true", should trigger reconcile
 		return true
 	},
+}
+
+func (r *DataScienceClusterReconciler) watchDataScienceClusterArgo(_ client.Object) []reconcile.Request {
+	instanceList := &dsc.DataScienceClusterList{}
+	err := r.Client.List(context.TODO(), instanceList)
+	if err != nil {
+		return nil
+	}
+	var requestName string
+	switch {
+	case len(instanceList.Items) == 1:
+		requestName = instanceList.Items[0].Name
+	case len(instanceList.Items) == 0:
+		requestName = defaultDSCName
+	default:
+		return nil
+	}
+
+	return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: requestName}}}
 }
