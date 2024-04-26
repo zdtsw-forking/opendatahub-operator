@@ -1,0 +1,28 @@
+# For ODH, we have default values for feature flags:
+# trustyai: Support
+# trainingoperator: Support
+# For RHOAI, we have default values for feature flags:
+# trustyai: Unsupport
+# trainingoperator: Support
+---
+apiVersion: core.openfeature.dev/v1beta1
+kind: FeatureFlag
+metadata:
+  name: opendatahub-operator-component-flags
+  labels:
+    app: opendatahub-operator
+spec:
+  flagSpec:
+    flags:
+      trustyai:
+        state: ENABLED
+        variants:
+          Support: true
+          Unsupport: false
+        defaultVariant: Support
+      trainingoperator:
+        state: ENABLED
+        variants:
+          Support: true
+          Unsupport: false
+        defaultVariant: Support

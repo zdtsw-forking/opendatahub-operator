@@ -21,6 +21,8 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
+        openfeature.dev/enabled: "true"
+        openfeature.dev/featureflagsource: "opendatahub-flag-sources"
       labels:
         control-plane: controller-manager
         name: opendatahub-operator
@@ -37,9 +39,6 @@ spec:
       containers:
       - command:
         - /manager
-        env:
-          - name: DISABLE_DSC_CONFIG
-            value: 'true'
         args:
         - --leader-elect
         - --operator-name=opendatahub

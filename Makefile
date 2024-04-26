@@ -64,7 +64,8 @@ GOLANGCI_LINT ?= $(LOCALBIN)/golangci-lint
 CRD_REF_DOCS ?= $(LOCALBIN)/crd-ref-docs
 YQ ?= $(LOCALBIN)/yq
 ## Tool Versions
-KUSTOMIZE_VERSION ?= v3.8.7
+#KUSTOMIZE_VERSION ?= v3.8.7
+KUSTOMIZE_VERSION ?= v5.4.1
 CONTROLLER_GEN_VERSION ?= v0.9.2
 OPERATOR_SDK_VERSION ?= v1.31.0
 GOLANGCI_LINT_VERSION ?= v1.54.0
@@ -201,7 +202,7 @@ ifndef ignore-not-found
 endif
 
 .PHONY: prepare
-prepare: manifests kustomize manager-kustomization
+prepare: cleanup-bundle manifests kustomize manager-kustomization 
 
 # phony target for the case of changing IMG variable
 .PHONY: manager-kustomization
@@ -277,6 +278,7 @@ bundle: prepare operator-sdk ## Generate bundle manifests and metadata, then val
 	$(KUSTOMIZE) build config/manifests | $(OPERATOR_SDK) generate bundle $(BUNDLE_GEN_FLAGS)
 	$(OPERATOR_SDK) bundle validate ./$(BUNDLE_DIR)
 	mv bundle.Dockerfile Dockerfiles/
+#	cp config/featureflag/* $(BUNDLE_DIR)/manifests/
 
 .PHONY: bundle-build
 bundle-build: bundle
@@ -293,6 +295,10 @@ deploy-bundle: operator-sdk bundle-build bundle-push
 .PHONY: upgrade-bundle
 upgrade-bundle: operator-sdk bundle-build bundle-push ## Upgrade bundle
 	$(OPERATOR_SDK) run bundle-upgrade $(BUNDLE_IMG) -n $(OPERATOR_NAMESPACE)
+
+.PHONY: cleanup-bundle
+cleanup-bundle: operator-sdk # Remove local bundle folder before regenerate new ones
+	rm -rf $(BUNDLE_DIR)
 
 .PHONY: opm
 OPM = ./bin/opm

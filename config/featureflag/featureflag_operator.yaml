@@ -1,0 +1,28 @@
+# For ODH, we have default values for feature flags:
+# platform-type: ODH
+# auto-create-dsci: DISABLE_DSC_CONFIG
+# For RHOAI, we have default values for feature flags:
+# platform-type: RHOAI
+# auto-create-dsci: CREATE_DSCI_CONFIG
+---
+apiVersion: core.openfeature.dev/v1beta1
+kind: FeatureFlag
+metadata:
+  name: opendatahub-operator-flags
+  labels:
+    app: opendatahub-operator
+spec:
+  flagSpec:
+    flags:
+      offering:
+        state: ENABLED
+        variants:
+          ODH: "ODH"
+          RHOAI: "RHOAI"
+        defaultVariant: ODH
+      auto-create-dsci:
+        state: ENABLED
+        variants:
+          DISABLE_DSC_CONFIG: true
+          CREATE_DSCI_CONFIG: true
+        defaultVariant: DISABLE_DSC_CONFIG

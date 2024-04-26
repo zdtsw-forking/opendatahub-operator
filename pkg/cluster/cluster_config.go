@@ -120,3 +120,27 @@ func GetPlatform(cli client.Client) (Platform, error) {
 	// check and return whether ODH or self-managed platform
 	return isSelfManaged(cli)
 }
+
+// isManagedRHOAI checks if CRD add-on exists and contains string ManagedRhods.
+func CheckRHOAIType(cli client.Client) (Platform, error) {
+	catalogSourceCRD := &apiextv1.CustomResourceDefinition{}
+
+	err := cli.Get(context.TODO(), client.ObjectKey{Name: "catalogsources.operators.coreos.com"}, catalogSourceCRD)
+	if err != nil {
+		return "", client.IgnoreNotFound(err)
+	}
+	expectedCatlogSource := &ofapi.CatalogSourceList{}
+	err = cli.List(context.TODO(), expectedCatlogSource)
+	if err != nil {
+		return "", client.IgnoreNotFound(err)
+	}
+	if len(expectedCatlogSource.Items) > 0 {
+		for _, cs := range expectedCatlogSource.Items {
+			if cs.Name == string(ManagedRhods) {
+				return ManagedRhods, nil
+			}
+		}
+	}
+
+	return SelfManagedRhods, nil
+}

@@ -21,6 +21,8 @@ import (
 	"flag"
 	"os"
 
+	flagd "github.com/open-feature/go-sdk-contrib/providers/flagd/pkg"
+	"github.com/open-feature/go-sdk/openfeature"
 	addonv1alpha1 "github.com/openshift/addon-operator/apis/addons/v1alpha1"
 	ocappsv1 "github.com/openshift/api/apps/v1"
 	ocbuildv1 "github.com/openshift/api/build/v1"
@@ -40,6 +42,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/util/retry"
 	apiregistrationv1 "k8s.io/kube-aggregator/pkg/apis/apiregistration/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -200,15 +203,36 @@ func main() { //nolint:funlen
 		setupLog.Error(err, "error getting client for setup")
 		os.Exit(1)
 	}
-	// Get operator platform
-	platform, err := cluster.GetPlatform(setupClient)
+
+	// set provider for feature flag, ignore error
+	if err = openfeature.SetProvider(flagd.NewProvider()); err != nil {
+		setupLog.Error(err, "failed to init openfeature provider")
+	}
+	platform := cluster.OpenDataHub
+	var platformOffering string
+	featureOperatorClient := openfeature.NewClient("opendatahub-operator")
+	// Get operator platform with retry if side car is not ready yet during startup
+	err = retry.OnError(retry.DefaultBackoff, func(err error) bool { return true }, func() error {
+		platformOffering, err = featureOperatorClient.StringValue(context.Background(), "offering", "ODH", openfeature.EvaluationContext{})
+		return err
+	})
 	if err != nil {
-		setupLog.Error(err, "error getting platform")
+		setupLog.Error(err, "error getting platform after retries")
 		os.Exit(1)
 	}
+
+	if platformOffering != "ODH" {
+		platform, err = cluster.CheckRHOAIType(setupClient)
+		if err != nil {
+			setupLog.Error(err, "error determin platform type for RHOAI")
+			os.Exit(1)
+		}
+	}
+	setupLog.Info("Platform type", "platform", string(platform))
+
 	// Check if user opted for disabling DSC configuration
-	disableDSCConfig, existDSCConfig := os.LookupEnv("DISABLE_DSC_CONFIG")
-	if existDSCConfig && disableDSCConfig != "false" {
+	disableDSCConfig, _ := featureOperatorClient.BooleanValue(context.Background(), "auto-create-dsci", false, openfeature.EvaluationContext{})
+	if disableDSCConfig {
 		setupLog.Info("DSCI auto creation is disabled")
 	} else {
 		var createDefaultDSCIFunc manager.RunnableFunc = func(ctx context.Context) error {

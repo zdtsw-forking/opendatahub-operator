@@ -1,0 +1,12 @@
+apiVersion: core.openfeature.dev/v1beta1
+kind: FeatureFlagSource
+metadata:
+  name: opendatahub-flag-sources
+  labels:
+    app: opendatahub-operator
+spec:
+  sources:
+    - source: opendatahub-operator-component-flags
+      provider: kubernetes
+    - source: opendatahub-operator-flags
+      provider: kubernetes
