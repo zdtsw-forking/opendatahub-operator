@@ -20,19 +20,23 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	admissionv1 "k8s.io/api/admission/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/util/wait"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
+	// "github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster".
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 )
 
 var log = ctrl.Log.WithName("odh-controller-webhook")
+var endpoint = "/validate-opendatahub-io-v1"
 
 //+kubebuilder:webhook:path=/validate-opendatahub-io-v1,mutating=false,failurePolicy=fail,sideEffects=None,groups=datasciencecluster.opendatahub.io;dscinitialization.opendatahub.io,resources=datascienceclusters;dscinitializations,verbs=create;update;delete,versions=v1,name=operator.opendatahub.io,admissionReviewVersions=v1
 //nolint:lll
@@ -47,7 +51,12 @@ func (w *OpenDataHubWebhook) SetupWithManager(mgr ctrl.Manager) {
 	odhWebhook := &webhook.Admission{
 		Handler: w,
 	}
-	hookServer.Register("/validate-opendatahub-io-v1", odhWebhook)
+	hookServer.Register(endpoint, odhWebhook)
+
+	// extra endpoint for webhookreadyz
+	hookServer.Register("/webhookreadyz", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
 }
 
 func (w *OpenDataHubWebhook) InjectDecoder(d *admission.Decoder) error {
@@ -133,3 +142,45 @@ func (w *OpenDataHubWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	return admission.Allowed(fmt.Sprintf("Operation %s on %s allowed", req.Operation, req.Kind.Kind))
 }
+
+func WaitForWebhookReady(ctx context.Context, interval int, timeout int) error {
+	checkInterval := time.Duration(interval) * time.Second
+	checkDuration := time.Duration(timeout) * time.Second
+	webhookURL := "http://localhost:9443/webhookreadyz" // TODO: http: TLS handshake error from [::1]:48116: remote error: tls: bad certificate
+	// operatorNs, err := cluster.GetOperatorNamespace()
+	// if err != nil {
+	// 	return err
+	// }
+	// webhookURL := "https://opendatahub-operator-controller-manager-service." + operatorNs + ".svc.cluster.local:9443" + endpoint
+
+	err := wait.PollUntilContextTimeout(ctx, checkInterval, checkDuration, false, func(ctx context.Context) (bool, error) {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, webhookURL, nil)
+		if err != nil {
+			return false, nil // Retry on error
+		}
+		fmt.Println("DEBUG WEN1")
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			fmt.Println("DEBUG WEN2")
+			return false, nil // Retry on error
+		}
+
+		defer resp.Body.Close()
+		if resp.StatusCode == http.StatusOK {
+			fmt.Println("DEBUG WEN3")
+			return true, nil
+		}
+
+		fmt.Println("DEBUG WEN4 Status Code:", resp.StatusCode)
+		return false, nil
+	})
+	return err
+}
+
+// hookServer := mgr.GetWebhookServer()
+// hookServer.StartedChecker()(req)
+
+// opendatahub-operator-webhook-service.openshift-operators.svc.cluster.local:443
+// https://opendatahub-operator-controller-manager-service.openshift-operators.svc.cluster.local:443/validate-opendatahub-io-v1
+// opendatahub-operator-controller-manager-service.openshift-operators.svc:443//validate-opendatahub-io-v1

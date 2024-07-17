@@ -18,7 +18,13 @@ package main
 
 import (
 	"context"
+	"errors"
+
+	// "fmt".
+	// "errors".
 	"flag"
+	"fmt"
+	"net/http"
 	"os"
 
 	addonv1alpha1 "github.com/openshift/addon-operator/apis/addons/v1alpha1"
@@ -96,7 +102,7 @@ func init() { //nolint:gochecknoinits
 	utilruntime.Must(operatorv1.Install(scheme))
 }
 
-func main() { //nolint:funlen
+func main() { //nolint:funlen,maintidx
 	var metricsAddr string
 	var probeAddr string
 	var dscApplicationsNamespace string
@@ -120,18 +126,84 @@ func main() { //nolint:funlen
 	// root context
 	ctx := ctrl.SetupSignalHandler()
 
+	// create manager
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{ // single pod does not need to have LeaderElection
 		Scheme:                 scheme,
 		MetricsBindAddress:     metricsAddr,
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
+		ReadinessEndpointName:  "readyz",
+		LivenessEndpointName:   "healthz",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
 	}
 
+	// Create new uncached client to run initial setup
+	setupCfg, err := config.GetConfig()
+	if err != nil {
+		setupLog.Error(err, "error getting config for setup")
+		os.Exit(1)
+	}
+	// uplift default limiataions
+	setupCfg.QPS = rest.DefaultQPS * controllerNum     // 5 * 4 controllers
+	setupCfg.Burst = rest.DefaultBurst * controllerNum // 10 * 4 controllers
+
+	setupClient, err := client.New(setupCfg, client.Options{Scheme: scheme})
+	if err != nil {
+		setupLog.Error(err, "error getting client for setup")
+		os.Exit(1)
+	}
+
 	(&webhook.OpenDataHubWebhook{}).SetupWithManager(mgr)
+	webhookReady := make(chan struct{})
+	go func() {
+		// time.Sleep(10 * time.Second)
+		setupLog.Info("start routine")
+		if checkErr := webhook.WaitForWebhookReady(ctx, 10, 30); checkErr != nil {
+			setupLog.Error(checkErr, "error timeout waiting for webhook ready")
+		//	os.Exit(1)
+		}
+		fmt.Println("Webhook is ready")
+		close(webhookReady)
+	}()
+
+	// check on 8081 with endpoint healthz from probeAddr
+	setupLog.Info("Add AddHealthzCheck healthz")
+	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up health check")
+		os.Exit(1)
+	}
+
+	// check on 8081 with endpoint readyz from probeAddr
+	setupLog.Info("check AddHealthzCheck readyz")
+	if err := mgr.AddHealthzCheck("readyz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up ready check")
+		os.Exit(1)
+	}
+
+	// check on 8081 with endpoint webhookreadyz from probeAddr
+	setupLog.Info("check AddHealthzCheck webhookreadyz")
+	if err := mgr.AddReadyzCheck("webhookreadyz", func(req *http.Request) error {
+		select {
+		case <-webhookReady:
+			setupLog.Info("lets double check Webhooky")
+			return mgr.GetWebhookServer().StartedChecker()(req)
+		default:
+			setupLog.Info("Webhook not ready")
+			return errors.New("webhook readyz not ready")
+		}
+	}); err != nil {
+		setupLog.Error(err, "unable to get webhookready check return")
+		os.Exit(1)
+	}
+
+	setupLog.Info("starting odh manager")
+	if err := mgr.Start(ctx); err != nil {
+		setupLog.Error(err, "problem running manager")
+		os.Exit(1)
+	}
 
 	if err = (&dscicontr.DSCInitializationReconciler{
 		Client:                mgr.GetClient(),
@@ -177,44 +249,47 @@ func main() { //nolint:funlen
 		os.Exit(1)
 	}
 
-	// Create new uncached client to run initial setup
-	setupCfg, err := config.GetConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting config for setup")
-		os.Exit(1)
-	}
-	// uplift default limiataions
-	setupCfg.QPS = rest.DefaultQPS * controllerNum     // 5 * 4 controllers
-	setupCfg.Burst = rest.DefaultBurst * controllerNum // 10 * 4 controllers
-
-	setupClient, err := client.New(setupCfg, client.Options{Scheme: scheme})
-	if err != nil {
-		setupLog.Error(err, "error getting client for setup")
-		os.Exit(1)
-	}
 	// Get operator platform
 	platform, err := cluster.GetPlatform(ctx, setupClient)
 	if err != nil {
 		setupLog.Error(err, "error getting platform")
 		os.Exit(1)
 	}
+
+	// Cleanup resources from previous v2 releases
+	var cleanExistingResourceFunc manager.RunnableFunc = func(ctx context.Context) error {
+		if err = upgrade.CleanupExistingResource(ctx, setupClient, platform, dscApplicationsNamespace, dscMonitoringNamespace); err != nil {
+			setupLog.Error(err, "unable to perform cleanup")
+		}
+		return err
+	}
+
+	err = mgr.Add(cleanExistingResourceFunc)
+	if err != nil {
+		setupLog.Error(err, "error remove deprecated resources from previous version")
+	}
+
 	// Check if user opted for disabling DSC configuration
 	disableDSCConfig, existDSCConfig := os.LookupEnv("DISABLE_DSC_CONFIG")
 	if existDSCConfig && disableDSCConfig != "false" {
 		setupLog.Info("DSCI auto creation is disabled")
 	} else {
-		var createDefaultDSCIFunc manager.RunnableFunc = func(ctx context.Context) error {
-			err := upgrade.CreateDefaultDSCI(ctx, setupClient, platform, dscApplicationsNamespace, dscMonitoringNamespace)
-			if err != nil {
-				setupLog.Error(err, "unable to create initial setup for the operator")
+		go func() {
+			setupLog.Info("Waiting for webhook ready before create DSCI ")
+			<-webhookReady
+			var createDefaultDSCIFunc manager.RunnableFunc = func(ctx context.Context) error {
+				err := upgrade.CreateDefaultDSCI(ctx, setupClient, platform, dscApplicationsNamespace, dscMonitoringNamespace)
+				if err != nil {
+					setupLog.Error(err, "unable to create initial setup for the operator")
+				}
+				return err
 			}
-			return err
-		}
-		err := mgr.Add(createDefaultDSCIFunc)
-		if err != nil {
-			setupLog.Error(err, "error scheduling DSCI creation")
-			os.Exit(1)
-		}
+			err := mgr.Add(createDefaultDSCIFunc)
+			if err != nil {
+				setupLog.Error(err, "error scheduling DSCI creation")
+				os.Exit(1)
+			}
+		}()
 	}
 
 	// Create default DSC CR for managed RHODS
@@ -231,32 +306,5 @@ func main() { //nolint:funlen
 			setupLog.Error(err, "error scheduling DSC creation")
 			os.Exit(1)
 		}
-	}
-	// Cleanup resources from previous v2 releases
-	var cleanExistingResourceFunc manager.RunnableFunc = func(ctx context.Context) error {
-		if err = upgrade.CleanupExistingResource(ctx, setupClient, platform, dscApplicationsNamespace, dscMonitoringNamespace); err != nil {
-			setupLog.Error(err, "unable to perform cleanup")
-		}
-		return err
-	}
-
-	err = mgr.Add(cleanExistingResourceFunc)
-	if err != nil {
-		setupLog.Error(err, "error remove deprecated resources from previous version")
-	}
-
-	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up health check")
-		os.Exit(1)
-	}
-	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up ready check")
-		os.Exit(1)
-	}
-
-	setupLog.Info("starting manager")
-	if err := mgr.Start(ctx); err != nil {
-		setupLog.Error(err, "problem running manager")
-		os.Exit(1)
 	}
 }
