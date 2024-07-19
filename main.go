@@ -18,13 +18,10 @@ package main
 
 import (
 	"context"
-	"errors"
-
 	// "fmt".
-	// "errors".
+	 "errors".
 	"flag"
-	"fmt"
-	"net/http"
+	 "net/http".
 	"os"
 
 	addonv1alpha1 "github.com/openshift/addon-operator/apis/addons/v1alpha1"
@@ -156,55 +153,21 @@ func main() { //nolint:funlen,maintidx
 		os.Exit(1)
 	}
 
+	setupLog.Info("create webhook")
 	(&webhook.OpenDataHubWebhook{}).SetupWithManager(mgr)
-	webhookReady := make(chan struct{})
-	go func() {
-		// time.Sleep(10 * time.Second)
-		setupLog.Info("start routine")
-		if checkErr := webhook.WaitForWebhookReady(ctx, 10, 30); checkErr != nil {
-			setupLog.Error(checkErr, "error timeout waiting for webhook ready")
-		//	os.Exit(1)
-		}
-		fmt.Println("Webhook is ready")
-		close(webhookReady)
-	}()
+	// webhookReady := make(chan struct{})
+	// go func() {
+	// 	// time.Sleep(10 * time.Second)
+	// 	setupLog.Info("start routine")
+	// 	if checkErr := webhook.WaitForWebhookReady(ctx, 10, 30); checkErr != nil {
+	// 		//setupLog.Error(checkErr, "error timeout waiting for webhook ready")
+	// 	//	os.Exit(1)
+	// 	}
+	// 	fmt.Println("Webhook is ready")
+	// 	close(webhookReady)
+	// }()
 
-	// check on 8081 with endpoint healthz from probeAddr
-	setupLog.Info("Add AddHealthzCheck healthz")
-	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up health check")
-		os.Exit(1)
-	}
-
-	// check on 8081 with endpoint readyz from probeAddr
-	setupLog.Info("check AddHealthzCheck readyz")
-	if err := mgr.AddHealthzCheck("readyz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up ready check")
-		os.Exit(1)
-	}
-
-	// check on 8081 with endpoint webhookreadyz from probeAddr
-	setupLog.Info("check AddHealthzCheck webhookreadyz")
-	if err := mgr.AddReadyzCheck("webhookreadyz", func(req *http.Request) error {
-		select {
-		case <-webhookReady:
-			setupLog.Info("lets double check Webhooky")
-			return mgr.GetWebhookServer().StartedChecker()(req)
-		default:
-			setupLog.Info("Webhook not ready")
-			return errors.New("webhook readyz not ready")
-		}
-	}); err != nil {
-		setupLog.Error(err, "unable to get webhookready check return")
-		os.Exit(1)
-	}
-
-	setupLog.Info("starting odh manager")
-	if err := mgr.Start(ctx); err != nil {
-		setupLog.Error(err, "problem running manager")
-		os.Exit(1)
-	}
-
+	setupLog.Info("create DSCI")
 	if err = (&dscicontr.DSCInitializationReconciler{
 		Client:                mgr.GetClient(),
 		Scheme:                mgr.GetScheme(),
@@ -216,6 +179,7 @@ func main() { //nolint:funlen,maintidx
 		os.Exit(1)
 	}
 
+	setupLog.Info("create DSC")
 	if err = (&datascienceclustercontrollers.DataScienceClusterReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -231,6 +195,7 @@ func main() { //nolint:funlen,maintidx
 		os.Exit(1)
 	}
 
+	setupLog.Info("create secret")
 	if err = (&secretgenerator.SecretGeneratorReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -240,6 +205,7 @@ func main() { //nolint:funlen,maintidx
 		os.Exit(1)
 	}
 
+	setupLog.Info("create certgen")
 	if err = (&certconfigmapgenerator.CertConfigmapGeneratorReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -250,12 +216,14 @@ func main() { //nolint:funlen,maintidx
 	}
 
 	// Get operator platform
+	setupLog.Info("get platform")
 	platform, err := cluster.GetPlatform(ctx, setupClient)
 	if err != nil {
 		setupLog.Error(err, "error getting platform")
 		os.Exit(1)
 	}
 
+	setupLog.Info("cleanup old")
 	// Cleanup resources from previous v2 releases
 	var cleanExistingResourceFunc manager.RunnableFunc = func(ctx context.Context) error {
 		if err = upgrade.CleanupExistingResource(ctx, setupClient, platform, dscApplicationsNamespace, dscMonitoringNamespace); err != nil {
@@ -264,19 +232,21 @@ func main() { //nolint:funlen,maintidx
 		return err
 	}
 
+	setupLog.Info("Add cleanup func")
 	err = mgr.Add(cleanExistingResourceFunc)
 	if err != nil {
 		setupLog.Error(err, "error remove deprecated resources from previous version")
 	}
 
 	// Check if user opted for disabling DSC configuration
+	setupLog.Info("DEBUG wen")
 	disableDSCConfig, existDSCConfig := os.LookupEnv("DISABLE_DSC_CONFIG")
 	if existDSCConfig && disableDSCConfig != "false" {
 		setupLog.Info("DSCI auto creation is disabled")
 	} else {
 		go func() {
 			setupLog.Info("Waiting for webhook ready before create DSCI ")
-			<-webhookReady
+			// <-webhookReady
 			var createDefaultDSCIFunc manager.RunnableFunc = func(ctx context.Context) error {
 				err := upgrade.CreateDefaultDSCI(ctx, setupClient, platform, dscApplicationsNamespace, dscMonitoringNamespace)
 				if err != nil {
@@ -306,5 +276,45 @@ func main() { //nolint:funlen,maintidx
 			setupLog.Error(err, "error scheduling DSC creation")
 			os.Exit(1)
 		}
+	}
+	// check on 8081 with endpoint healthz from probeAddr
+	setupLog.Info("Add AddHealthzCheck healthz")
+	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up health check")
+		os.Exit(1)
+	}
+
+	// check on 8081 with endpoint readyz from probeAddr
+	setupLog.Info("check AddHealthzCheck readyz")
+	if err := mgr.AddHealthzCheck("readyz", healthz.Ping); err != nil {
+		setupLog.Error(err, "unable to set up ready check")
+		os.Exit(1)
+	}
+
+	// check on 8081 with endpoint webhookreadyz from probeAddr
+	setupLog.Info("check AddHealthzCheck webhookreadyz")
+	if err := mgr.AddReadyzCheck("webhookreadyz", func(req *http.Request) error {
+		select {
+		case <-webhookReady:
+			setupLog.Info("lets double check Webhooky")
+			return mgr.GetWebhookServer().StartedChecker()(req)
+		default:
+			setupLog.Info("Webhook not ready")
+			return errors.New("webhook readyz not ready")
+		}
+	}); err != nil {
+		setupLog.Info("BAD WEN")
+	}
+
+	err = mgr.AddReadyzCheck("webhookreadyz", healthz.Ping)
+	if err != nil {
+		setupLog.Error(err, "unable to get webhookready check return")
+		os.Exit(1)
+	}
+
+	setupLog.Info("starting odh manager")
+	if err := mgr.Start(ctx); err != nil {
+		setupLog.Error(err, "problem running manager")
+		os.Exit(1)
 	}
 }
