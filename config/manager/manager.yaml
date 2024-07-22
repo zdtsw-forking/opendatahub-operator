@@ -36,7 +36,7 @@ spec:
         #   type: RuntimeDefault
       containers:
       - command:
-        - /manager
+        - /dlv
         env:
           - name: DISABLE_DSC_CONFIG
             value: 'true'

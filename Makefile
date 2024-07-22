@@ -178,7 +178,8 @@ api-docs: crd-ref-docs ## Creates API docs using https://github.com/elastic/crd-
 
 .PHONY: build
 build: generate fmt vet ## Build manager binary.
-	go build -o bin/manager main.go
+	go build -gcflags "all=-N -l" -o bin/manager main.go
+	/home/wenzhou/go/bin/dlv exec ./bin/manager --headless --listen=:40000 --api-version=2 -- --health-probe-bind-address=:8081 --metrics-bind-address=0.0.0.0:8080
 
 RUN_ARGS = --log-mode=devel
 GO_RUN_MAIN = OPERATOR_NAMESPACE=$(OPERATOR_NAMESPACE) DEFAULT_MANIFESTS_PATH=$(DEFAULT_MANIFESTS_PATH) go run $(GO_RUN_ARGS) ./main.go $(RUN_ARGS)
@@ -190,10 +191,12 @@ run: manifests generate fmt vet ## Run a controller from your host.
 run-nowebhook: GO_RUN_ARGS += -tags nowebhook
 run-nowebhook: manifests generate fmt vet ## Run a controller from your host without webhook enabled
 	$(GO_RUN_MAIN)
+run: manifests generate fmt vet get-manifests ## Run a controller from your host with manifests
+	OPERATOR_NAMESPACE=$(OPERATOR_NAMESPACE) DEFAULT_MANIFESTS_PATH=${DEFAULT_MANIFESTS_PATH} /home/wenzhou/go/bin/dlv debug ./main.go --headless --listen=:40000 --api-version=2 -- --health-probe-bind-address=:8081 --metrics-bind-address=0.0.0.0:8080
 
 .PHONY: image-build
 image-build: # unit-test ## Build image with the manager.
-	$(IMAGE_BUILDER) build --no-cache -f Dockerfiles/Dockerfile  ${IMAGE_BUILD_FLAGS} -t $(IMG) .
+	$(IMAGE_BUILDER) build --no-cache -f Dockerfiles/dlv.Dockerfile  ${IMAGE_BUILD_FLAGS} -t $(IMG) .
 
 .PHONY: image-push
 image-push: ## Push image with the manager.
