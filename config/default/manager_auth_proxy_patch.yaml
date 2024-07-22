@@ -11,6 +11,12 @@ spec:
       containers:
       - name: manager
         args:
-        - "--health-probe-bind-address=:8081"
-        - "--metrics-bind-address=0.0.0.0:8080"
-        - "--leader-elect"
+        - '--listen=:40000'
+        - '--headless=true'
+        - '--api-version=2'
+        - '--log'
+        - 'exec'
+        - '/manager'
+        - '--'
+        - '--health-probe-bind-address=:8081'
+        - '--metrics-bind-address=0.0.0.0:8080'

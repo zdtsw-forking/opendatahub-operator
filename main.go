@@ -210,12 +210,12 @@ func main() { //nolint:funlen,maintidx
 		os.Exit(1)
 	}
 
-	(&webhook.OpenDataHubValidatingWebhook{
-		Client:  mgr.GetClient(),
-		Decoder: admission.NewDecoder(mgr.GetScheme()),
-	}).SetupWithManager(mgr)
+	// (&webhook.OpenDataHubValidatingWebhook{
+	// 	Client:  mgr.GetClient(),
+	// 	Decoder: admission.NewDecoder(mgr.GetScheme()),
+	// }).SetupWithManager(mgr)
 
-	(&webhook.DSCDefaulter{}).SetupWithManager(mgr)
+	// (&webhook.DSCDefaulter{}).SetupWithManager(mgr)
 
 	if err = (&dscictrl.DSCInitializationReconciler{
 		Client:                mgr.GetClient(),

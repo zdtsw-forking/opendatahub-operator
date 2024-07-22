@@ -1077,11 +1077,18 @@ spec:
             spec:
               containers:
               - args:
+                - --listen=:40000
+                - --headless=true
+                - --api-version=2
+                - --log
+                - exec
+                - /manager
+                - --
                 - --health-probe-bind-address=:8081
                 - --metrics-bind-address=0.0.0.0:8080
                 - --leader-elect
                 command:
-                - /manager
+                - /dlv
                 env:
                 - name: DISABLE_DSC_CONFIG
                   value: "true"
@@ -1176,7 +1183,11 @@ spec:
   selector:
     matchLabels:
       component: opendatahub-operator
+<<<<<<< HEAD
   version: 2.18.0
+=======
+  version: 2.15.1-60
+>>>>>>> f9b31b81 (debug)
   webhookdefinitions:
   - admissionReviewVersions:
     - v1
