@@ -162,6 +162,12 @@ e.g `make image-build -e IMAGE_BUILD_FLAGS="--build-arg USE_LOCAL=true"`
 
 #### Deployment
 
+**Run main.go locally**
+
+  ```commandline
+  make run -e OPERATOR_NAMESPACE=openshift-operators -e DISABLE_DSC_CONFIG=true -e CI=true
+  ```
+
 **Deploying operator locally**
 
 - Define operator namespace

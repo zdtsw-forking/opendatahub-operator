@@ -22,6 +22,8 @@ BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 IMAGE_BUILDER ?= podman
 OPERATOR_NAMESPACE ?= opendatahub-operator-system
 DEFAULT_MANIFESTS_PATH ?= opt/manifests
+CI ?= true
+DISABLE_DSC_CONFIG ?= false
 
 
 CHANNELS="fast"
@@ -140,7 +142,7 @@ endef
 
 .PHONY: manifests
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
-	$(CONTROLLER_GEN) rbac:roleName=controller-manager-role crd:ignoreUnexportedFields=true webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+	$(CONTROLLER_GEN) rbac:roleName=controller-manager-role crd:ignoreUnexportedFields=true paths="./..." output:crd:artifacts:config=config/crd/bases
 	$(call fetch-external-crds,github.com/openshift/api,route/v1)
 	$(call fetch-external-crds,github.com/openshift/api,user/v1)
 
@@ -177,9 +179,9 @@ api-docs: crd-ref-docs ## Creates API docs using https://github.com/elastic/crd-
 ##@ Build
 
 .PHONY: build
-build: generate fmt vet ## Build manager binary.
+build: generate fmt vet lint ## Build manager binary.
 	go build -gcflags "all=-N -l" -o bin/manager main.go
-	/home/wenzhou/go/bin/dlv exec ./bin/manager --headless --listen=:40000 --api-version=2 -- --health-probe-bind-address=:8081 --metrics-bind-address=0.0.0.0:8080
+#	/home/wenzhou/go/bin/dlv exec ./bin/manager --headless --listen=:40000 --api-version=2 -- --health-probe-bind-address=:8081 --metrics-bind-address=0.0.0.0:8080
 
 .PHONY: run
 run: manifests generate fmt vet get-manifests ## Run a controller from your host with manifests
@@ -188,6 +190,21 @@ run: manifests generate fmt vet get-manifests ## Run a controller from your host
 
 .PHONY: image-build
 image-build: # unit-test ## Build image with the manager.
+	$(IMAGE_BUILDER) build --no-cache -f Dockerfiles/Dockerfile  ${IMAGE_BUILD_FLAGS} -t $(IMG) .
+
+##@ Build dlv
+
+.PHONY: build-dlv
+build-dlv: generate fmt vet ## Build manager binary with dlv debug flags
+	go build -gcflags "all=-N -l" -o manager main.go
+
+
+.PHONY: run-dlv
+run-dlv: manifests generate fmt vet ## Run a controller from your host.
+	/home/wenzhou/go/bin/dlv exec ./manager --headless --listen=:40000 --api-version=2 -- --health-probe-bind-address=:8081 --metrics-bind-address=0.0.0.0:8080
+
+.PHONY: image-build-dlv
+image-build-dlv: # unit-test ## Build image with the manager.
 	$(IMAGE_BUILDER) build --no-cache -f Dockerfiles/dlv.Dockerfile  ${IMAGE_BUILD_FLAGS} -t $(IMG) .
 
 .PHONY: image-push

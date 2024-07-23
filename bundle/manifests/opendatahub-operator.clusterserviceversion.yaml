@@ -1184,10 +1184,14 @@ spec:
     matchLabels:
       component: opendatahub-operator
 <<<<<<< HEAD
+<<<<<<< HEAD
   version: 2.18.0
 =======
   version: 2.15.1-60
 >>>>>>> f9b31b81 (debug)
+=======
+  version: 2.15.0
+>>>>>>> 8767a3ff (update:)
   webhookdefinitions:
   - admissionReviewVersions:
     - v1

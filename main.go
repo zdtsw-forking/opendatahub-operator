@@ -19,6 +19,8 @@ package main
 import (
 	"context"
 	"flag"
+
+	// "github.com/opendatahub-io/opendatahub-operator/v2/controllers/webhook".
 	"os"
 
 	addonv1alpha1 "github.com/openshift/addon-operator/apis/addons/v1alpha1"
@@ -62,7 +64,6 @@ import (
 	dscctrl "github.com/opendatahub-io/opendatahub-operator/v2/controllers/datasciencecluster"
 	dscictrl "github.com/opendatahub-io/opendatahub-operator/v2/controllers/dscinitialization"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/secretgenerator"
-	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/webhook"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/logger"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/upgrade"
@@ -206,7 +207,7 @@ func main() { //nolint:funlen,maintidx
 		// LeaderElectionReleaseOnCancel: true,
 	})
 	if err != nil {
-		setupLog.Error(err, "unable to start manager")
+		setupLog.Error(err, "unable to create manager")
 		os.Exit(1)
 	}
 
