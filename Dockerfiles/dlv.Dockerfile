@@ -16,9 +16,9 @@ RUN ./get_all_manifests.sh ${OVERWRITE_MANIFESTS}
 FROM registry.access.redhat.com/ubi8/go-toolset:$GOLANG_VERSION as builder_local_true
 # Get all manifests from local to builder_local_true
 USER root
-WORKDIR /opt
+WORKDIR /
 # copy local manifests to build
-COPY odh-manifests/ /opt/odh-manifests/
+COPY opt/manifests/ /opt/manifests/
 
 ################################################################################
 FROM builder_local_${USE_LOCAL} as builder
@@ -47,7 +47,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 WORKDIR /
 COPY --from=builder /usr/bin/dlv .
 COPY --from=builder /workspace/manager .
-COPY --chown=1001:0 --from=builder /opt/odh-manifests /opt/manifests
+COPY --chown=1001:0 --from=builder /opt/manifests /opt/manifests
 # Recursive change all files
 RUN chown -R 1001:0 /opt/manifests &&\
    chmod -R a+r /opt/manifests
