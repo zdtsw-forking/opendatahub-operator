@@ -25,7 +25,7 @@ func ServingCertificateResource(ctx context.Context, f *feature.Feature) error {
 	case infrav1.Provided:
 		return nil
 	default:
-		return cluster.PropagateDefaultIngressCertificate(ctx, f.Client, secretData.Name, secretData.Namespace)
+		return cluster.PropagateDefaultIngressCertificate(ctx, f.Client, secretData.Name, secretData.Namespace, feature.OwnedBy(f))
 	}
 }
 
