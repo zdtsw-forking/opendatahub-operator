@@ -5,21 +5,21 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// Component init condition.
+// Component init condition when it is just created
 // type: <component>Ready
 // status: Unknown
 // reason: ReconcileStart
-func InitComponentCondition(componentName string, enabled bool) conditionsv1.Condition {
+func NewComponentCondition(conditions *[]conditionsv1.Condition, componentName string, enabled bool) {
 	managementstatue := "not Managed"
 	if enabled {
 		managementstatue = "Managed"
 	}
-	return conditionsv1.Condition{
+	conditionsv1.SetStatusCondition(conditions, conditionsv1.Condition{
 		Type:    conditionsv1.ConditionType(componentName + PhaseReady),
 		Status:  corev1.ConditionUnknown,
 		Reason:  ReconcileStartReason,
 		Message: "Component managementStatus is " + managementstatue,
-	}
+	})
 }
 
 // Component reconilce success.

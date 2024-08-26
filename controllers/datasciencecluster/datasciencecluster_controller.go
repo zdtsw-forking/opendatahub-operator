@@ -303,7 +303,7 @@ func (r *DataScienceClusterReconciler) reconcileSubComponent(ctx context.Context
 	// only set to init condition e.g Unknonw for the very first time when component is not in the list
 	if !isExistStatus {
 		instance, err := status.UpdateWithRetry(ctx, r.Client, instance, func(saved *dscv1.DataScienceCluster) {
-			status.UpdateCondition(&saved.Status.Conditions, status.InitComponentCondition(componentName, enabled))
+			status.NewComponentCondition(&saved.Status.Conditions, componentName, enabled)
 		})
 		if err != nil {
 			_ = r.reportError(err, instance, "failed to update DataScienceCluster conditions before first time reconciling "+componentName)
