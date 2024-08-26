@@ -91,12 +91,12 @@ func (d *Dashboard) ReconcileComponent(ctx context.Context,
 	if enabled {
 		// 1. cleanup OAuth client related secret and CR if dashboard is in 'installed false' status
 		if err := d.cleanOauthClient(ctx, cli, dscispec, currentComponentExist, l); err != nil {
-			return status.UpdateFailedCondition(ComponentNameUpstream, err)
+			return status.FailedComponentCondition(ComponentNameUpstream, err)
 		}
 		if d.DevFlags != nil {
 			// Download manifests and update paths
 			if err := d.OverrideManifests(ctx, platform); err != nil {
-				return status.UpdateFailedCondition(ComponentNameUpstream, err)
+				return status.FailedComponentCondition(ComponentNameUpstream, err)
 			}
 			if OverridePath != "" {
 				entryPath = OverridePath
@@ -108,23 +108,23 @@ func (d *Dashboard) ReconcileComponent(ctx context.Context,
 		// 2. platform specific RBAC
 		if platform == cluster.OpenDataHub || platform == "" {
 			if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, dscispec.ApplicationsNamespace, "odh-dashboard"); err != nil {
-				return status.UpdateFailedCondition(ComponentNameUpstream, err)
+				return status.FailedComponentCondition(ComponentNameUpstream, err)
 			}
 		} else {
 			if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, dscispec.ApplicationsNamespace, "rhods-dashboard"); err != nil {
-				return status.UpdateFailedCondition(ComponentNameDownstream, err)
+				return status.FailedComponentCondition(ComponentNameDownstream, err)
 			}
 		}
 
 		// 3. Append or Update variable for component to consume
 		extraParamsMap, err := updateKustomizeVariable(ctx, cli, platform, dscispec)
 		if err != nil {
-			return status.UpdateFailedCondition(ComponentNameUpstream, errors.New("failed to set variable for extraParamsMap"))
+			return status.FailedComponentCondition(ComponentNameUpstream, errors.New("failed to set variable for extraParamsMap"))
 		}
 
 		// 4. update params.env regardless devFlags is provided of not
 		if err := deploy.ApplyParams(entryPath, imageParamMap, extraParamsMap); err != nil {
-			return status.UpdateFailedCondition(ComponentNameUpstream, fmt.Errorf("failed to update params.env from %s : %w", entryPath, err))
+			return status.FailedComponentCondition(ComponentNameUpstream, fmt.Errorf("failed to update params.env from %s : %w", entryPath, err))
 		}
 	}
 
@@ -134,11 +134,11 @@ func (d *Dashboard) ReconcileComponent(ctx context.Context,
 	case cluster.SelfManagedRhods, cluster.ManagedRhods:
 		// anaconda
 		if err := cluster.CreateSecret(ctx, cli, "anaconda-ce-access", dscispec.ApplicationsNamespace); err != nil {
-			return status.UpdateFailedCondition(ComponentNameDownstream, fmt.Errorf("failed to create access-secret for anaconda: %w", err))
+			return status.FailedComponentCondition(ComponentNameDownstream, fmt.Errorf("failed to create access-secret for anaconda: %w", err))
 		}
 		// Deploy RHOAI manifests
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner, entryPath, dscispec.ApplicationsNamespace, ComponentNameDownstream, enabled); err != nil {
-			return status.UpdateFailedCondition(ComponentNameDownstream, fmt.Errorf("failed to apply manifests from %s: %w", PathDownstream, err))
+			return status.FailedComponentCondition(ComponentNameDownstream, fmt.Errorf("failed to apply manifests from %s: %w", PathDownstream, err))
 		}
 		l.Info("apply manifests done")
 
@@ -147,31 +147,31 @@ func (d *Dashboard) ReconcileComponent(ctx context.Context,
 			if enabled {
 				// first check if the service is up, so prometheus won't fire alerts when it is just startup
 				if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentNameDownstream, dscispec.ApplicationsNamespace, 20, 3); err != nil {
-					return status.UpdateFailedCondition(ComponentNameDownstream, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentNameDownstream, err))
+					return status.FailedComponentCondition(ComponentNameDownstream, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentNameDownstream, err))
 				}
 				l.Info("deployment is done, updating monitoring rules")
 			}
 
 			if err := d.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentNameDownstream); err != nil {
-				return status.UpdateFailedCondition(ComponentNameDownstream, err)
+				return status.FailedComponentCondition(ComponentNameDownstream, err)
 			}
 			if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 				filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 				dscispec.Monitoring.Namespace,
 				"prometheus", true); err != nil {
-				return status.UpdateFailedCondition(ComponentNameDownstream, err)
+				return status.FailedComponentCondition(ComponentNameDownstream, err)
 			}
 			l.Info("updating SRE monitoring done")
 		}
-		return status.GetDefaultComponentCondition(ComponentNameUpstream), nil
+		return status.SuccessComponentCondition(ComponentNameUpstream), nil
 
 	default:
 		// Deploy ODH manifests
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner, entryPath, dscispec.ApplicationsNamespace, ComponentNameUpstream, enabled); err != nil {
-			return status.UpdateFailedCondition(ComponentNameUpstream, fmt.Errorf("failed to apply manifests from %s: %w", entryPath, err))
+			return status.FailedComponentCondition(ComponentNameUpstream, fmt.Errorf("failed to apply manifests from %s: %w", entryPath, err))
 		}
 		l.Info("apply manifests done")
-		return status.GetDefaultComponentCondition(ComponentNameUpstream), nil
+		return status.SuccessComponentCondition(ComponentNameUpstream), nil
 	}
 }
 

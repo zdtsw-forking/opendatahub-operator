@@ -138,7 +138,7 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	// Start reconciling
 	if instance.Status.Conditions == nil {
 		instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(dsci *dsciv1.DSCInitialization) {
-			status.UpdateCondition(&dsci.Status.Conditions, *status.SetDefaultConditionInit(status.DSCIReconcileStartMessage))
+			status.UpdateCondition(&dsci.Status.Conditions, *status.InitControllerCondition(status.DSCIReconcileStartMessage))
 			dsci.Status.Phase = status.PhaseCreated
 		})
 		if err != nil {
@@ -214,9 +214,10 @@ func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		}
 
 		// Start reconciling
+		// TODO: cleanup this code, dead code
 		if instance.Status.Conditions == nil {
 			instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(dsci *dsciv1.DSCInitialization) {
-				status.UpdateCondition(&dsci.Status.Conditions, *status.SetDefaultConditionInit(status.DSCIReconcileStartMessage))
+				status.UpdateCondition(&dsci.Status.Conditions, *status.InitControllerCondition(status.DSCIReconcileStartMessage))
 				dsci.Status.Phase = status.PhaseCreated
 			})
 			if err != nil {

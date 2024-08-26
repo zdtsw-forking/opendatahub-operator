@@ -71,18 +71,18 @@ func (r *Ray) ReconcileComponent(ctx context.Context, cli client.Client, logger 
 		if r.DevFlags != nil {
 			// Download manifests and update paths
 			if err := r.OverrideManifests(ctx, platform); err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 		if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (r.DevFlags == nil || len(r.DevFlags.Manifests) == 0) {
 			if err := deploy.ApplyParams(RayPath, imageParamMap, map[string]string{"namespace": dscispec.ApplicationsNamespace}); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to update image from %s : %w", RayPath, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to update image from %s : %w", RayPath, err))
 			}
 		}
 	}
 	// Deploy Ray Operator
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, RayPath, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
-		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", RayPath, err))
+		return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", RayPath, err))
 	}
 	l.Info("apply manifests done")
 	// CloudService Monitoring handling
@@ -90,21 +90,21 @@ func (r *Ray) ReconcileComponent(ctx context.Context, cli client.Client, logger 
 		if enabled {
 			// first check if the service is up, so prometheus won't fire alerts when it is just startup
 			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 20, 2); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
 			}
 			l.Info("deployment is done, updating monitoring rules")
 		}
 		if err := r.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 			dscispec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		l.Info("updating SRE monitoring done")
 	}
 
-	return status.GetDefaultComponentCondition(ComponentName), nil
+	return status.SuccessComponentCondition(ComponentName), nil
 }

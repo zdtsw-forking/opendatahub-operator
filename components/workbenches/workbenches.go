@@ -116,7 +116,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 		if w.DevFlags != nil {
 			// Download manifests and update paths
 			if err := w.OverrideManifests(ctx, platform); err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 		if platform == cluster.SelfManagedRhods || platform == cluster.ManagedRhods {
@@ -124,17 +124,17 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 			// Specifying this label triggers its deletion when the operator is uninstalled.
 			_, err := cluster.CreateNamespace(ctx, cli, "rhods-notebooks", cluster.WithLabels(labels.ODH.OwnedNamespace, "true"))
 			if err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 		// Update Default rolebinding
 		err := cluster.UpdatePodSecurityRolebinding(ctx, cli, dscispec.ApplicationsNamespace, "notebook-controller-service-account")
 		if err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 	}
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, notebookControllerPath, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
-		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests %s: %w", notebookControllerPath, err))
+		return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifests %s: %w", notebookControllerPath, err))
 	}
 	l.WithValues("Path", notebookControllerPath).Info("apply manifests done NBC")
 
@@ -144,11 +144,11 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 			if platform == cluster.ManagedRhods || platform == cluster.SelfManagedRhods {
 				// for kf-notebook-controller image
 				if err := deploy.ApplyParams(notebookControllerPath, imageParamMap); err != nil {
-					return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to update image %s: %w", notebookControllerPath, err))
+					return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to update image %s: %w", notebookControllerPath, err))
 				}
 				// for odh-notebook-controller image
 				if err := deploy.ApplyParams(kfnotebookControllerPath, imageParamMap); err != nil {
-					return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to update image %s: %w", kfnotebookControllerPath, err))
+					return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to update image %s: %w", kfnotebookControllerPath, err))
 				}
 			}
 		}
@@ -161,7 +161,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 			kfnotebookControllerPath,
 			dscispec.ApplicationsNamespace,
 			ComponentName, enabled); err != nil {
-			return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifetss %s: %w", kfnotebookControllerPath, err))
+			return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifetss %s: %w", kfnotebookControllerPath, err))
 		}
 		manifestsPath = notebookImagesPath
 	} else {
@@ -171,7 +171,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 		manifestsPath,
 		dscispec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
-		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifetss %s: %w", manifestsPath, err))
+		return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifetss %s: %w", manifestsPath, err))
 	}
 	l.WithValues("Path", manifestsPath).Info("apply manifests done notebook image")
 	// CloudService Monitoring handling
@@ -180,21 +180,21 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 			// first check if the service is up, so prometheus wont fire alerts when it is just startup
 			// only 1 replica set timeout to 1min
 			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 10, 1); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("deployments for %s are not ready to server: %w", ComponentName, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("deployments for %s are not ready to server: %w", ComponentName, err))
 			}
 			l.Info("deployment is done, updating monitoring rules")
 		}
 		if err := w.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 			dscispec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		l.Info("updating SRE monitoring done")
 	}
 
-	return status.GetDefaultComponentCondition(ComponentName), nil
+	return status.SuccessComponentCondition(ComponentName), nil
 }

@@ -9,7 +9,7 @@ import (
 // type: Progressing
 // statue: True
 // Reason: ReconcileStart.
-func SetDefaultConditionInit(message string) *conditionsv1.Condition {
+func InitControllerCondition(message string) *conditionsv1.Condition {
 	return &conditionsv1.Condition{
 		Type:    conditionsv1.ConditionProgressing,
 		Status:  corev1.ConditionTrue,
@@ -79,10 +79,10 @@ func SetErrorCondition(conditions *[]conditionsv1.Condition, reason string, mess
 	})
 }
 
-// SetUnavailableCondition sets available conditions to false to indicate resource is in terminating process.
+// UnavailableCondition sets available conditions to false to indicate resource is in terminating process.
 // type: 	Available
 // status: 	False
-func SetUnavailableCondition(reason string, message string) *conditionsv1.Condition {
+func UnavailableCondition(reason string, message string) *conditionsv1.Condition {
 	return &conditionsv1.Condition{
 		Type:    conditionsv1.ConditionAvailable,
 		Status:  corev1.ConditionFalse,
@@ -91,7 +91,8 @@ func SetUnavailableCondition(reason string, message string) *conditionsv1.Condit
 	}
 }
 
-// UpdateCondition is top caller in DSC controller to handle different case: init, check, error, successetc.
+// UpdateCondition is top caller in controllers to handle different case: init, error, success etc.
+// newCondition is the condition to be updated from  the existing conditions list.
 func UpdateCondition(conditions *[]conditionsv1.Condition, newCondition conditionsv1.Condition) {
 	conditionsv1.SetStatusCondition(conditions, newCondition)
 }

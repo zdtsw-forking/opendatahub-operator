@@ -103,7 +103,7 @@ func (m *ModelMeshServing) ReconcileComponent(ctx context.Context,
 		if m.DevFlags != nil {
 			// Download manifests and update paths
 			if err := m.OverrideManifests(ctx, platform); err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 
@@ -112,37 +112,37 @@ func (m *ModelMeshServing) ReconcileComponent(ctx context.Context,
 			"modelmesh-controller",
 			"odh-prometheus-operator",
 			"prometheus-custom"); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		// Update image parameters
 		if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (m.DevFlags == nil || len(m.DevFlags.Manifests) == 0) {
 			if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed update image from %s : %w", Path, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed update image from %s : %w", Path, err))
 			}
 		}
 	}
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
-		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", Path, err))
+		return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifests from %s : %w", Path, err))
 	}
 	l.WithValues("Path", Path).Info("apply manifests done for modelmesh")
 	// For odh-model-controller
 	if enabled {
 		if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, dscispec.ApplicationsNamespace,
 			"odh-model-controller"); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		// Update image parameters for odh-model-controller
 		if dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "" {
 			if err := deploy.ApplyParams(DependentPath, dependentImageParamMap); err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 	}
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, DependentPath, dscispec.ApplicationsNamespace, m.GetComponentName(), enabled); err != nil {
 		// explicitly ignore error if error contains keywords "spec.selector" and "field is immutable" and return all other error.
 		if !strings.Contains(err.Error(), "spec.selector") || !strings.Contains(err.Error(), "field is immutable") {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 	}
 
@@ -152,26 +152,26 @@ func (m *ModelMeshServing) ReconcileComponent(ctx context.Context,
 		if enabled {
 			// first check if service is up, so prometheus won't fire alerts when it is just startup
 			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 20, 2); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
 			}
 			l.Info("deployment is done, updating monitoring rules")
 		}
 		// first model-mesh rules
 		if err := m.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		// then odh-model-controller rules
 		if err := m.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, DependentComponentName); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 			dscispec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
-			return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests: %w", err))
+			return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifests: %w", err))
 		}
 		l.Info("updating SRE monitoring done")
 	}
 
-	return status.GetDefaultComponentCondition(ComponentName), nil
+	return status.SuccessComponentCondition(ComponentName), nil
 }

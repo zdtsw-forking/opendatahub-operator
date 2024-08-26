@@ -97,19 +97,19 @@ func (d *DataSciencePipelines) ReconcileComponent(ctx context.Context,
 		if d.DevFlags != nil {
 			// Download manifests and update paths
 			if err := d.OverrideManifests(ctx, platform); err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 		// skip check if the dependent operator has beeninstalled, this is done in dashboard
 		// Update image parameters only when we do not have customized manifests set
 		if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (d.DevFlags == nil || len(d.DevFlags.Manifests) == 0) {
 			if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to update image from %s : %w", Path, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to update image from %s : %w", Path, err))
 			}
 		}
 		// Check for existing Argo Workflows
 		if err := UnmanagedArgoWorkFlowExists(ctx, cli); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 	}
 
@@ -119,7 +119,7 @@ func (d *DataSciencePipelines) ReconcileComponent(ctx context.Context,
 		manifestsPath = filepath.Join(OverlayPath, "odh")
 	}
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, manifestsPath, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
-		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifests %s: %w", manifestsPath, err))
+		return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifests %s: %w", manifestsPath, err))
 	}
 	l.Info("apply manifests done")
 
@@ -129,24 +129,24 @@ func (d *DataSciencePipelines) ReconcileComponent(ctx context.Context,
 			// first check if the service is up, so prometheus won't fire alerts when it is just startup
 			// only 1 replica should be very quick
 			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 10, 1); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
 			}
 			l.Info("deployment is done, updating monitoring rules")
 		}
 
 		if err := d.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 			dscispec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		l.Info("updating SRE monitoring done")
 	}
 
-	return status.GetDefaultComponentCondition(ComponentName), nil
+	return status.SuccessComponentCondition(ComponentName), nil
 }
 
 func UnmanagedArgoWorkFlowExists(ctx context.Context,

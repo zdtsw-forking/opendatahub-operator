@@ -71,18 +71,18 @@ func (t *TrustyAI) ReconcileComponent(ctx context.Context, cli client.Client, lo
 		if t.DevFlags != nil {
 			// Download manifests and update paths
 			if err := t.OverrideManifests(ctx, platform); err != nil {
-				return status.UpdateFailedCondition(ComponentName, err)
+				return status.FailedComponentCondition(ComponentName, err)
 			}
 		}
 		if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (t.DevFlags == nil || len(t.DevFlags.Manifests) == 0) {
 			if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to update image %s: %w", Path, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to update image %s: %w", Path, err))
 			}
 		}
 	}
 	// Deploy TrustyAI Operator
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, dscispec.ApplicationsNamespace, t.GetComponentName(), enabled); err != nil {
-		return status.UpdateFailedCondition(ComponentName, fmt.Errorf("failed to apply manifetss %s: %w", Path, err))
+		return status.FailedComponentCondition(ComponentName, fmt.Errorf("failed to apply manifetss %s: %w", Path, err))
 	}
 	l.Info("apply manifests done")
 
@@ -90,20 +90,20 @@ func (t *TrustyAI) ReconcileComponent(ctx context.Context, cli client.Client, lo
 	if platform == cluster.ManagedRhods {
 		if enabled {
 			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 10, 1); err != nil {
-				return status.UpdateFailedCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
+				return status.FailedComponentCondition(ComponentName, fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err))
 			}
 			l.Info("deployment is done, updating monitoring rules")
 		}
 		if err := t.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
 			dscispec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
-			return status.UpdateFailedCondition(ComponentName, err)
+			return status.FailedComponentCondition(ComponentName, err)
 		}
 		l.Info("updating SRE monitoring done")
 	}
-	return status.GetDefaultComponentCondition(ComponentName), nil
+	return status.SuccessComponentCondition(ComponentName), nil
 }

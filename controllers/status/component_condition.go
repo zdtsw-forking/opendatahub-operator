@@ -9,7 +9,7 @@ import (
 // type: <component>Ready
 // status: Unknown
 // reason: ReconcileStart
-func SetInitComponentCondition(componentName string, enabled bool) conditionsv1.Condition {
+func InitComponentCondition(componentName string, enabled bool) conditionsv1.Condition {
 	managementstatue := "not Managed"
 	if enabled {
 		managementstatue = "Managed"
@@ -26,7 +26,7 @@ func SetInitComponentCondition(componentName string, enabled bool) conditionsv1.
 // type: <component>Ready
 // status: True
 // reason: ReconcileCompleted
-func GetDefaultComponentCondition(componentName string) conditionsv1.Condition {
+func SuccessComponentCondition(componentName string) conditionsv1.Condition {
 	return conditionsv1.Condition{
 		Type:    conditionsv1.ConditionType(componentName + PhaseReady),
 		Status:  corev1.ConditionTrue,
@@ -40,13 +40,13 @@ func GetDefaultComponentCondition(componentName string) conditionsv1.Condition {
 // status: False
 // reason: ReconcileFailed
 // message: <derive from err>
-func UpdateFailedCondition(componentName string, err error) (conditionsv1.Condition, error) {
+func FailedComponentCondition(componentName string, err error) (conditionsv1.Condition, error) {
 	FailedCondition := setFailedComponentCondition(componentName)
 	FailedCondition.Message = err.Error()
 	return FailedCondition, err
 }
 
-// Component failed reconcile condition, called by UpdateFailedCondition().
+// Component failed reconcile condition, called by FailedComponentCondition().
 func setFailedComponentCondition(componentName string) conditionsv1.Condition {
 	return conditionsv1.Condition{
 		Type:   conditionsv1.ConditionType(componentName + PhaseReady),
@@ -56,7 +56,7 @@ func setFailedComponentCondition(componentName string) conditionsv1.Condition {
 }
 
 // Special handling on DSPA for Argo.
-func SetExistingArgoCondition(reason string, message string) conditionsv1.Condition {
+func ArgoExistCondition(reason string, message string) conditionsv1.Condition {
 	return conditionsv1.Condition{
 		Type:    CapabilityDSPv2Argo,
 		Status:  corev1.ConditionFalse,

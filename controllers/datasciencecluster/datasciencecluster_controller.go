@@ -124,7 +124,7 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 	if upgrade.HasDeleteConfigMap(ctx, r.Client) {
 		instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(dsc *dscv1.DataScienceCluster) {
 			// set Available to false, ready to delete
-			status.UpdateCondition(&dsc.Status.Conditions, *status.SetUnavailableCondition(status.TerminatingReason, status.TerminatingMessage))
+			status.UpdateCondition(&dsc.Status.Conditions, *status.UnavailableCondition(status.TerminatingReason, status.TerminatingMessage))
 			dsc.Status.Phase = status.PhaseDeleting
 		})
 		if err != nil {
@@ -170,7 +170,7 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 		r.Log.Info(status.DSCIMissingMessage)
 		instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(dsc *dscv1.DataScienceCluster) {
 			// set Available to false, waiting for DSCI
-			status.UpdateCondition(&dsc.Status.Conditions, *status.SetUnavailableCondition(status.DSCIMissingReason, status.DSCIMissingMessage))
+			status.UpdateCondition(&dsc.Status.Conditions, *status.UnavailableCondition(status.DSCIMissingReason, status.DSCIMissingMessage))
 			dsc.Status.Phase = status.PhaseError
 		})
 		if err != nil {
@@ -218,7 +218,7 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 		if instance.Status.InstalledComponents[datasciencepipelines.ComponentName] {
 			if err := datasciencepipelines.UnmanagedArgoWorkFlowExists(ctx, r.Client); err != nil {
 				_, err = status.UpdateWithRetry(ctx, r.Client, instance, func(dsc *dscv1.DataScienceCluster) {
-					status.UpdateCondition(&dsc.Status.Conditions, status.SetExistingArgoCondition(status.ArgoWorkflowExistReason, fmt.Sprintf("Failed upgrade: %v ", err.Error())))
+					status.UpdateCondition(&dsc.Status.Conditions, status.ArgoExistCondition(status.ArgoWorkflowExistReason, fmt.Sprintf("Failed upgrade: %v ", err.Error())))
 					dsc.Status.Phase = status.PhaseError
 				})
 				return ctrl.Result{}, err
@@ -229,7 +229,7 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 	// Start reconciling
 	if instance.Status.Conditions == nil {
 		instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(dsc *dscv1.DataScienceCluster) {
-			status.UpdateCondition(&dsc.Status.Conditions, *status.SetDefaultConditionInit(status.DSCReconcileStartMessage))
+			status.UpdateCondition(&dsc.Status.Conditions, *status.InitControllerCondition(status.DSCReconcileStartMessage))
 
 			dsc.Status.Phase = status.PhaseCreated
 		})
@@ -303,7 +303,7 @@ func (r *DataScienceClusterReconciler) reconcileSubComponent(ctx context.Context
 	// only set to init condition e.g Unknonw for the very first time when component is not in the list
 	if !isExistStatus {
 		instance, err := status.UpdateWithRetry(ctx, r.Client, instance, func(saved *dscv1.DataScienceCluster) {
-			status.UpdateCondition(&saved.Status.Conditions, status.SetInitComponentCondition(componentName, enabled))
+			status.UpdateCondition(&saved.Status.Conditions, status.InitComponentCondition(componentName, enabled))
 		})
 		if err != nil {
 			_ = r.reportError(err, instance, "failed to update DataScienceCluster conditions before first time reconciling "+componentName)
@@ -326,7 +326,7 @@ func (r *DataScienceClusterReconciler) reconcileSubComponent(ctx context.Context
 				// special handle on DSP
 				if strings.Contains(err.Error(), datasciencepipelines.ArgoWorkflowCRD+" CRD already exists") {
 					status.UpdateCondition(&dsc.Status.Conditions,
-						status.SetExistingArgoCondition(status.ArgoWorkflowExistReason, fmt.Sprintf("datasciencepipeline update failed: %v", err)),
+						status.ArgoExistCondition(status.ArgoWorkflowExistReason, fmt.Sprintf("datasciencepipeline update failed: %v", err)),
 					)
 				} else {
 					status.UpdateCondition(&dsc.Status.Conditions, reconcileCondition)
@@ -347,7 +347,7 @@ func (r *DataScienceClusterReconciler) reconcileSubComponent(ctx context.Context
 		}
 		dsc.Status.InstalledComponents[componentName] = enabled
 		if enabled {
-			status.UpdateCondition(&dsc.Status.Conditions, status.GetDefaultComponentCondition(componentName))
+			status.UpdateCondition(&dsc.Status.Conditions, reconcileCondition)
 		} else {
 			status.RemoveComponentCondition(&dsc.Status.Conditions, conditionsv1.ConditionType(componentName+status.PhaseReady))
 		}
