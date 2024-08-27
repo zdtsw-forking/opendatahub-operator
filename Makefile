@@ -73,7 +73,7 @@ YQ_VERSION ?= v4.12.2
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.31.0
 ENVTEST_PACKAGE_VERSION = v0.0.0-20240813183042-b901db121e1f
-CRD_REF_DOCS_VERSION = 0.0.11
+CRD_REF_DOCS_VERSION = 0.1.0
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -264,12 +264,23 @@ golangci-lint: $(GOLANGCI_LINT) ## Download golangci-lint locally if necessary.
 $(GOLANGCI_LINT): $(LOCALBIN)
 	test -s $(GOLANGCI_LINT) || { curl -sSfL $(GOLANGCI_LINT_INSTALL_SCRIPT) | bash -s $(GOLANGCI_LINT_VERSION); }
 
-CRD_REF_DOCS_DL_URL ?= 'https://github.com/elastic/crd-ref-docs/releases/download/v$(CRD_REF_DOCS_VERSION)/crd-ref-docs'
+
+ifeq (linux,$(shell go env GOOS))
+ARCH=x86_64
+else
+ARCH=$(shell go env GOARCH) # for Intel or M1/2
+endif
+CRD_REF_DOCS_TARBALL="crd-ref-docs.tar.gz"
 .PHONY: crd-ref-docs
-crd-ref-docs: $(CRD_REF_DOCS) ## Download crd-ref-docs locally if necessary.
+crd-ref-docs: $(CRD_REF_DOCS)
 $(CRD_REF_DOCS): $(LOCALBIN)
-	test -s $(CRD_REF_DOCS) || curl -sSLo $(CRD_REF_DOCS) $(CRD_REF_DOCS_DL_URL) && \
-	chmod +x $(CRD_REF_DOCS) ;\
+	test -s $(CRD_REF_DOCS) || ( \
+		OS=$(shell go env GOOS) && \
+		wget -q -O $(LOCALBIN)/$(CRD_REF_DOCS_TARBALL) https://github.com/elastic/crd-ref-docs/releases/download/v$(CRD_REF_DOCS_VERSION)/crd-ref-docs_$(CRD_REF_DOCS_VERSION)_$${OS}_${ARCH}.tar.gz && \
+		tar -xzf $(LOCALBIN)/$(CRD_REF_DOCS_TARBALL) -C $(LOCALBIN) && \
+		rm -rf $(LOCALBIN)/$(CRD_REF_DOCS_TARBALL) $(LOCALBIN)/LICENSE $(LOCALBIN)/README.md && \
+		chmod +x $(CRD_REF_DOCS) \
+	)
 
 BUNDLE_DIR ?= "bundle"
 .PHONY: bundle
