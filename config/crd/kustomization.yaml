@@ -5,6 +5,18 @@ resources:
 - bases/dscinitialization.opendatahub.io_dscinitializations.yaml
 - bases/datasciencecluster.opendatahub.io_datascienceclusters.yaml
 - bases/features.opendatahub.io_featuretrackers.yaml
+- bases/components.opendatahub.io_dsccodeflares.yaml
+- bases/components.opendatahub.io_dscdashboards.yaml
+- bases/components.opendatahub.io_dsctos.yaml
+- bases/components.opendatahub.io_dsckueues.yaml
+- bases/components.opendatahub.io_dsckserves.yaml
+- bases/components.opendatahub.io_dscmodelmeshservings.yaml
+- bases/components.opendatahub.io_dscmodelregs.yaml
+- bases/components.opendatahub.io_dsctrustyais.yaml
+- bases/components.opendatahub.io_dscworkbenches.yaml
+- bases/components.opendatahub.io_dscrays.yaml
+- bases/components.opendatahub.io_dscdatasciencepipelines.yaml
+- bases/services.opendatahub.io_dscservices.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
 # patches:

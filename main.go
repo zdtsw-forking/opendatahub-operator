@@ -57,8 +57,8 @@ import (
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	featurev1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/features/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelregistry"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/certconfigmapgenerator"
+	//"github.com/opendatahub-io/opendatahub-operator/v2/controllers/dashboard"
 	dscctrl "github.com/opendatahub-io/opendatahub-operator/v2/controllers/datasciencecluster"
 	dscictrl "github.com/opendatahub-io/opendatahub-operator/v2/controllers/dscinitialization"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/secretgenerator"
@@ -258,6 +258,17 @@ func main() { //nolint:funlen,maintidx
 		Log:    logger.LogWithLevel(ctrl.Log.WithName(operatorName).WithName("controllers").WithName("CertConfigmapGenerator"), logmode),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "CertConfigmapGenerator")
+		os.Exit(1)
+	}
+
+	if err = (&dashboard.DashboardReconciler{
+		Client:                mgr.GetClient(),
+		Scheme:                mgr.GetScheme(),
+		Log:                   ctrl.Log.WithName(operatorName).WithName("controllers").WithName("Dashboard"),
+		Recorder:              mgr.GetEventRecorderFor("dashboard-controller"),
+		ApplicationsNamespace: dscApplicationsNamespace,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Dashboard")
 		os.Exit(1)
 	}
 

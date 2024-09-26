@@ -19,8 +19,6 @@ import (
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 )
 
-// +kubebuilder:rbac:groups="config.openshift.io",resources=ingresses,verbs=get
-
 func GetDomain(ctx context.Context, c client.Client) (string, error) {
 	ingress := &unstructured.Unstructured{}
 	ingress.SetGroupVersionKind(gvk.OpenshiftIngress)

@@ -25,17 +25,18 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/opendatahub-io/opendatahub-operator/v2/components"
+
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelregistry"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
+
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 )
@@ -50,7 +51,6 @@ type DataScienceClusterSpec struct {
 type Components struct {
 	// Dashboard component configuration.
 	Dashboard dashboard.Dashboard `json:"dashboard,omitempty"`
-
 	// Workbenches component configuration.
 	Workbenches workbenches.Workbenches `json:"workbenches,omitempty"`
 
@@ -79,9 +79,6 @@ type Components struct {
 
 	// TrustyAI component configuration.
 	TrustyAI trustyai.TrustyAI `json:"trustyai,omitempty"`
-
-	// ModelRegistry component configuration.
-	ModelRegistry modelregistry.ModelRegistry `json:"modelregistry,omitempty"`
 
 	//Training Operator component configuration.
 	TrainingOperator trainingoperator.TrainingOperator `json:"trainingoperator,omitempty"`

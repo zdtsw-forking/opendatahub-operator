@@ -10,6 +10,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature"
@@ -17,7 +18,7 @@ import (
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature/servicemesh"
 )
 
-func (k *Kserve) configureServiceMesh(ctx context.Context, cli client.Client, owner metav1.Object, dscispec *dsciv1.DSCInitializationSpec) error {
+func (k *Kserve) configureServiceMesh(ctx context.Context, cli client.Client, owner metav1.Object, dscispec *dsccomponentv1alpha1.DSCComponentSpec) error {
 	if dscispec.ServiceMesh != nil {
 		if dscispec.ServiceMesh.ManagementState == operatorv1.Managed && k.GetManagementState() == operatorv1.Managed {
 			serviceMeshInitializer := feature.ComponentFeaturesHandler(owner, k.GetComponentName(), dscispec.ApplicationsNamespace, k.defineServiceMeshFeatures(ctx, cli, dscispec))
@@ -31,12 +32,12 @@ func (k *Kserve) configureServiceMesh(ctx context.Context, cli client.Client, ow
 	return k.removeServiceMeshConfigurations(ctx, cli, owner, dscispec)
 }
 
-func (k *Kserve) removeServiceMeshConfigurations(ctx context.Context, cli client.Client, owner metav1.Object, dscispec *dsciv1.DSCInitializationSpec) error {
+func (k *Kserve) removeServiceMeshConfigurations(ctx context.Context, cli client.Client, owner metav1.Object, dscispec *dsccomponentv1alpha1.DSCComponentSpec) error {
 	serviceMeshInitializer := feature.ComponentFeaturesHandler(owner, k.GetComponentName(), dscispec.ApplicationsNamespace, k.defineServiceMeshFeatures(ctx, cli, dscispec))
 	return serviceMeshInitializer.Delete(ctx, cli)
 }
 
-func (k *Kserve) defineServiceMeshFeatures(ctx context.Context, cli client.Client, dscispec *dsciv1.DSCInitializationSpec) feature.FeaturesProvider {
+func (k *Kserve) defineServiceMeshFeatures(ctx context.Context, cli client.Client, dscispec **dsccomponentv1alpha1.DSCComponentSpec) feature.FeaturesProvider {
 	return func(registry feature.FeaturesRegistry) error {
 		authorinoInstalled, err := cluster.SubscriptionExists(ctx, cli, "authorino-operator")
 		if err != nil {

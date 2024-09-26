@@ -9,6 +9,7 @@ metadata:
     containerImage: quay.io/opendatahub/opendatahub-operator:v2.18.2
     createdAt: "2024-9-24T00:00:00Z"
     olm.skipRange: '>=1.0.0 <2.18.2'
+    operators.operatorframework.io/internal-objects: '[components.opendatahub.io]'
     repository: https://github.com/opendatahub-io/opendatahub-operator
   name: opendatahub-operator.v2.18.2
   namespace: placeholder
