@@ -13,9 +13,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
 )
@@ -90,8 +92,35 @@ func (w *Workbenches) GetComponentName() string {
 	return ComponentName
 }
 
+func (d *Workbenches) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
+	// create/delete Workbenches Component CR
+	wbCR := &dsccomponentv1alpha1.Workbench{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Ray",
+			APIVersion: "components.opendatahub.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:            "default-workbench",
+			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
+		},
+		Spec: dsccomponentv1alpha1.WBComponentSpec{
+			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
+				Platform:              dsci.Status.Release.Name,
+				ComponentName:         ComponentName,
+				ApplicationsNamespace: dsci.Spec.ApplicationsNamespace,
+				Monitoring:            dsci.Spec.Monitoring,
+			},
+		},
+	}
+	if enabled {
+		cli.Create(ctx, wbCR)
+	} else {
+		cli.Delete(ctx, wbCR)
+	}
+	return nil
+}
 func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client, l logr.Logger,
-	owner metav1.Object, dscispec *dsciv1.DSCInitializationSpec, platform cluster.Platform, _ bool) error {
+	owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, _ bool) error {
 	var imageParamMap = map[string]string{
 		"odh-notebook-controller-image":    "RELATED_IMAGE_ODH_NOTEBOOK_CONTROLLER_IMAGE",
 		"odh-kf-notebook-controller-image": "RELATED_IMAGE_ODH_KF_NOTEBOOK_CONTROLLER_IMAGE",
@@ -100,15 +129,15 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 	// Set default notebooks namespace
 	// Create rhods-notebooks namespace in managed platforms
 	enabled := w.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := dscispec.Monitoring.ManagementState == operatorv1.Managed
+	monitoringEnabled := componentSpec.Monitoring.ManagementState == operatorv1.Managed
 	if enabled {
 		if w.DevFlags != nil {
 			// Download manifests and update paths
-			if err := w.OverrideManifests(ctx, platform); err != nil {
+			if err := w.OverrideManifests(ctx, componentSpec.Platform); err != nil {
 				return err
 			}
 		}
-		if platform == cluster.SelfManagedRhods || platform == cluster.ManagedRhods {
+		if componentSpec.Platform == cluster.SelfManagedRhods || componentSpec.Platform == cluster.ManagedRhods {
 			// Intentionally leaving the ownership unset for this namespace.
 			// Specifying this label triggers its deletion when the operator is uninstalled.
 			_, err := cluster.CreateNamespace(ctx, cli, cluster.DefaultNotebooksNamespace, cluster.WithLabels(labels.ODH.OwnedNamespace, "true"))
@@ -117,7 +146,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 			}
 		}
 		// Update Default rolebinding
-		err := cluster.UpdatePodSecurityRolebinding(ctx, cli, dscispec.ApplicationsNamespace, "notebook-controller-service-account")
+		err := cluster.UpdatePodSecurityRolebinding(ctx, cli, componentSpec.ApplicationsNamespace, "notebook-controller-service-account")
 		if err != nil {
 			return err
 		}
@@ -125,7 +154,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	// Update image parameters for nbc
 	if enabled {
-		if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (w.DevFlags == nil || len(w.DevFlags.Manifests) == 0) {
+		if w.DevFlags == nil || len(w.DevFlags.Manifests) == 0 {
 			// for kf-notebook-controller image
 			if err := deploy.ApplyParams(notebookControllerPath, imageParamMap); err != nil {
 				return fmt.Errorf("failed to update image %s: %w", notebookControllerPath, err)
@@ -138,7 +167,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 	}
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		notebookControllerPath,
-		dscispec.ApplicationsNamespace,
+		componentSpec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
 		return fmt.Errorf("failed to apply manifetss %s: %w", notebookControllerPath, err)
 	}
@@ -146,7 +175,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		kfnotebookControllerPath,
-		dscispec.ApplicationsNamespace,
+		componentSpec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
 		return fmt.Errorf("failed to apply manifetss %s: %w", kfnotebookControllerPath, err)
 	}
@@ -154,7 +183,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		notebookImagesPath,
-		dscispec.ApplicationsNamespace,
+		componentSpec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
 		return err
 	}
@@ -162,19 +191,19 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	// Wait for deployment available
 	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 10, 2); err != nil {
+		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.ApplicationsNamespace, 10, 2); err != nil {
 			return fmt.Errorf("deployments for %s are not ready to server: %w", ComponentName, err)
 		}
 	}
 
 	// CloudService Monitoring handling
-	if platform == cluster.ManagedRhods {
+	if componentSpec.Platform == cluster.ManagedRhods {
 		if err := w.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
 			return err
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			dscispec.Monitoring.Namespace,
+			componentSpec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
 			return err
 		}

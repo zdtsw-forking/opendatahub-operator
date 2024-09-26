@@ -13,6 +13,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 )
@@ -35,55 +36,33 @@ type Component struct {
 	// Add developer fields
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,order=2
-	DevFlags *DevFlags `json:"devFlags,omitempty"`
+	DevFlags *dsccomponentv1alpha1.DSCDevFlags `json:"devFlags,omitempty"`
 }
 
 func (c *Component) GetManagementState() operatorv1.ManagementState {
 	return c.ManagementState
 }
 
-func (c *Component) Cleanup(_ context.Context, _ client.Client, _ metav1.Object, _ *dsciv1.DSCInitializationSpec) error {
+func (c *Component) Cleanup(_ context.Context, _ client.Client, _ metav1.Object, _ *dsccomponentv1alpha1.ComponentSpec) error {
 	// noop
 	return nil
 }
 
-// DevFlags defines list of fields that can be used by developers to test customizations. This is not recommended
-// to be used in production environment.
-// +kubebuilder:object:generate=true
-type DevFlags struct {
-	// List of custom manifests for the given component
-	// +optional
-	Manifests []ManifestsConfig `json:"manifests,omitempty"`
-}
-
-type ManifestsConfig struct {
-	// uri is the URI point to a git repo with tag/branch. e.g.  https://github.com/org/repo/tarball/<tag/branch>
-	// +optional
-	// +kubebuilder:default:=""
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,order=1
-	URI string `json:"uri,omitempty"`
-
-	// contextDir is the relative path to the folder containing manifests in a repository, default value "manifests"
-	// +optional
-	// +kubebuilder:default:="manifests"
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,order=2
-	ContextDir string `json:"contextDir,omitempty"`
-
-	// sourcePath is the subpath within contextDir where kustomize builds start. Examples include any sub-folder or path: `base`, `overlays/dev`, `default`, `odh` etc.
-	// +optional
-	// +kubebuilder:default:=""
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,order=3
-	SourcePath string `json:"sourcePath,omitempty"`
+// TODO: remove it when all copmonent implement it
+func (c *Component) CreateComponentCR(_ context.Context, _ client.Client, _ metav1.Object, _ *dsciv1.DSCInitialization, _ bool) error {
+	return nil
 }
 
 type ComponentInterface interface {
 	ReconcileComponent(ctx context.Context, cli client.Client, logger logr.Logger,
-		owner metav1.Object, DSCISpec *dsciv1.DSCInitializationSpec, platform cluster.Platform, currentComponentStatus bool) error
-	Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, DSCISpec *dsciv1.DSCInitializationSpec) error
+		owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, currentComponentStatus bool) error
+	Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, DSCISpec *dsccomponentv1alpha1.ComponentSpec) error
 	GetComponentName() string
 	GetManagementState() operatorv1.ManagementState
 	OverrideManifests(ctx context.Context, platform cluster.Platform) error
 	UpdatePrometheusConfig(cli client.Client, logger logr.Logger, enable bool, component string) error
+	ConfigComponentLogger(logger logr.Logger, component string, componentSpec *dsccomponentv1alpha1.ComponentSpec) logr.Logger
+	CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error
 }
 
 // UpdatePrometheusConfig update prometheus-configs.yaml to include/exclude <component>.rules

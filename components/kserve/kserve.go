@@ -13,12 +13,43 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/components"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 )
+
+func (k *Kserve) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
+	// create/delete Kserve Component CR
+	kserveCR := &dsccomponentv1alpha1.Kserve{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Kserve",
+			APIVersion: "components.opendatahub.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:            "default-kserve",
+			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
+		},
+		Spec: dsccomponentv1alpha1.KserveComponentSpec{
+			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
+				Platform:              dsci.Status.Release.Name,
+				ComponentName:         ComponentName,
+				ApplicationsNamespace: dsci.Spec.ApplicationsNamespace,
+				ServiceMesh:           dsci.Spec.ServiceMesh,
+				Monitoring:            dsci.Spec.Monitoring,
+			},
+		},
+	}
+	if enabled {
+		cli.Create(ctx, kserveCR)
+	} else {
+		cli.Delete(ctx, kserveCR)
+	}
+	return nil
+}
 
 var (
 	ComponentName          = "kserve"
@@ -95,60 +126,60 @@ func (k *Kserve) GetComponentName() string {
 }
 
 func (k *Kserve) ReconcileComponent(ctx context.Context, cli client.Client,
-	l logr.Logger, owner metav1.Object, dscispec *dsciv1.DSCInitializationSpec, platform cluster.Platform, _ bool) error {
+	l logr.Logger, owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, _ bool) error {
 	// dependentParamMap for odh-model-controller to use.
 	var dependentParamMap = map[string]string{
 		"odh-model-controller": "RELATED_IMAGE_ODH_MODEL_CONTROLLER_IMAGE",
 	}
 
 	enabled := k.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := dscispec.Monitoring.ManagementState == operatorv1.Managed
+	monitoringEnabled := componentSpec.Monitoring.ManagementState == operatorv1.Managed
 
 	if !enabled {
-		if err := k.removeServerlessFeatures(ctx, cli, owner, dscispec); err != nil {
+		if err := k.removeServerlessFeatures(ctx, cli, owner, componentSpec); err != nil {
 			return err
 		}
 	} else {
 		// Configure dependencies
-		if err := k.configureServerless(ctx, cli, l, owner, dscispec); err != nil {
+		if err := k.configureServerless(ctx, cli, l, owner, componentSpec); err != nil {
 			return err
 		}
 		if k.DevFlags != nil {
 			// Download manifests and update paths
-			if err := k.OverrideManifests(ctx, platform); err != nil {
+			if err := k.OverrideManifests(ctx, componentSpec.Platform); err != nil {
 				return err
 			}
 		}
 	}
 
-	if err := k.configureServiceMesh(ctx, cli, owner, dscispec); err != nil {
+	if err := k.configureServiceMesh(ctx, cli, owner, componentSpec); err != nil {
 		return fmt.Errorf("failed configuring service mesh while reconciling kserve component. cause: %w", err)
 	}
 
-	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
+	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, componentSpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
 		return fmt.Errorf("failed to apply manifests from %s : %w", Path, err)
 	}
 
 	l.WithValues("Path", Path).Info("apply manifests done for kserve")
 
 	if enabled {
-		if err := k.setupKserveConfig(ctx, cli, l, dscispec); err != nil {
+		if err := k.setupKserveConfig(ctx, cli, l, componentSpec); err != nil {
 			return err
 		}
 
 		// For odh-model-controller
-		if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, dscispec.ApplicationsNamespace, "odh-model-controller"); err != nil {
+		if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, componentSpec.ApplicationsNamespace, "odh-model-controller"); err != nil {
 			return err
 		}
 		// Update image parameters for odh-model-controller
-		if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (k.DevFlags == nil || len(k.DevFlags.Manifests) == 0) {
+		if k.DevFlags == nil || len(k.DevFlags.Manifests) == 0 {
 			if err := deploy.ApplyParams(DependentPath, dependentParamMap); err != nil {
 				return fmt.Errorf("failed to update image %s: %w", DependentPath, err)
 			}
 		}
 	}
 
-	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, DependentPath, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
+	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, DependentPath, componentSpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
 		if !strings.Contains(err.Error(), "spec.selector") || !strings.Contains(err.Error(), "field is immutable") {
 			// explicitly ignore error if error contains keywords "spec.selector" and "field is immutable" and return all other error.
 			return err
@@ -158,13 +189,13 @@ func (k *Kserve) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	// Wait for deployment available
 	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, dscispec.ApplicationsNamespace, 20, 3); err != nil {
+		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.ApplicationsNamespace, 20, 3); err != nil {
 			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
 		}
 	}
 
 	// CloudService Monitoring handling
-	if platform == cluster.ManagedRhods {
+	if componentSpec.Platform == cluster.ManagedRhods {
 		// kesrve rules
 		if err := k.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
 			return err
@@ -175,7 +206,7 @@ func (k *Kserve) ReconcileComponent(ctx context.Context, cli client.Client,
 	return nil
 }
 
-func (k *Kserve) Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, instance *dsciv1.DSCInitializationSpec) error {
+func (k *Kserve) Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, instance *dsccomponentv1alpha1.ComponentSpec) error {
 	if removeServerlessErr := k.removeServerlessFeatures(ctx, cli, owner, instance); removeServerlessErr != nil {
 		return removeServerlessErr
 	}

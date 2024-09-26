@@ -103,9 +103,10 @@ metadata:
     categories: AI/Machine Learning, Big Data
     certified: "False"
     containerImage: quay.io/opendatahub/opendatahub-operator:v2.18.2
-    createdAt: "2024-09-24T15:16:50Z"
+    createdAt: "2024-09-30T13:48:45Z"
     olm.skipRange: '>=1.0.0 <2.18.2'
     operators.operatorframework.io/builder: operator-sdk-v1.31.0
+    operators.operatorframework.io/internal-objects: '[components.opendatahub.io]'
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     repository: https://github.com/opendatahub-io/opendatahub-operator
   name: opendatahub-operator.v2.18.2
@@ -114,6 +115,12 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
+    - kind: CodeFlare
+      name: codeflares.components.opendatahub.io
+      version: v1alpha1
+    - kind: Dashboard
+      name: dashboards.components.opendatahub.io
+      version: v1alpha1
     - description: DataScienceCluster is the Schema for the datascienceclusters API.
       displayName: Data Science Cluster
       kind: DataScienceCluster
@@ -123,6 +130,9 @@ spec:
         displayName: Components
         path: components
       version: v1
+    - kind: DataSciencePipeline
+      name: datasciencepipelines.components.opendatahub.io
+      version: v1alpha1
     - description: DSCInitialization is the Schema for the dscinitializations API.
       displayName: DSC Initialization
       kind: DSCInitialization
@@ -158,9 +168,36 @@ spec:
         displayName: Conditions
         path: conditions
       version: v1
+    - kind: DSCServices
+      name: dscservices.services.opendatahub.io
+      version: v1alpha1
     - kind: FeatureTracker
       name: featuretrackers.features.opendatahub.io
       version: v1
+    - kind: KFTO
+      name: kftos.components.opendatahub.io
+      version: v1alpha1
+    - kind: Kserve
+      name: kserves.components.opendatahub.io
+      version: v1alpha1
+    - kind: Kueue
+      name: kueues.components.opendatahub.io
+      version: v1alpha1
+    - kind: ModelMeshServing
+      name: modelmeshservings.components.opendatahub.io
+      version: v1alpha1
+    - kind: ModelReg
+      name: modelregs.components.opendatahub.io
+      version: v1alpha1
+    - kind: Ray
+      name: rays.components.opendatahub.io
+      version: v1alpha1
+    - kind: TrustyAI
+      name: trustyais.components.opendatahub.io
+      version: v1alpha1
+    - kind: Workbench
+      name: workbenches.components.opendatahub.io
+      version: v1alpha1
   description: "The Open Data Hub is a machine-learning-as-a-service platform built
     on Red Hat's Kubernetes-based OpenShift® Container Platform. Open Data Hub integrates
     multiple AI/ML open source components into one operator that can easily be downloaded
@@ -1091,7 +1128,7 @@ spec:
                       fieldPath: metadata.namespace
                 - name: DEFAULT_MANIFESTS_PATH
                   value: /opt/manifests
-                image: REPLACE_IMAGE:latest
+                image: quay.io/opendatahub/opendatahub-operator:latest
                 imagePullPolicy: Always
                 livenessProbe:
                   httpGet:

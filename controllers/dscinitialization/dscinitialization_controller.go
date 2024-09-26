@@ -68,12 +68,6 @@ type DSCInitializationReconciler struct {
 	ApplicationsNamespace string
 }
 
-// +kubebuilder:rbac:groups="dscinitialization.opendatahub.io",resources=dscinitializations/status,verbs=get;update;patch;delete
-// +kubebuilder:rbac:groups="dscinitialization.opendatahub.io",resources=dscinitializations/finalizers,verbs=get;update;patch;delete
-// +kubebuilder:rbac:groups="dscinitialization.opendatahub.io",resources=dscinitializations,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups="features.opendatahub.io",resources=featuretrackers,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups="features.opendatahub.io",resources=featuretrackers/status,verbs=get;update;patch;delete
-
 // Reconcile contains controller logic specific to DSCInitialization instance updates.
 func (r *DSCInitializationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) { //nolint:funlen,gocyclo,maintidx
 	r.Log.Info("Reconciling DSCInitialization.", "DSCInitialization Request.Name", req.Name)
@@ -272,42 +266,6 @@ func (r *DSCInitializationReconciler) SetupWithManager(ctx context.Context, mgr 
 			&dsciv1.DSCInitialization{},
 			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}), dsciPredicateStateChangeTrustedCA),
 		).
-		Owns(
-			&corev1.Namespace{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&corev1.Secret{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&corev1.ConfigMap{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&networkingv1.NetworkPolicy{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&rbacv1.Role{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&rbacv1.RoleBinding{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&rbacv1.ClusterRole{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&rbacv1.ClusterRoleBinding{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&appsv1.Deployment{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&corev1.ServiceAccount{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&corev1.Service{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
-		Owns(
-			&routev1.Route{},
-			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}))).
 		Watches(
 			&dscv1.DataScienceCluster{},
 			handler.EnqueueRequestsFromMapFunc(func(ctx context.Context, a client.Object) []reconcile.Request {
@@ -315,11 +273,13 @@ func (r *DSCInitializationReconciler) SetupWithManager(ctx context.Context, mgr 
 			}),
 			builder.WithPredicates(DSCDeletionPredicate),
 		).
+		//TODO : move to service controller
 		Watches(
 			&corev1.Secret{},
 			handler.EnqueueRequestsFromMapFunc(r.watchMonitoringSecretResource),
 			builder.WithPredicates(SecretContentChangedPredicate),
 		).
+		//TODO : move to service controller
 		Watches(
 			&corev1.ConfigMap{},
 			handler.EnqueueRequestsFromMapFunc(r.watchMonitoringConfigMapResource),

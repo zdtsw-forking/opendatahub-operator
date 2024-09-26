@@ -3,14 +3,14 @@ package kserve
 import (
 	"path"
 
-	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature/manifest"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature/serverless"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature/servicemesh"
 )
 
-func (k *Kserve) configureServerlessFeatures(dsciSpec *dsciv1.DSCInitializationSpec) feature.FeaturesProvider {
+func (k *Kserve) configureServerlessFeatures(dsciSpec *dsccomponentv1alpha1.ComponentSpec) feature.FeaturesProvider {
 	return func(registry feature.FeaturesRegistry) error {
 		servingDeployment := feature.Define("serverless-serving-deployment").
 			Manifests(

@@ -39,7 +39,6 @@ func (in *Components) DeepCopyInto(out *Components) {
 	in.CodeFlare.DeepCopyInto(&out.CodeFlare)
 	in.Ray.DeepCopyInto(&out.Ray)
 	in.TrustyAI.DeepCopyInto(&out.TrustyAI)
-	in.ModelRegistry.DeepCopyInto(&out.ModelRegistry)
 	in.TrainingOperator.DeepCopyInto(&out.TrainingOperator)
 }
 

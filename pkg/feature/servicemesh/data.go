@@ -6,6 +6,7 @@ import (
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature"
@@ -24,11 +25,11 @@ const (
 // FeatureData is a convention to simplify how the data for the Service Mesh features is Defined and accessed.
 // Being a "singleton" it is based on anonymous struct concept.
 var FeatureData = struct {
-	ControlPlane  feature.DataDefinition[dsciv1.DSCInitializationSpec, infrav1.ControlPlaneSpec]
+	ControlPlane  feature.DataDefinition[dsccomponentv1alpha1.ComponentSpec, infrav1.ControlPlaneSpec]
 	Authorization AuthorizationData
 }{
-	ControlPlane: feature.DataDefinition[dsciv1.DSCInitializationSpec, infrav1.ControlPlaneSpec]{
-		Define: func(source *dsciv1.DSCInitializationSpec) feature.DataEntry[infrav1.ControlPlaneSpec] {
+	ControlPlane: feature.DataDefinition[dsccomponentv1alpha1.ComponentSpec, infrav1.ControlPlaneSpec]{
+		Define: func(source *dsccomponentv1alpha1.ComponentSpec) feature.DataEntry[infrav1.ControlPlaneSpec] {
 			return feature.DataEntry[infrav1.ControlPlaneSpec]{
 				Key: controlPlaneKey,
 				Value: func(_ context.Context, _ client.Client) (infrav1.ControlPlaneSpec, error) {

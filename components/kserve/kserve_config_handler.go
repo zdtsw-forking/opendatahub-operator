@@ -13,7 +13,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/feature"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
@@ -23,7 +23,7 @@ const (
 	KserveConfigMapName string = "inferenceservice-config"
 )
 
-func (k *Kserve) setupKserveConfig(ctx context.Context, cli client.Client, logger logr.Logger, dscispec *dsciv1.DSCInitializationSpec) error {
+func (k *Kserve) setupKserveConfig(ctx context.Context, cli client.Client, logger logr.Logger, dscispec *dsccomponentv1alpha1.ComponentSpec) error {
 	// as long as Kserve.Serving is not 'Removed', we will setup the dependencies
 
 	switch k.Serving.ManagementState {
@@ -53,7 +53,7 @@ func (k *Kserve) setupKserveConfig(ctx context.Context, cli client.Client, logge
 	return nil
 }
 
-func (k *Kserve) setDefaultDeploymentMode(ctx context.Context, cli client.Client, dscispec *dsciv1.DSCInitializationSpec, defaultmode DefaultDeploymentMode) error {
+func (k *Kserve) setDefaultDeploymentMode(ctx context.Context, cli client.Client, dscispec *dsccomponentv1alpha1.ComponentSpec, defaultmode DefaultDeploymentMode) error {
 	inferenceServiceConfigMap := &corev1.ConfigMap{}
 	err := cli.Get(ctx, client.ObjectKey{
 		Namespace: dscispec.ApplicationsNamespace,
@@ -119,7 +119,7 @@ func (k *Kserve) setDefaultDeploymentMode(ctx context.Context, cli client.Client
 	return nil
 }
 
-func (k *Kserve) configureServerless(ctx context.Context, cli client.Client, logger logr.Logger, owner metav1.Object, instance *dsciv1.DSCInitializationSpec) error {
+func (k *Kserve) configureServerless(ctx context.Context, cli client.Client, logger logr.Logger, owner metav1.Object, instance *dsccomponentv1alpha1.ComponentSpec) error {
 	switch k.Serving.ManagementState {
 	case operatorv1.Unmanaged: // Bring your own CR
 		logger.Info("Serverless CR is not configured by the operator, we won't do anything")
@@ -157,7 +157,7 @@ func (k *Kserve) configureServerless(ctx context.Context, cli client.Client, log
 	return nil
 }
 
-func (k *Kserve) removeServerlessFeatures(ctx context.Context, cli client.Client, owner metav1.Object, instance *dsciv1.DSCInitializationSpec) error {
+func (k *Kserve) removeServerlessFeatures(ctx context.Context, cli client.Client, owner metav1.Object, instance *dsccomponentv1alpha1.ComponentSpec) error {
 	serverlessFeatures := feature.ComponentFeaturesHandler(owner, k.GetComponentName(), instance.ApplicationsNamespace, k.configureServerlessFeatures(instance))
 
 	return serverlessFeatures.Delete(ctx, cli)
