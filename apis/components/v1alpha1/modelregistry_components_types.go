@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster
@@ -48,4 +49,12 @@ type ModelRegComponentSpec struct {
 // ModelRegComponentStatus defines the custom status.
 type ModelRegComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+	ModelRegistry ModelRegistryStatus `json:"modelregistry,omitempty"`
+
 }
+
+// ModelRegistryStatus struct holds the status for the ModelRegistry component.
+type ModelRegistryStatus struct {
+	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
+}
+

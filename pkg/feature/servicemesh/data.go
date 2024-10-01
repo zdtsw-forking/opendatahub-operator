@@ -33,7 +33,7 @@ var FeatureData = struct {
 			return feature.DataEntry[infrav1.ControlPlaneSpec]{
 				Key: controlPlaneKey,
 				Value: func(_ context.Context, _ client.Client) (infrav1.ControlPlaneSpec, error) {
-					return source.ServiceMesh.ControlPlane, nil
+					return source.DSCInitializationSpec.ServiceMesh.ControlPlane, nil
 				},
 			}
 		},

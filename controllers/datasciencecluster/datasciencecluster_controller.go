@@ -349,7 +349,7 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterForDSCI(ctx contex
 func (r *DataScienceClusterReconciler) watchDataScienceClusterResources(ctx context.Context, a client.Object) []reconcile.Request {
 	requestName, err := r.getRequestName(ctx)
 	if err != nil {
-		return nil
+		return []reconcile.Request{}
 	}
 
 	if a.GetObjectKind().GroupVersionKind().Kind == "CustomResourceDefinition" {
@@ -361,7 +361,7 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterResources(ctx cont
 	// Trigger reconcile function when uninstall configmap is created
 	operatorNs, err := cluster.GetOperatorNamespace()
 	if err != nil {
-		return nil
+		return []reconcile.Request{}
 	}
 	if a.GetNamespace() == operatorNs {
 		cmLabels := a.GetLabels()
@@ -371,7 +371,7 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterResources(ctx cont
 			}}
 		}
 	}
-	return nil
+	return  []reconcile.Request{}
 }
 
 func (r *DataScienceClusterReconciler) getRequestName(ctx context.Context) (string, error) {
@@ -391,33 +391,4 @@ func (r *DataScienceClusterReconciler) getRequestName(ctx context.Context) (stri
 	}
 }
 
-func (r *DataScienceClusterReconciler) watchDefaultIngressSecret(ctx context.Context, a client.Object) []reconcile.Request {
-	requestName, err := r.getRequestName(ctx)
-	if err != nil {
-		return nil
-	}
-	// When ingress secret gets created/deleted, trigger reconcile function
-	ingressCtrl, err := cluster.FindAvailableIngressController(ctx, r.Client)
-	if err != nil {
-		return nil
-	}
-	defaultIngressSecretName := cluster.GetDefaultIngressCertSecretName(ingressCtrl)
-	if a.GetName() == defaultIngressSecretName && a.GetNamespace() == "openshift-ingress" {
-		return []reconcile.Request{{
-			NamespacedName: types.NamespacedName{Name: requestName},
-		}}
-	}
-	return nil
-}
 
-// defaultIngressCertSecretPredicates filters delete and create events to trigger reconcile when default ingress cert secret is expired
-// or created.
-var defaultIngressCertSecretPredicates = predicate.Funcs{
-	CreateFunc: func(createEvent event.CreateEvent) bool {
-		return true
-
-	},
-	DeleteFunc: func(e event.DeleteEvent) bool {
-		return true
-	},
-}

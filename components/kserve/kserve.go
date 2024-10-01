@@ -37,9 +37,10 @@ func (k *Kserve) CreateComponentCR(ctx context.Context, cli client.Client, owner
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
 				Platform:              dsci.Status.Release.Name,
 				ComponentName:         ComponentName,
-				ApplicationsNamespace: dsci.Spec.ApplicationsNamespace,
-				ServiceMesh:           dsci.Spec.ServiceMesh,
-				Monitoring:            dsci.Spec.Monitoring,
+				DSCInitializationSpec: dsci.Spec,
+				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
+					LoggerMode: dsci.Spec.DevFlags.LogMode,
+				},
 			},
 		},
 	}
@@ -87,124 +88,6 @@ type Kserve struct {
 	DefaultDeploymentMode DefaultDeploymentMode `json:"defaultDeploymentMode,omitempty"`
 }
 
-func (k *Kserve) OverrideManifests(ctx context.Context, _ cluster.Platform) error {
-	// Download manifests if defined by devflags
-	// Go through each manifest and set the overlays if defined
-	for _, subcomponent := range k.DevFlags.Manifests {
-		if strings.Contains(subcomponent.URI, DependentComponentName) {
-			// Download subcomponent
-			if err := deploy.DownloadManifests(ctx, DependentComponentName, subcomponent); err != nil {
-				return err
-			}
-			// If overlay is defined, update paths
-			defaultKustomizePath := "base"
-			if subcomponent.SourcePath != "" {
-				defaultKustomizePath = subcomponent.SourcePath
-			}
-			DependentPath = filepath.Join(deploy.DefaultManifestPath, DependentComponentName, defaultKustomizePath)
-		}
-
-		if strings.Contains(subcomponent.URI, ComponentName) {
-			// Download subcomponent
-			if err := deploy.DownloadManifests(ctx, ComponentName, subcomponent); err != nil {
-				return err
-			}
-			// If overlay is defined, update paths
-			defaultKustomizePath := "overlays/odh"
-			if subcomponent.SourcePath != "" {
-				defaultKustomizePath = subcomponent.SourcePath
-			}
-			Path = filepath.Join(deploy.DefaultManifestPath, ComponentName, defaultKustomizePath)
-		}
-	}
-
-	return nil
-}
-
-func (k *Kserve) GetComponentName() string {
-	return ComponentName
-}
-
-func (k *Kserve) ReconcileComponent(ctx context.Context, cli client.Client,
-	l logr.Logger, owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, _ bool) error {
-	// dependentParamMap for odh-model-controller to use.
-	var dependentParamMap = map[string]string{
-		"odh-model-controller": "RELATED_IMAGE_ODH_MODEL_CONTROLLER_IMAGE",
-	}
-
-	enabled := k.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.Monitoring.ManagementState == operatorv1.Managed
-
-	if !enabled {
-		if err := k.removeServerlessFeatures(ctx, cli, owner, componentSpec); err != nil {
-			return err
-		}
-	} else {
-		// Configure dependencies
-		if err := k.configureServerless(ctx, cli, l, owner, componentSpec); err != nil {
-			return err
-		}
-		if k.DevFlags != nil {
-			// Download manifests and update paths
-			if err := k.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
-	}
-
-	if err := k.configureServiceMesh(ctx, cli, owner, componentSpec); err != nil {
-		return fmt.Errorf("failed configuring service mesh while reconciling kserve component. cause: %w", err)
-	}
-
-	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, componentSpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
-		return fmt.Errorf("failed to apply manifests from %s : %w", Path, err)
-	}
-
-	l.WithValues("Path", Path).Info("apply manifests done for kserve")
-
-	if enabled {
-		if err := k.setupKserveConfig(ctx, cli, l, componentSpec); err != nil {
-			return err
-		}
-
-		// For odh-model-controller
-		if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, componentSpec.ApplicationsNamespace, "odh-model-controller"); err != nil {
-			return err
-		}
-		// Update image parameters for odh-model-controller
-		if k.DevFlags == nil || len(k.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(DependentPath, dependentParamMap); err != nil {
-				return fmt.Errorf("failed to update image %s: %w", DependentPath, err)
-			}
-		}
-	}
-
-	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, DependentPath, componentSpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
-		if !strings.Contains(err.Error(), "spec.selector") || !strings.Contains(err.Error(), "field is immutable") {
-			// explicitly ignore error if error contains keywords "spec.selector" and "field is immutable" and return all other error.
-			return err
-		}
-	}
-	l.WithValues("Path", Path).Info("apply manifests done for odh-model-controller")
-
-	// Wait for deployment available
-	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.ApplicationsNamespace, 20, 3); err != nil {
-			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
-		}
-	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		// kesrve rules
-		if err := k.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
-	}
-
-	return nil
-}
 
 func (k *Kserve) Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, instance *dsccomponentv1alpha1.ComponentSpec) error {
 	if removeServerlessErr := k.removeServerlessFeatures(ctx, cli, owner, instance); removeServerlessErr != nil {

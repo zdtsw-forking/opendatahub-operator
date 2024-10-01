@@ -18,7 +18,9 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+		"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
 )
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster
@@ -38,7 +40,7 @@ type Ray struct {
 
 type RayComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	// AdditionSpecWen string `json:"additionSpecWen,omitempty"`
+	Ray ray.Ray `json:"ray,omitempty"`
 }
 
 // RayComponentStatus defines the custom status.

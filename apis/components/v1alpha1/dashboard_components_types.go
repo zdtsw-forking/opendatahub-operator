@@ -18,7 +18,9 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
 )
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster
@@ -39,7 +41,7 @@ type Dashboard struct {
 type DashboardComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
 	//AdditionSpecWen string `json:"additionSpecWen,omitempty"`
-	DSCIDevFlags string `json:"dsciDevFlags,omitempty"`
+	Dashboard dashboard.Dashboard `json:"dashboard,omitempty"`
 }
 
 // DashboardComponentStatus defines the custom status of CodeFlare.

@@ -18,7 +18,9 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+		"github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
 )
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster
@@ -38,7 +40,8 @@ type ModelMeshServing struct {
 
 type ModelMeshServingComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	// AdditionSpecWen string `json:"additionSpecWen,omitempty"`
+	ModelMeshServing modelmeshserving.ModelMeshServing `json:"modelmeshserving,omitempty"`
+
 }
 
 // ModelMeshServingComponentStatus defines the custom status of CodeFlare.

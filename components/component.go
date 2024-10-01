@@ -48,21 +48,13 @@ func (c *Component) Cleanup(_ context.Context, _ client.Client, _ metav1.Object,
 	return nil
 }
 
-// TODO: remove it when all copmonent implement it
-func (c *Component) CreateComponentCR(_ context.Context, _ client.Client, _ metav1.Object, _ *dsciv1.DSCInitialization, _ bool) error {
-	return nil
-}
+
 
 type ComponentInterface interface {
-	ReconcileComponent(ctx context.Context, cli client.Client, logger logr.Logger,
-		owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, currentComponentStatus bool) error
-	Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, DSCISpec *dsccomponentv1alpha1.ComponentSpec) error
-	GetComponentName() string
 	GetManagementState() operatorv1.ManagementState
-	OverrideManifests(ctx context.Context, platform cluster.Platform) error
+	
 	UpdatePrometheusConfig(cli client.Client, logger logr.Logger, enable bool, component string) error
-	ConfigComponentLogger(logger logr.Logger, component string, componentSpec *dsccomponentv1alpha1.ComponentSpec) logr.Logger
-	CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error
+
 }
 
 // UpdatePrometheusConfig update prometheus-configs.yaml to include/exclude <component>.rules

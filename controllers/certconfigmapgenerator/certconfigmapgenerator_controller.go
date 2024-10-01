@@ -99,12 +99,12 @@ func (r *CertConfigmapGeneratorReconciler) Reconcile(ctx context.Context, req ct
 func (r *CertConfigmapGeneratorReconciler) watchNamespaceResource(_ context.Context, a client.Object) []reconcile.Request {
 	namespace, isNamespaceObject := a.(*corev1.Namespace)
 	if !isNamespaceObject {
-		return nil
+		return []reconcile.Request{}
 	}
 	if trustedcabundle.ShouldInjectTrustedBundle(namespace) {
 		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: trustedcabundle.CAConfigMapName, Namespace: a.GetName()}}}
 	}
-	return nil
+	return []reconcile.Request{}
 }
 
 func (r *CertConfigmapGeneratorReconciler) watchTrustedCABundleConfigMapResource(_ context.Context, a client.Object) []reconcile.Request {
@@ -112,7 +112,7 @@ func (r *CertConfigmapGeneratorReconciler) watchTrustedCABundleConfigMapResource
 		r.Log.Info("Cert configmap has been updated, start reconcile")
 		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: a.GetName(), Namespace: a.GetNamespace()}}}
 	}
-	return nil
+	return []reconcile.Request{}
 }
 
 var NamespaceCreatedPredicate = predicate.Funcs{

@@ -5,30 +5,34 @@ import (
 	//"github.com/opendatahub-io/opendatahub-operator/v2/components"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	//"github.com/opendatahub-io/opendatahub-operator/v2/pkg/components"
-	infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
-	conditionsv1 "github.com/openshift/custom-resource-status/conditions/v1"
+	//infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	operatorv1 "github.com/openshift/api/operator/v1"
 )
 
-
 type ComponentSpec struct {
-	Platform              cluster.Platform         `json:"platform,omitempty"`
-	ComponentName         string                   `json:"componentName,omitempty"`
-	ApplicationsNamespace string                   `json:"applicationsNamespace,omitempty"`
-	ServiceMesh           *infrav1.ServiceMeshSpec `json:"serviceMesh,omitempty"`
-	Monitoring            dsciv1.Monitoring        `json:"monitoring,omitempty"`
-	ComponentDevFlags     DevFlags                 `json:"componentdevflags,omitempty"`
-}
+	Platform              cluster.Platform             `json:"platform,omitempty"`
+	ComponentName         string                       `json:"componentName,omitempty"`
+	DSCComponentSpec		  DSCComponentSpec				 `json:"dscComponent,omitempty"`
+	DSCISpec dsciv1.DSCInitializationSpec `json:"dscinitializationspec,omitempty"`
+} 
 
 // ComponentStatus defines the custom status of ComponentSpec.
 type ComponentStatus struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=status
 	// +optional
-	Conditions []conditionsv1.Condition `json:"conditions,omitempty"`
-	Phase      string                   `json:"phase,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Phase      string             `json:"phase,omitempty"`
+	ManagementState operatorv1.ManagementState `json:"managementState,omitempty"`
+}
+
+type DSCComponentSpec struct {
+	ComponentDevFlags     DevFlags                     `json:"componentdevflags,omitempty"`
+	ComponentCustomization map[string]interface{}       `json:"componentcustomization,omitempty"`
 }
 
 type DevFlags struct {
-	LoggerMode  string      `json:"LoggerMode,omitempty"` // dsciv1.DevFlags
+	LoggerMode  string      `json:"LoggerMode,omitempty"` // TODO: enabled different logging on component based?
 	DSCDevFlags DSCDevFlags `json:"dscdevflags,omitempty"`
 }
 

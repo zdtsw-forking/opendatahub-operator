@@ -21,6 +21,7 @@ package status
 import (
 	conditionsv1 "github.com/openshift/custom-resource-status/conditions/v1"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // These constants represent the overall Phase as used by .Status.Phase.
@@ -155,7 +156,7 @@ func SetErrorCondition(conditions *[]conditionsv1.Condition, reason string, mess
 
 // SetCompleteCondition sets the ConditionReconcileComplete to True and other Conditions
 // to indicate that the reconciliation process has completed successfully.
-func SetCompleteCondition(conditions *[]conditionsv1.Condition, reason string, message string) {
+func SetCompleteCondition(conditions *[]metav1.Condition, reason string, message string) {
 	conditionsv1.SetStatusCondition(conditions, conditionsv1.Condition{
 		Type:    ConditionReconcileComplete,
 		Status:  corev1.ConditionTrue,
@@ -190,7 +191,7 @@ func SetCompleteCondition(conditions *[]conditionsv1.Condition, reason string, m
 }
 
 // SetCondition is a general purpose function to update any type of condition.
-func SetCondition(conditions *[]conditionsv1.Condition, conditionType string, reason string, message string, status corev1.ConditionStatus) {
+func SetCondition(conditions *[]metav1.Condition, conditionType string, reason string, message string, status corev1.ConditionStatus) {
 	conditionsv1.SetStatusCondition(conditions, conditionsv1.Condition{
 		Type:    conditionsv1.ConditionType(conditionType),
 		Status:  status,
@@ -201,16 +202,11 @@ func SetCondition(conditions *[]conditionsv1.Condition, conditionType string, re
 
 // SetComponentCondition appends Condition Type with const ReadySuffix for given component
 // when component finished reconcile.
-func SetComponentCondition(conditions *[]conditionsv1.Condition, component string, reason string, message string, status corev1.ConditionStatus) {
+func SetComponentCondition(conditions *[]metav1.Condition, component string, reason string, message string, status corev1.ConditionStatus) {
 	SetCondition(conditions, component+ReadySuffix, reason, message, status)
 }
 
 // RemoveComponentCondition remove Condition of giving component.
 func RemoveComponentCondition(conditions *[]conditionsv1.Condition, component string) {
 	conditionsv1.RemoveStatusCondition(conditions, conditionsv1.ConditionType(component+ReadySuffix))
-}
-
-// ModelRegistryStatus struct holds the status for the ModelRegistry component.
-type ModelRegistryStatus struct {
-	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
 }

@@ -107,8 +107,10 @@ func (d *Workbenches) CreateComponentCR(ctx context.Context, cli client.Client, 
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
 				Platform:              dsci.Status.Release.Name,
 				ComponentName:         ComponentName,
-				ApplicationsNamespace: dsci.Spec.ApplicationsNamespace,
-				Monitoring:            dsci.Spec.Monitoring,
+				DSCInitializationSpec: dsci.Spec,
+				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
+					LoggerMode: dsci.Spec.DevFlags.LogMode,
+				},
 			},
 		},
 	}
@@ -119,7 +121,7 @@ func (d *Workbenches) CreateComponentCR(ctx context.Context, cli client.Client, 
 	}
 	return nil
 }
-func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client, l logr.Logger,
+func (w *Workbenches) DeployManifests(ctx context.Context, cli client.Client, l logr.Logger,
 	owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, _ bool) error {
 	var imageParamMap = map[string]string{
 		"odh-notebook-controller-image":    "RELATED_IMAGE_ODH_NOTEBOOK_CONTROLLER_IMAGE",
@@ -129,7 +131,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 	// Set default notebooks namespace
 	// Create rhods-notebooks namespace in managed platforms
 	enabled := w.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.Monitoring.ManagementState == operatorv1.Managed
+	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
 	if enabled {
 		if w.DevFlags != nil {
 			// Download manifests and update paths
@@ -146,7 +148,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 			}
 		}
 		// Update Default rolebinding
-		err := cluster.UpdatePodSecurityRolebinding(ctx, cli, componentSpec.ApplicationsNamespace, "notebook-controller-service-account")
+		err := cluster.UpdatePodSecurityRolebinding(ctx, cli, componentSpec.DSCISpec.ApplicationsNamespace, "notebook-controller-service-account")
 		if err != nil {
 			return err
 		}
@@ -167,7 +169,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 	}
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		notebookControllerPath,
-		componentSpec.ApplicationsNamespace,
+		componentSpec.DSCISpec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
 		return fmt.Errorf("failed to apply manifetss %s: %w", notebookControllerPath, err)
 	}
@@ -175,7 +177,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		kfnotebookControllerPath,
-		componentSpec.ApplicationsNamespace,
+		componentSpec.DSCISpec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
 		return fmt.Errorf("failed to apply manifetss %s: %w", kfnotebookControllerPath, err)
 	}
@@ -183,7 +185,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		notebookImagesPath,
-		componentSpec.ApplicationsNamespace,
+		componentSpec.DSCISpec.ApplicationsNamespace,
 		ComponentName, enabled); err != nil {
 		return err
 	}
@@ -191,7 +193,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 
 	// Wait for deployment available
 	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.ApplicationsNamespace, 10, 2); err != nil {
+		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 10, 2); err != nil {
 			return fmt.Errorf("deployments for %s are not ready to server: %w", ComponentName, err)
 		}
 	}
@@ -203,7 +205,7 @@ func (w *Workbenches) ReconcileComponent(ctx context.Context, cli client.Client,
 		}
 		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.Monitoring.Namespace,
+			componentSpec.DSCISpec.Monitoring.Namespace,
 			"prometheus", true); err != nil {
 			return err
 		}

@@ -330,13 +330,13 @@ func (r *DSCInitializationReconciler) watchMonitoringConfigMapResource(_ context
 
 		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "prometheus", Namespace: "redhat-ods-monitoring"}}}
 	}
-	return nil
+	return []reconcile.Request{}
 }
 
 func (r *DSCInitializationReconciler) watchMonitoringSecretResource(_ context.Context, a client.Object) []reconcile.Request {
 	operatorNs, err := cluster.GetOperatorNamespace()
 	if err != nil {
-		return nil
+		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "prometheus", Namespace: "redhat-ods-monitoring"}}}
 	}
 
 	if a.GetName() == "addon-managed-odh-parameters" && a.GetNamespace() == operatorNs {
@@ -344,7 +344,7 @@ func (r *DSCInitializationReconciler) watchMonitoringSecretResource(_ context.Co
 
 		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "addon-managed-odh-parameters", Namespace: operatorNs}}}
 	}
-	return nil
+	return []reconcile.Request{}
 }
 
 func (r *DSCInitializationReconciler) watchDSCResource(ctx context.Context) []reconcile.Request {
@@ -359,5 +359,5 @@ func (r *DSCInitializationReconciler) watchDSCResource(ctx context.Context) []re
 
 		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "backup"}}}
 	}
-	return nil
+	return []reconcile.Request{}
 }
