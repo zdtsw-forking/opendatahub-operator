@@ -36,6 +36,7 @@ type DSCServices struct {
 }
 
 type DSCServicesSpec struct {
+	Name string `json:"name,omitempty"` // monitoring, logging, etc etc
 }
 
 // DSCServicesStatus defines the custom status of DSCServices.

@@ -8,6 +8,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -16,18 +17,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
+	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
-		dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 )
-
 
 var (
 	ComponentName          = "workbenches"
@@ -39,6 +35,7 @@ var (
 	// notebook image manifests.
 	notebookImagesPath = deploy.DefaultManifestPath + "/notebooks/overlays/additional"
 )
+
 type WorkbenchReconciler struct {
 	Client client.Client
 	Scheme *runtime.Scheme
@@ -48,7 +45,7 @@ type WorkbenchReconciler struct {
 // SetupWithManager sets up the controller with the Manager.
 func (w *WorkbenchReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&dsccomponentv1alpha1.Workbench{}).
+		For(&dsccomponentv1alpha1.Workbenches{}).
 		Owns(&admissionregistrationv1.MutatingWebhookConfiguration{}).
 		Owns(&admissionregistrationv1.ValidatingWebhookConfiguration{}).
 		Owns(&corev1.Secret{}).
@@ -66,7 +63,7 @@ func (w *WorkbenchReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Man
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == workbenches.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -81,7 +78,7 @@ var componentDeploymentPredicates = predicate.Funcs{
 
 func (w *WorkbenchReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
 	// Fetch the WorkbenchComponent instance to know created or deleted
-	obj := &dsccomponentv1alpha1.Workbench{}
+	obj := &dsccomponentv1alpha1.Workbenches{}
 	err := w.Client.Get(ctx, request.NamespacedName, obj)
 
 	// deletion case
@@ -96,7 +93,7 @@ func (w *WorkbenchReconciler) Reconcile(ctx context.Context, request ctrl.Reques
 		return ctrl.Result{}, err
 	}
 	w.Log.Info("Workbench CR has been createw.", "Request.Name", request.Name)
-	w.DeployManifests(ctx, w.Client, w.Log, obj, &obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, w.DeployManifests(ctx, w.Client, w.Log, obj, &obj.Spec.ComponentSpec, true)
 }
 
 func (w *WorkbenchReconciler) OverrideManifests(ctx context.Context, platform cluster.Platform) error {
@@ -151,21 +148,25 @@ func (w *WorkbenchReconciler) GetComponentName() string {
 
 func (d *WorkbenchReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
 	// create/delete Workbenches Component CR
-	wbCR := &dsccomponentv1alpha1.DSCWorkbench{
+	wbCR := &dsccomponentv1alpha1.Workbenches{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "DSCRay",
 			APIVersion: "components.opendatahub.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-workbench",
+			Name:            "default",
 			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
 		},
 		Spec: dsccomponentv1alpha1.WBComponentSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         ComponentName,
-				ApplicationsNamespace: dsci.Spec.ApplicationsNamespace,
-				Monitoring:            dsci.Spec.Monitoring,
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
+				},
 			},
 		},
 	}
@@ -182,18 +183,19 @@ func (w *WorkbenchReconciler) DeployManifests(ctx context.Context, cli client.Cl
 		"odh-notebook-controller-image":    "RELATED_IMAGE_ODH_NOTEBOOK_CONTROLLER_IMAGE",
 		"odh-kf-notebook-controller-image": "RELATED_IMAGE_ODH_KF_NOTEBOOK_CONTROLLER_IMAGE",
 	}
-
+	obj := (owner).(*dsccomponentv1alpha1.Workbenches)
 	// Set default notebooks namespace
 	// Create rhods-notebooks namespace in managed platforms
-	enabled := w.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.Monitoring.ManagementState == operatorv1.Managed
+
+	enabled := obj.Spec.ComponentSpec.DSCComponentSpec.Component.GetManagementState() == operatorv1.Managed
+
 	if enabled {
-		if w.DevFlags != nil {
-			// Download manifests and update paths
-			if err := w.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
+		// if w.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := w.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// }
 		if componentSpec.Platform == cluster.SelfManagedRhods || componentSpec.Platform == cluster.ManagedRhods {
 			// Intentionally leaving the ownership unset for this namespace.
 			// Specifying this label triggers its deletion when the operator is uninstalled.
@@ -211,16 +213,16 @@ func (w *WorkbenchReconciler) DeployManifests(ctx context.Context, cli client.Cl
 
 	// Update image parameters for nbc
 	if enabled {
-		if w.DevFlags == nil || len(w.DevFlags.Manifests) == 0 {
-			// for kf-notebook-controller image
-			if err := deploy.ApplyParams(notebookControllerPath, imageParamMap); err != nil {
-				return fmt.Errorf("failed to update image %s: %w", notebookControllerPath, err)
-			}
-			// for odh-notebook-controller image
-			if err := deploy.ApplyParams(kfnotebookControllerPath, imageParamMap); err != nil {
-				return fmt.Errorf("failed to update image %s: %w", kfnotebookControllerPath, err)
-			}
-		}
+		// if w.DevFlags == nil || len(w.DevFlags.Manifests) == 0 {
+		// 	// for kf-notebook-controller image
+		// 	if err := deploy.ApplyParams(notebookControllerPath, imageParamMap); err != nil {
+		// 		return fmt.Errorf("failed to update image %s: %w", notebookControllerPath, err)
+		// 	}
+		// 	// for odh-notebook-controller image
+		// 	if err := deploy.ApplyParams(kfnotebookControllerPath, imageParamMap); err != nil {
+		// 		return fmt.Errorf("failed to update image %s: %w", kfnotebookControllerPath, err)
+		// 	}
+		// }
 	}
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
 		notebookControllerPath,
@@ -246,26 +248,5 @@ func (w *WorkbenchReconciler) DeployManifests(ctx context.Context, cli client.Cl
 	}
 	l.WithValues("Path", notebookImagesPath).Info("apply manifests done notebook image done")
 
-	// Wait for deployment available
-	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.ApplicationsNamespace, 10, 2); err != nil {
-			return fmt.Errorf("deployments for %s are not ready to server: %w", ComponentName, err)
-		}
-	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		if err := w.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
-	}
 	return nil
 }
-

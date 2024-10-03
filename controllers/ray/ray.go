@@ -9,6 +9,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -17,7 +18,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -50,7 +50,7 @@ func (r *RayReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager) 
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ray.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -67,9 +67,7 @@ func (r *RayReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ct
 	// Fetch the RayComponent instance to know created or deleted
 	obj := &dsccomponentv1alpha1.Ray{}
 	err := r.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
+
 	// deletion case
 	if err != nil {
 		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
@@ -82,7 +80,7 @@ func (r *RayReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ct
 		return ctrl.Result{}, err
 	}
 	r.Log.Info("Ray CR has been creater.", "Request.Name", request.Name)
-	r.DeployManifests(ctx, r.Client, r.Log, obj, obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, r.DeployManifests(ctx, r.Client, r.Log, obj, obj.Spec.ComponentSpec, true)
 }
 
 var (
@@ -98,16 +96,18 @@ func (r *RayReconciler) CreateComponentCR(ctx context.Context, cli client.Client
 			APIVersion: "components.opendatahub.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-ray",
+			Name:            "default",
 			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
 		},
 		Spec: dsccomponentv1alpha1.RayComponentSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         ComponentName,
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
 				},
 			},
 		},
@@ -147,48 +147,27 @@ func (r *RayReconciler) DeployManifests(ctx context.Context, cli client.Client, 
 	var imageParamMap = map[string]string{
 		"odh-kuberay-operator-controller-image": "RELATED_IMAGE_ODH_KUBERAY_OPERATOR_CONTROLLER_IMAGE",
 	}
-
+	obj := (owner).(*dsccomponentv1alpha1.Ray)
 	enabled := r.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
 
 	if enabled {
-		if r.DevFlags != nil {
-			// Download manifests and update paths
-			if err := r.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
-		if r.DevFlags == nil || len(r.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(RayPath, imageParamMap, map[string]string{"namespace": componentSpec.DSCISpec.ApplicationsNamespace}); err != nil {
-				return fmt.Errorf("failed to update image from %s : %w", RayPath, err)
-			}
-		}
+		// if r.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := r.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// }
+		// if r.DevFlags == nil || len(r.DevFlags.Manifests) == 0 {
+		// 	if err := deploy.ApplyParams(RayPath, imageParamMap, map[string]string{"namespace": componentSpec.DSCISpec.ApplicationsNamespace}); err != nil {
+		// 		return fmt.Errorf("failed to update image from %s : %w", RayPath, err)
+		// 	}
+		// }
 	}
 	// Deploy Ray Operator
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, RayPath, componentSpec.DSCISpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
 		return fmt.Errorf("failed to apply manifets from %s : %w", RayPath, err)
 	}
 	l.Info("apply manifests done")
-
-	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 20, 2); err != nil {
-			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
-		}
-	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		if err := r.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.DSCISpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
-	}
 
 	return nil
 }

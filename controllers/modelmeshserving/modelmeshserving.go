@@ -7,12 +7,14 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
+	operatorv1 "github.com/openshift/api/operator/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -22,19 +24,28 @@ import (
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type ModelMeshServingReconciler struct {
 	Client client.Client
 	Scheme *runtime.Scheme
 	Log    logr.Logger
+}
+
+var (
+	ComponentName          = "model-mesh"
+	Path                   = deploy.DefaultManifestPath + "/" + ComponentName + "/overlays/odh"
+	DependentComponentName = "odh-model-controller"
+	DependentPath          = deploy.DefaultManifestPath + "/" + DependentComponentName + "/base"
+)
+
+func (m *ModelMeshServingReconciler) GetManagementState() operatorv1.ManagementState {
+	return operatorv1.Managed
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -78,7 +89,7 @@ func (m *ModelMeshServingReconciler) SetupWithManager(ctx context.Context, mgr c
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == modelmeshserving.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -129,7 +140,6 @@ var modelMeshwebhookPredicates = predicate.Funcs{
 		return e.ObjectNew.GetName() != "modelmesh-servingruntime.serving.kserve.io"
 	},
 }
-
 var modelMeshRolePredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		notAllowedNames := []string{"leader-election-role", "proxy-role", "metrics-reader", "kserve-prometheus-k8s", "odh-model-controller-role"}
@@ -153,9 +163,7 @@ func (m *ModelMeshServingReconciler) Reconcile(ctx context.Context, request ctrl
 	// Fetch the ModelMeshServingComponent instance to know created or deleted
 	obj := &dsccomponentv1alpha1.ModelMeshServing{}
 	err := m.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
+
 	// deletion case
 	if err != nil {
 		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
@@ -168,15 +176,8 @@ func (m *ModelMeshServingReconciler) Reconcile(ctx context.Context, request ctrl
 		return ctrl.Result{}, err
 	}
 	m.Log.Info("ModelMeshServing CR has been createm.", "Request.Name", request.Name)
-	m.DeployManifests(ctx, m.Client, m.Log, obj, obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, m.DeployManifests(ctx, m.Client, m.Log, obj, obj.Spec.ComponentSpec, true)
 }
-
-var (
-	ComponentName          = "model-mesh"
-	Path                   = deploy.DefaultManifestPath + "/" + ComponentName + "/overlays/odh"
-	DependentComponentName = "odh-model-controller"
-	DependentPath          = deploy.DefaultManifestPath + "/" + DependentComponentName + "/base"
-)
 
 func (m *ModelMeshServingReconciler) OverrideManifests(ctx context.Context, _ cluster.Platform) error {
 	// Go through each manifest and set the overlays if defined
@@ -218,16 +219,18 @@ func (m *ModelMeshServingReconciler) CreateComponentCR(ctx context.Context, cli 
 			APIVersion: "components.opendatahub.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-modelmeshserving",
+			Name:            "default",
 			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
 		},
 		Spec: dsccomponentv1alpha1.ModelMeshServingComponentSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         ComponentName,
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
 				},
 			},
 		},
@@ -261,16 +264,15 @@ func (m *ModelMeshServingReconciler) DeployManifests(ctx context.Context, cli cl
 	}
 
 	enabled := m.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
 
 	// Update Default rolebinding
 	if enabled {
-		if m.DevFlags != nil {
-			// Download manifests and update paths
-			if err := m.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
+		// if m.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := m.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// }
 
 		if err := cluster.UpdatePodSecurityRolebinding(ctx, cli, componentSpec.DSCISpec.ApplicationsNamespace,
 			"modelmesh",
@@ -280,11 +282,11 @@ func (m *ModelMeshServingReconciler) DeployManifests(ctx context.Context, cli cl
 			return err
 		}
 		// Update image parameters
-		if m.DevFlags == nil || len(m.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
-				return fmt.Errorf("failed update image from %s : %w", Path, err)
-			}
-		}
+		// if m.DevFlags == nil || len(m.DevFlags.Manifests) == 0 {
+		// 	if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
+		// 		return fmt.Errorf("failed update image from %s : %w", Path, err)
+		// 	}
+		// }
 	}
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, componentSpec.DSCISpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
@@ -298,7 +300,7 @@ func (m *ModelMeshServingReconciler) DeployManifests(ctx context.Context, cli cl
 			return err
 		}
 		// Update image parameters for odh-model-controller
-		if componentSpec.ComponentDevFlags.DSCDevFlags.Manifests == nil {
+		if componentSpec.DSCComponentSpec.DSCDevFlags.Manifests == nil {
 			if err := deploy.ApplyParams(DependentPath, dependentImageParamMap); err != nil {
 				return err
 			}
@@ -317,25 +319,6 @@ func (m *ModelMeshServingReconciler) DeployManifests(ctx context.Context, cli cl
 		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 20, 2); err != nil {
 			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
 		}
-	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		// first model-mesh rules
-		if err := m.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		// then odh-model-controller rules
-		if err := m.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, DependentComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.DSCISpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
 	}
 
 	return nil

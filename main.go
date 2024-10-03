@@ -61,6 +61,7 @@ import (
 	//"github.com/opendatahub-io/opendatahub-operator/v2/controllers/dashboard"
 	dscctrl "github.com/opendatahub-io/opendatahub-operator/v2/controllers/datasciencecluster"
 	dscictrl "github.com/opendatahub-io/opendatahub-operator/v2/controllers/dscinitialization"
+	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/modelregistry"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/secretgenerator"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/webhook"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
@@ -233,7 +234,7 @@ func main() { //nolint:funlen,maintidx
 		Scheme: mgr.GetScheme(),
 		Log:    logger.LogWithLevel(ctrl.Log.WithName(operatorName).WithName("controllers").WithName("DataScienceCluster"), logmode),
 		DataScienceCluster: &dscctrl.DataScienceClusterConfig{
-			DSCISpec: &dsciv1.DSCInitializationSpec{
+			DSCISpec: &dsciv1.DSCISpec{
 				ApplicationsNamespace: dscApplicationsNamespace,
 			},
 		},

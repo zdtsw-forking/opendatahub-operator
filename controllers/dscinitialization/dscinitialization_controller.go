@@ -273,37 +273,7 @@ func (r *DSCInitializationReconciler) SetupWithManager(ctx context.Context, mgr 
 			}),
 			builder.WithPredicates(DSCDeletionPredicate),
 		).
-		//TODO : move to service controller
-		Watches(
-			&corev1.Secret{},
-			handler.EnqueueRequestsFromMapFunc(r.watchMonitoringSecretResource),
-			builder.WithPredicates(SecretContentChangedPredicate),
-		).
-		//TODO : move to service controller
-		Watches(
-			&corev1.ConfigMap{},
-			handler.EnqueueRequestsFromMapFunc(r.watchMonitoringConfigMapResource),
-			builder.WithPredicates(CMContentChangedPredicate),
-		).
 		Complete(r)
-}
-
-var SecretContentChangedPredicate = predicate.Funcs{
-	UpdateFunc: func(e event.UpdateEvent) bool {
-		oldSecret, _ := e.ObjectOld.(*corev1.Secret)
-		newSecret, _ := e.ObjectNew.(*corev1.Secret)
-
-		return !reflect.DeepEqual(oldSecret.Data, newSecret.Data)
-	},
-}
-
-var CMContentChangedPredicate = predicate.Funcs{
-	UpdateFunc: func(e event.UpdateEvent) bool {
-		oldCM, _ := e.ObjectOld.(*corev1.ConfigMap)
-		newCM, _ := e.ObjectNew.(*corev1.ConfigMap)
-
-		return !reflect.DeepEqual(oldCM.Data, newCM.Data)
-	},
 }
 
 var DSCDeletionPredicate = predicate.Funcs{
@@ -322,29 +292,6 @@ var dsciPredicateStateChangeTrustedCA = predicate.Funcs{
 		}
 		return true
 	},
-}
-
-func (r *DSCInitializationReconciler) watchMonitoringConfigMapResource(_ context.Context, a client.Object) []reconcile.Request {
-	if a.GetName() == "prometheus" && a.GetNamespace() == "redhat-ods-monitoring" {
-		r.Log.Info("Found monitoring configmap has updated, start reconcile")
-
-		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "prometheus", Namespace: "redhat-ods-monitoring"}}}
-	}
-	return []reconcile.Request{}
-}
-
-func (r *DSCInitializationReconciler) watchMonitoringSecretResource(_ context.Context, a client.Object) []reconcile.Request {
-	operatorNs, err := cluster.GetOperatorNamespace()
-	if err != nil {
-		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "prometheus", Namespace: "redhat-ods-monitoring"}}}
-	}
-
-	if a.GetName() == "addon-managed-odh-parameters" && a.GetNamespace() == operatorNs {
-		r.Log.Info("Found monitoring secret has updated, start reconcile")
-
-		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "addon-managed-odh-parameters", Namespace: operatorNs}}}
-	}
-	return []reconcile.Request{}
 }
 
 func (r *DSCInitializationReconciler) watchDSCResource(ctx context.Context) []reconcile.Request {

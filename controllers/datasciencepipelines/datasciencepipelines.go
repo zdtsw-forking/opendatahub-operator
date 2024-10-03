@@ -3,7 +3,6 @@ package datasciencepipelines
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 
 	"github.com/go-logr/logr"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
@@ -11,6 +10,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -23,20 +23,10 @@ import (
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-type DataSciencePipelineReconciler struct {
-	Client client.Client
-	Scheme *runtime.Scheme
-	Log    logr.Logger
-}
 
 var (
 	ComponentName   = "data-science-pipelines-operator"
@@ -45,10 +35,39 @@ var (
 	ArgoWorkflowCRD = "workflows.argoproj.io"
 )
 
+type DataSciencePipelineReconciler struct {
+	Client client.Client
+	Scheme *runtime.Scheme
+	Log    logr.Logger
+}
+
+func UnmanagedArgoWorkFlowExists(ctx context.Context,
+	cli client.Client) error {
+	workflowCRD := &apiextensionsv1.CustomResourceDefinition{}
+	if err := cli.Get(ctx, client.ObjectKey{Name: ArgoWorkflowCRD}, workflowCRD); err != nil {
+		if k8serr.IsNotFound(err) {
+			return nil
+		}
+		return fmt.Errorf("failed to get existing Workflow CRD : %w", err)
+	}
+	// Verify if existing workflow is deployed by ODH with label
+	odhLabelValue, odhLabelExists := workflowCRD.Labels[labels.ODH.Component(ComponentName)]
+	if odhLabelExists && odhLabelValue == "true" {
+		return nil
+	}
+	return fmt.Errorf("%s CRD already exists but not deployed by this operator. "+
+		"Remove existing Argo workflows or set `spec.components.datasciencepipelines.managementState` to Removed to proceed ", ArgoWorkflowCRD)
+}
+
+func SetExistingArgoCondition(conditions *[]conditionsv1.Condition, reason, message string) {
+	status.SetCondition(conditions, string(status.CapabilityDSPv2Argo), reason, message, corev1.ConditionFalse)
+	status.SetComponentCondition(conditions, ComponentName, status.ReconcileFailed, message, corev1.ConditionFalse)
+}
+
 // SetupWithManager sets up the controller with the Manager.
 func (d *DataSciencePipelineReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&dsccomponentv1alpha1.DataSciencePipeline{}).
+		For(&dsccomponentv1alpha1.DataSciencePipelines{}).
 		Owns(&corev1.Secret{}).
 		Owns(&admissionregistrationv1.MutatingWebhookConfiguration{}).
 		Owns(&admissionregistrationv1.ValidatingWebhookConfiguration{}).
@@ -73,7 +92,7 @@ func (d *DataSciencePipelineReconciler) SetupWithManager(ctx context.Context, mg
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == datasciencepipelines.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -92,13 +111,13 @@ func (d *DataSciencePipelineReconciler) watchCRD(ctx context.Context, a client.O
 			NamespacedName: types.NamespacedName{Name: "ArgoWorkflowCRD"},
 		}}
 	}
-	return []reconcile.Request{}
+	return nil
 }
 
 // argoWorkflowCRDPredicates filters the delete events to trigger reconcile when Argo Workflow CRD is deleted.
 var argoWorkflowCRDPredicates = predicate.Funcs{
 	DeleteFunc: func(e event.DeleteEvent) bool {
-		if e.Object.GetName() == datasciencepipelines.ArgoWorkflowCRD {
+		if e.Object.GetName() == ArgoWorkflowCRD {
 			labelList := e.Object.GetLabels()
 			// CRD to be deleted with label "app.opendatahub.io/datasciencepipeline":"true", should not trigger reconcile
 			if value, exist := labelList[labels.ODH.Component(datasciencepipelines.ComponentName)]; exist && value == "true" {
@@ -112,11 +131,9 @@ var argoWorkflowCRDPredicates = predicate.Funcs{
 
 func (d *DataSciencePipelineReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
 	// Fetch the DSPComponent instance to know created or deleted
-	obj := &dsccomponentv1alpha1.DataSciencePipeline{}
+	obj := &dsccomponentv1alpha1.DataSciencePipelines{}
 	err := d.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
+
 	// deletion case
 	if err != nil {
 		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
@@ -130,58 +147,7 @@ func (d *DataSciencePipelineReconciler) Reconcile(ctx context.Context, request c
 	}
 
 	d.Log.Info("DataSciencePipeline CR has been created/updated.", "Request.Name", request.Name)
-	d.DeployManifests(ctx, d.Client, d.Log, obj, &obj.Spec.ComponentSpec, true)
-}
-
-func (d *DataSciencePipelineReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
-	// create/delete DataSciencePipelines Component CR
-	dspCR := &dsccomponentv1alpha1.DataSciencePipeline{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "DataSciencePipeline",
-			APIVersion: "components.opendatahub.io/v1",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-dsp",
-			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
-		},
-		Spec: dsccomponentv1alpha1.DataSciencePipelineSpec{
-			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         ComponentName,
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
-				},
-			},
-		},
-	}
-	if enabled {
-		cli.Create(ctx, dspCR)
-	} else {
-		cli.Delete(ctx, dspCR)
-	}
-	return nil
-}
-func (d *DataSciencePipelineReconciler) OverrideManifests(ctx context.Context, _ cluster.Platform) error {
-	// If devflags are set, update default manifests path
-	if len(d.DevFlags.Manifests) != 0 {
-		manifestConfig := d.DevFlags.Manifests[0]
-		if err := deploy.DownloadManifests(ctx, ComponentName, manifestConfig); err != nil {
-			return err
-		}
-		// If overlay is defined, update paths
-		defaultKustomizePath := "base"
-		if manifestConfig.SourcePath != "" {
-			defaultKustomizePath = manifestConfig.SourcePath
-		}
-		Path = filepath.Join(deploy.DefaultManifestPath, ComponentName, defaultKustomizePath)
-	}
-
-	return nil
-}
-
-func (d *DataSciencePipelineReconciler) GetComponentName() string {
-	return ComponentName
+	return ctrl.Result{}, d.DeployManifests(ctx, d.Client, d.Log, obj, &obj.Spec.ComponentSpec, true)
 }
 
 func (d *DataSciencePipelineReconciler) DeployManifests(ctx context.Context,
@@ -211,22 +177,22 @@ func (d *DataSciencePipelineReconciler) DeployManifests(ctx context.Context,
 	}
 
 	enabled := d.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
 
+	obj := (owner).(*dsccomponentv1alpha1.DataSciencePipelines)
 	if enabled {
-		if d.DevFlags != nil {
-			// Download manifests and update paths
-			if err := d.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
+		// if d.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := d.OverrideManifests(ctx, platform); err != nil {
+		// 		return err
+		// 	}
+		// }
 		// skip check if the dependent operator has beeninstalled, this is done in dashboard
 		// Update image parameters only when we do not have customized manifests set
-		if d.DevFlags == nil || len(d.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
-				return fmt.Errorf("failed to update image from %s : %w", Path, err)
-			}
-		}
+		// if (dscispec.DevFlags == nil || dscispec.DevFlags.ManifestsUri == "") && (d.DevFlags == nil || len(d.DevFlags.Manifests) == 0) {
+		// 	if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
+		// 		return fmt.Errorf("failed to update image from %s : %w", Path, err)
+		// 	}
+		// }
 		// Check for existing Argo Workflows
 		if err := UnmanagedArgoWorkFlowExists(ctx, cli); err != nil {
 			return err
@@ -235,34 +201,46 @@ func (d *DataSciencePipelineReconciler) DeployManifests(ctx context.Context,
 
 	// new overlay
 	manifestsPath := filepath.Join(OverlayPath, "rhoai")
-	if componentSpec.Platform == cluster.OpenDataHub || componentSpec.Platform == "" {
+	if platform == cluster.OpenDataHub || platform == "" {
 		manifestsPath = filepath.Join(OverlayPath, "odh")
 	}
-	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, manifestsPath, componentSpec.DSCISpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
+	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, manifestsPath, dscispec.ApplicationsNamespace, ComponentName, enabled); err != nil {
 		return err
 	}
 	l.Info("apply manifests done")
 
-	// Wait for deployment available
+	return nil
+}
+
+func (d *DataSciencePipelineReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
+
+	// create/delete Component CR
+	dspoCR := &dsccomponentv1alpha1.DataSciencePipelines{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "DataSciencePipeline",
+			APIVersion: "components.opendatahub.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:            "default",
+			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
+		},
+		Spec: dsccomponentv1alpha1.DataSciencePipelineSpec{
+			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
+				},
+			},
+		},
+	}
 	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 20, 2); err != nil {
-			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
-		}
+		cli.Create(ctx, dspoCR)
+	} else {
+		cli.Delete(ctx, dspoCR)
 	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		if err := d.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.DSCISpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
-	}
-
 	return nil
 }

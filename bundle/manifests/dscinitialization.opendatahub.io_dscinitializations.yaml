@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: DSCInitializationSpec defines the desired state of DSCInitialization.
+            description: DSCISpec defines the desired state of DSCInitialization.
             properties:
               applicationsNamespace:
                 default: opendatahub

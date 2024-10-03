@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
 )
 
 // +kubebuilder:object:root=true
@@ -30,7 +29,7 @@ import (
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="Ready"
 // +kubebuilder:printcolumn:name="Reason",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].reason`,description="Reason"
 // +kubebuilder:printcolumn:name="Message",type=string,priority=1,JSONPath=`.status.conditions[?(@.type=="Ready")].message`,description="Message"
-type KFTO struct {
+type TrainingOperator struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
@@ -40,10 +39,22 @@ type KFTO struct {
 
 type KFTOComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	// AdditionSpecWen string `json:"additionSpecWen,omitempty"`
 }
 
 // KFTOComponentStatus defines the custom status.
 type KFTOComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+//+kubebuilder:object:root=true
+type TrainingOperatorList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []TrainingOperator `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&TrainingOperator{},
+		&TrainingOperatorList{},
+	)
 }

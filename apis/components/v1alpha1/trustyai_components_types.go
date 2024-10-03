@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
 )
 
 // +kubebuilder:object:root=true
@@ -40,10 +39,22 @@ type TrustyAI struct {
 
 type TrustyAIComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	TrustyAI trustyai.TrustyAI `json:"trustyai,omitempty"`
 }
 
 // TrustyAIComponentStatus defines the custom status of CodeFlare.
 type TrustyAIComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+//+kubebuilder:object:root=true
+type TrustyAIList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []TrustyAI `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&TrustyAI{},
+		&TrustyAIList{},
+	)
 }

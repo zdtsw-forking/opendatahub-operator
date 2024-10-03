@@ -9,6 +9,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -18,13 +19,11 @@ import (
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type KueueReconciler struct {
@@ -52,7 +51,7 @@ func (k *KueueReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == kueue.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -69,14 +68,12 @@ func (k *KueueReconciler) Reconcile(ctx context.Context, request ctrl.Request) (
 	// Fetch the KueueComponent instance to know created or deleted
 	obj := &dsccomponentv1alpha1.Kueue{}
 	err := k.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
+
 	// deletion case
 	if err != nil {
 		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
 			k.Log.Info("Kueue CR has been deletek.", "Request.Name", request.Name)
-			if err = k.DeployManifests(ctx, k.Client, k.Log, obj, obj.Spec.ComponentSpec, true); err != nil {
+			if err = k.DeployManifests(ctx, k.Client, k.Log, obj, true); err != nil {
 				return ctrl.Result{}, err
 			}
 			return ctrl.Result{}, nil
@@ -84,7 +81,7 @@ func (k *KueueReconciler) Reconcile(ctx context.Context, request ctrl.Request) (
 		return ctrl.Result{}, err
 	}
 	k.Log.Info("Kueue CR has been createk.", "Request.Name", request.Name)
-	k.DeployManifests(ctx, k.Client, k.Log, obj, obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, k.DeployManifests(ctx, k.Client, k.Log, obj, true)
 }
 
 var (
@@ -105,11 +102,13 @@ func (k *KueueReconciler) CreateComponentCR(ctx context.Context, cli client.Clie
 		},
 		Spec: dsccomponentv1alpha1.KueueComponentSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         ComponentName,
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
 				},
 			},
 		},
@@ -123,18 +122,18 @@ func (k *KueueReconciler) CreateComponentCR(ctx context.Context, cli client.Clie
 }
 func (k *KueueReconciler) OverrideManifests(ctx context.Context, _ cluster.Platform) error {
 	// If devflags are set, update default manifests path
-	if len(k.DevFlags.Manifests) != 0 {
-		manifestConfig := k.DevFlags.Manifests[0]
-		if err := deploy.DownloadManifests(ctx, ComponentName, manifestConfig); err != nil {
-			return err
-		}
-		// If overlay is defined, update paths
-		defaultKustomizePath := "rhoai"
-		if manifestConfig.SourcePath != "" {
-			defaultKustomizePath = manifestConfig.SourcePath
-		}
-		Path = filepath.Join(deploy.DefaultManifestPath, ComponentName, defaultKustomizePath)
-	}
+	// if len(k.DevFlags.Manifests) != 0 {
+	// 	manifestConfig := k.DevFlags.Manifests[0]
+	// 	if err := deploy.DownloadManifests(ctx, ComponentName, manifestConfig); err != nil {
+	// 		return err
+	// 	}
+	// 	// If overlay is defined, update paths
+	// 	defaultKustomizePath := "rhoai"
+	// 	if manifestConfig.SourcePath != "" {
+	// 		defaultKustomizePath = manifestConfig.SourcePath
+	// 	}
+	// 	Path = filepath.Join(deploy.DefaultManifestPath, ComponentName, defaultKustomizePath)
+	// }
 
 	return nil
 }
@@ -143,26 +142,31 @@ func (k *KueueReconciler) GetComponentName() string {
 	return ComponentName
 }
 
+func (k *KueueReconciler) GetManagementState() string {
+	return ComponentName
+}
+
 func (k *KueueReconciler) DeployManifests(ctx context.Context, cli client.Client, l logr.Logger,
-	owner metav1.Object, componentSpec *dsccomponentv1alpha1.ComponentSpec, _ bool) error {
+	owner metav1.Object, _ bool) error {
+	obj := (owner).(*dsccomponentv1alpha1.Kueue)
 	var imageParamMap = map[string]string{
 		"odh-kueue-controller-image": "RELATED_IMAGE_ODH_KUEUE_CONTROLLER_IMAGE", // new kueue image
 	}
 
 	enabled := k.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
+
 	if enabled {
-		if k.DevFlags != nil {
-			// Download manifests and update paths
-			if err := k.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
-		if k.DevFlags == nil || len(k.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
-				return fmt.Errorf("failed to update image from %s : %w", Path, err)
-			}
-		}
+		// if k.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := k.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// }
+		// if k.DevFlags == nil || len(k.DevFlags.Manifests) == 0 {
+		// 	if err := deploy.ApplyParams(Path, imageParamMap); err != nil {
+		// 		return fmt.Errorf("failed to update image from %s : %w", Path, err)
+		// 	}
+		// }
 	}
 	// Deploy Kueue Operator
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, Path, componentSpec.DSCISpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
@@ -174,20 +178,6 @@ func (k *KueueReconciler) DeployManifests(ctx context.Context, cli client.Client
 		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 20, 2); err != nil {
 			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
 		}
-	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		if err := k.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.DSCISpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
 	}
 
 	return nil

@@ -2,30 +2,30 @@ package codeflare
 
 import (
 	"context"
+	"fmt"
+	"path/filepath"
 
 	"github.com/go-logr/logr"
+	operatorv1 "github.com/openshift/api/operator/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-		"path/filepath"
-		"fmt"
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
+	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
-	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
-		dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
-
 )
 
 type CodeFlareReconciler struct {
@@ -33,12 +33,14 @@ type CodeFlareReconciler struct {
 	Scheme *runtime.Scheme
 	Log    logr.Logger
 }
+
 var (
 	ComponentName     = "codeflare"
 	CodeflarePath     = deploy.DefaultManifestPath + "/" + ComponentName + "/default"
 	CodeflareOperator = "codeflare-operator"
 	ParamsPath        = deploy.DefaultManifestPath + "/" + ComponentName + "/manager"
 )
+
 // SetupWithManager sets up the controller with the Manager.
 func (c *CodeFlareReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
@@ -74,13 +76,23 @@ var componentDeploymentPredicates = predicate.Funcs{
 }
 
 func (c *CodeFlareReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
+
+	// check if component is Managed or not
+	// TODO : component.GetManagementState()
+	mockManagementStatus := operatorv1.Managed
+
 	// Fetch the CodeFlareComponent instance to know created or deleted
 	obj := &dsccomponentv1alpha1.CodeFlare{}
 	err := c.Client.Get(ctx, request.NamespacedName, obj)
 
+	if err = c.CreateComponentCR(ctx, c.Client, instance, &dsciInstances.Items[0], mockManagementStatus == operatorv1.Managed); err != nil {
+		componentErrors = multierror.Append(componentErrors, err)
+
+	}
+
 	// deletion case
 	if err != nil {
-		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
+		if k8serr.IsNotFound(err) {
 			c.Log.Info("CodeFlare CR has been deleted.", "Request.Name", request.Name)
 			if err = c.DeployManifests(ctx, c.Client, c.Log, obj, &obj.Spec.ComponentSpec, true); err != nil {
 				return ctrl.Result{}, err
@@ -91,7 +103,7 @@ func (c *CodeFlareReconciler) Reconcile(ctx context.Context, request ctrl.Reques
 	}
 
 	c.Log.Info("Dashboard CR has been created/updated.", "Request.Name", request.Name)
-	c.DeployManifests(ctx, c.Client, c.Log, obj, &obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, c.DeployManifests(ctx, c.Client, c.Log, obj, &obj.Spec.ComponentSpec, true)
 }
 
 func (d *CodeFlareReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
@@ -103,19 +115,18 @@ func (d *CodeFlareReconciler) CreateComponentCR(ctx context.Context, cli client.
 			APIVersion: "components.opendatahub.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-cfo",
+			Name:            "default",
 			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
 		},
 		Spec: dsccomponentv1alpha1.CodeFlareSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         "codeflare",
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
-					// DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
-					// 	Manifests: [], // TODO
-					// },
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
 				},
 			},
 		},
@@ -158,17 +169,16 @@ func (c *CodeFlareReconciler) DeployManifests(ctx context.Context,
 	var imageParamMap = map[string]string{
 		"codeflare-operator-controller-image": "RELATED_IMAGE_ODH_CODEFLARE_OPERATOR_IMAGE", // no need mcad, embedded in cfo
 	}
-
+	obj := (owner).(*dsccomponentv1alpha1.CodeFlare)
 	enabled := c.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.Monitoring.ManagementState == operatorv1.Managed
 
 	if enabled {
-		if c.DevFlags != nil {
-			// Download manifests and update paths
-			if err := c.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
+		// if c.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := c.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// }
 		// check if the CodeFlare operator is installed: it should not be installed
 		// Both ODH and RHOAI should have the same operator name
 		dependentOperator := CodeflareOperator
@@ -181,11 +191,11 @@ func (c *CodeFlareReconciler) DeployManifests(ctx context.Context,
 		}
 
 		// Update image parameters only when we do not have customized manifests set
-		if c.DevFlags == nil || len(c.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(ParamsPath, imageParamMap, map[string]string{"namespace": componentSpec.ApplicationsNamespace}); err != nil {
-				return fmt.Errorf("failed update image from %s : %w", CodeflarePath+"/bases", err)
-			}
-		}
+		// if c.DevFlags == nil || len(c.DevFlags.Manifests) == 0 {
+		// 	if err := deploy.ApplyParams(ParamsPath, imageParamMap, map[string]string{"namespace": componentSpec.ApplicationsNamespace}); err != nil {
+		// 		return fmt.Errorf("failed update image from %s : %w", CodeflarePath+"/bases", err)
+		// 	}
+		// }
 	}
 
 	// Deploy Codeflare
@@ -201,21 +211,6 @@ func (c *CodeFlareReconciler) DeployManifests(ctx context.Context,
 		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.ApplicationsNamespace, 20, 2); err != nil {
 			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
 		}
-	}
-
-	// CloudServiceMonitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		// inject prometheus codeflare*.rules in to /opt/manifests/monitoring/prometheus/prometheus-configs.yaml
-		if err := c.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
 	}
 
 	return nil

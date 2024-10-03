@@ -29,18 +29,18 @@ import (
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	featuresv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/features/v1"
 	infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelregistry"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/modelregistry"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 )
@@ -115,7 +115,7 @@ func CreateDefaultDSC(ctx context.Context, cli client.Client) error {
 // If there exists default-dsci instance already, it will not update DSCISpec on it.
 // Note: DSCI CR modifcations are not supported, as it is the initial prereq setting for the components.
 func CreateDefaultDSCI(ctx context.Context, cli client.Client, _ cluster.Platform, appNamespace, monNamespace string) error {
-	defaultDsciSpec := &dsciv1.DSCInitializationSpec{
+	defaultDsciSpec := &dsciv1.DSCISpec{
 		ApplicationsNamespace: appNamespace,
 		Monitoring: dsciv1.Monitoring{
 			ManagementState: operatorv1.Managed,

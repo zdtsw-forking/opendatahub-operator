@@ -38,7 +38,11 @@ type ModelReg struct {
 }
 
 type ModelRegComponentSpec struct {
-	ComponentSpec `json:",inline"` // Embedded ComponentSpec
+	ComponentSpec `json:",inline"`       // Embedded ComponentSpec
+	ModelReg      ModelRegCustomizedSpec `json:"kserve,omitempty"`
+}
+
+type ModelRegCustomizedSpec struct {
 	// Namespace for model registries to be installed, configurable only once when model registry is enabled, defaults to "odh-model-registries"
 	// +kubebuilder:default="odh-model-registries"
 	// +kubebuilder:validation:Pattern="^([a-z0-9]([-a-z0-9]*[a-z0-9])?)?$"
@@ -49,7 +53,6 @@ type ModelRegComponentSpec struct {
 // ModelRegComponentStatus defines the custom status.
 type ModelRegComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
-	ModelRegistry ModelRegistryStatus `json:"modelregistry,omitempty"`
 
 }
 
@@ -57,4 +60,16 @@ type ModelRegComponentStatus struct {
 type ModelRegistryStatus struct {
 	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
 }
+//+kubebuilder:object:root=true
+type ModelRegList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []ModelReg `json:"items"`
+}
 
+func init() {
+	SchemeBuilder.Register(
+		&ModelReg{},
+		&ModelRegList{},
+	)
+}

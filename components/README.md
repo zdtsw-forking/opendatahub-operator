@@ -31,8 +31,8 @@ can be found [here](https://github.com/opendatahub-io/opendatahub-operator/tree/
 
     ```go
     type ComponentInterface interface {
-      DeployManifests(ctx context.Context, cli client.Client, logger logr.Logger, owner metav1.Object, DSCISpec *dsciv1.DSCInitializationSpec, currentComponentStatus bool) error
-      Cleanup(cli client.Client, DSCISpec *dsciv1.DSCInitializationSpec) error
+      DeployManifests(ctx context.Context, cli client.Client, logger logr.Logger, owner metav1.Object, DSCISpec *dsciv1.DSCISpec, currentComponentStatus bool) error
+      Cleanup(cli client.Client, DSCISpec *dsciv1.DSCISpec) error
       GetComponentName() string
       GetManagementState() operatorv1.ManagementState
       OverrideManifests(platform cluster.Platform) error

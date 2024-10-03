@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
 )
 
 // +kubebuilder:object:root=true
@@ -30,7 +29,7 @@ import (
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="Ready"
 // +kubebuilder:printcolumn:name="Reason",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].reason`,description="Reason"
 // +kubebuilder:printcolumn:name="Message",type=string,priority=1,JSONPath=`.status.conditions[?(@.type=="Ready")].message`,description="Message"
-type DataSciencePipeline struct {
+type DataSciencePipelines struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
@@ -40,10 +39,22 @@ type DataSciencePipeline struct {
 
 type DataSciencePipelineSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	DataSciencePipelines datasciencepipelines.DataSciencePipelines `json:"datasciencepipelines,omitempty"`
 }
 
 // DataSciencePipelinetatus defines the custom status.
 type DataSciencePipelinetatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+
+type DataSciencePipelinesList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []DataSciencePipelines `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&DataSciencePipelines{},
+		&DataSciencePipelinesList{},
+	)
 }

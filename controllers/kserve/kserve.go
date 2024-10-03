@@ -13,6 +13,7 @@ import (
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -23,18 +24,42 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/modelregistry"
+	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type KserveReconciler struct {
 	Client client.Client
 	Scheme *runtime.Scheme
 	Log    logr.Logger
+}
+
+// +kubebuilder:validation:Pattern=`^(Serverless|RawDeployment)$`
+type DefaultDeploymentMode string
+
+var (
+	ComponentName          = "kserve"
+	Path                   = deploy.DefaultManifestPath + "/" + ComponentName + "/overlays/odh"
+	DependentComponentName = "odh-model-controller"
+	DependentPath          = deploy.DefaultManifestPath + "/" + DependentComponentName + "/base"
+	ServiceMeshOperator    = "servicemeshoperator"
+	ServerlessOperator     = "serverless-operator"
+	// Serverless will be used as the default deployment mode for Kserve. This requires Serverless and ServiceMesh operators configured as dependencies.
+	Serverless DefaultDeploymentMode = "Serverless"
+	// RawDeployment will be used as the default deployment mode for Kserve.
+	RawDeployment DefaultDeploymentMode = "RawDeployment"
+)
+
+func (k *KserveReconciler) Cleanup(ctx context.Context, cli client.Client, owner metav1.Object, instance *dsccomponentv1alpha1.ComponentSpec) error {
+	if removeServerlessErr := k.removeServerlessFeatures(ctx, cli, owner, instance); removeServerlessErr != nil {
+		return removeServerlessErr
+	}
+
+	return k.removeServiceMeshConfigurations(ctx, cli, owner, instance)
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -74,13 +99,11 @@ func (k *KserveReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manage
 		Complete(k)
 }
 
-func (r *KserveReconciler) watchDefaultIngressSecret(ctx context.Context, a client.Object) []reconcile.Request {
-	requestName, err := r.getRequestName(ctx)
-	if err != nil {
-		return []reconcile.Request{}
-	}
+func (k *KserveReconciler) watchDefaultIngressSecret(ctx context.Context, a client.Object) []reconcile.Request {
+	requestName := k.GetComponentName()
+
 	// When ingress secret gets created/deleted, trigger reconcile function
-	ingressCtrl, err := cluster.FindAvailableIngressController(ctx, r.Client)
+	ingressCtrl, err := cluster.FindAvailableIngressController(ctx, k.Client)
 	if err != nil {
 		return []reconcile.Request{}
 	}
@@ -97,7 +120,7 @@ func (r *KserveReconciler) watchDefaultIngressSecret(ctx context.Context, a clie
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == modelregistry.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -183,9 +206,6 @@ func (k *KserveReconciler) Reconcile(ctx context.Context, request ctrl.Request) 
 	// Fetch the KserveComponent instance to know created or deleted
 	obj := &dsccomponentv1alpha1.Kserve{}
 	err := k.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
 
 	// deletion case
 	if err != nil {
@@ -199,7 +219,7 @@ func (k *KserveReconciler) Reconcile(ctx context.Context, request ctrl.Request) 
 		return ctrl.Result{}, err
 	}
 	k.Log.Info("Kserve CR has been createk.", "Request.Name", request.Name)
-	k.DeployManifests(ctx, k.Client, k.Log, obj, &obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, k.DeployManifests(ctx, k.Client, k.Log, obj, &obj.Spec.ComponentSpec, true)
 }
 
 // defaultIngressCertSecretPredicates filters delete and create events to trigger reconcile when default ingress cert secret is expired
@@ -260,8 +280,7 @@ func (k *KserveReconciler) DeployManifests(ctx context.Context, cli client.Clien
 	}
 
 	enabled := k.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
-
+	obj := (owner).(*dsccomponentv1alpha1.Kserve)
 	if !enabled {
 		if err := k.removeServerlessFeatures(ctx, cli, owner, componentSpec); err != nil {
 			return err
@@ -271,12 +290,12 @@ func (k *KserveReconciler) DeployManifests(ctx context.Context, cli client.Clien
 		if err := k.configureServerless(ctx, cli, l, owner, componentSpec); err != nil {
 			return err
 		}
-		if k.DevFlags != nil {
-			// Download manifests and update paths
-			if err := k.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-		}
+		// if k.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := k.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// }
 	}
 
 	if err := k.configureServiceMesh(ctx, cli, owner, componentSpec); err != nil {
@@ -299,11 +318,11 @@ func (k *KserveReconciler) DeployManifests(ctx context.Context, cli client.Clien
 			return err
 		}
 		// Update image parameters for odh-model-controller
-		if k.DevFlags == nil || len(k.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(DependentPath, dependentParamMap); err != nil {
-				return fmt.Errorf("failed to update image %s: %w", DependentPath, err)
-			}
-		}
+		// if k.DevFlags == nil || len(k.DevFlags.Manifests) == 0 {
+		// 	if err := deploy.ApplyParams(DependentPath, dependentParamMap); err != nil {
+		// 		return fmt.Errorf("failed to update image %s: %w", DependentPath, err)
+		// 	}
+		// }
 	}
 
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, DependentPath, componentSpec.DSCISpec.ApplicationsNamespace, ComponentName, enabled); err != nil {
@@ -314,21 +333,38 @@ func (k *KserveReconciler) DeployManifests(ctx context.Context, cli client.Clien
 	}
 	l.WithValues("Path", Path).Info("apply manifests done for odh-model-controller")
 
-	// Wait for deployment available
+	return nil
+}
+
+func (k *KserveReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
+	// create/delete Kserve Component CR
+	kserveCR := &dsccomponentv1alpha1.Kserve{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Kserve",
+			APIVersion: "components.opendatahub.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:            "default",
+			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
+		},
+		Spec: dsccomponentv1alpha1.KserveComponentSpec{
+			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
+				},
+			},
+		},
+	}
+
 	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 20, 3); err != nil {
-			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
-		}
+		cli.Create(ctx, kserveCR)
+	} else {
+		cli.Delete(ctx, kserveCR)
 	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		// kesrve rules
-		if err := k.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
-	}
-
 	return nil
 }

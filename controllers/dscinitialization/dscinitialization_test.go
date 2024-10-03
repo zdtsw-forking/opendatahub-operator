@@ -359,7 +359,7 @@ func createDSCI(enableMonitoring operatorv1.ManagementState, enableTrustedCABund
 			Name:      applicationName,
 			Namespace: workingNamespace,
 		},
-		Spec: dsciv1.DSCInitializationSpec{
+		Spec: dsciv1.DSCISpec{
 			ApplicationsNamespace: applicationNamespace,
 			Monitoring: dsciv1.Monitoring{
 				Namespace:       monitoringNS,

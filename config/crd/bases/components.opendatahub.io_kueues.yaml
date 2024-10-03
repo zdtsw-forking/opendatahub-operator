@@ -97,7 +97,7 @@ spec:
                     type: object
                 type: object
               dscinitializationspec:
-                description: DSCInitializationSpec defines the desired state of DSCInitialization.
+                description: DSCISpec defines the desired state of DSCInitialization.
                 properties:
                   applicationsNamespace:
                     default: opendatahub

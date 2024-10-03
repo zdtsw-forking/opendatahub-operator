@@ -17,9 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	
+	infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
 )
 
 // +kubebuilder:object:root=true
@@ -43,11 +42,35 @@ type Kserve struct {
 type DefaultDeploymentMode string
 
 type KserveComponentSpec struct {
-	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	Kserve kserve.Kserve `json:"kserve,omitempty"`
+	ComponentSpec `json:",inline"`     // Embedded ComponentSpec
+	Kserve        KserveCustomizedSpec `json:"kserve,omitempty"`
+}
+
+// KserveCustomizedSpec struct holds the configuration for the Kserve component.
+// +kubebuilder:object:generate=true
+type KserveCustomizedSpec struct {
+	Serving infrav1.ServingSpec `json:"serving,omitempty"`
+	// Configures the default deployment mode for Kserve. This can be set to 'Serverless' or 'RawDeployment'.
+	// The value specified in this field will be used to set the default deployment mode in the 'inferenceservice-config' configmap for Kserve.
+	// This field is optional. If no default deployment mode is specified, Kserve will use Serverless mode.
+	// +kubebuilder:validation:Enum=Serverless;RawDeployment
+	DefaultDeploymentMode DefaultDeploymentMode `json:"defaultDeploymentMode,omitempty"`
 }
 
 // KserveComponentStatus defines the custom status.
 type KserveComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+//+kubebuilder:object:root=true
+type KserveList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Kserve `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&Kserve{},
+		&KserveList{},
+	)
 }

@@ -2,11 +2,16 @@ package dashboard
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"path/filepath"
 
 	"github.com/go-logr/logr"
+	operatorv1 "github.com/openshift/api/operator/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -17,16 +22,11 @@ import (
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	operatorv1 "github.com/openshift/api/operator/v1"
-	corev1 "k8s.io/api/core/v1"
-	k8serr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
-		"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 )
 
 type DashboardReconciler struct {
@@ -56,8 +56,8 @@ func (d *DashboardReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Man
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == dashboard.ComponentNameUpstream) ||
-			(namespace == "redhat-ods-applications" && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == dashboard.ComponentNameDownstream) {
+		if (namespace == "opendatahub" && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentNameUpstream) ||
+			(namespace == "redhat-ods-applications" && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentNameDownstream) {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -74,16 +74,12 @@ func (d *DashboardReconciler) Reconcile(ctx context.Context, request ctrl.Reques
 	// Fetch the DashboardComponent instance to know created or deleted
 	obj := &dsccomponentv1alpha1.Dashboard{}
 	err := d.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
-	var _ components.ComponentInterface = (*DashboardReconciler)(nil)
 
 	// deletion case
 	if err != nil {
 		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
 			d.Log.Info("Dashboard CR has been deleted.", "Request.Name", request.Name)
-			if err = d.DeployManifests(ctx, d.Client, d.Log, obj, obj.Spec.ComponentSpec, true); err != nil {
+			if err = d.DeployManifests(ctx, d.Client, d.Log, obj, &obj.Spec.ComponentSpec, true); err != nil {
 				return ctrl.Result{}, err
 			}
 			return ctrl.Result{}, nil
@@ -98,9 +94,8 @@ func (d *DashboardReconciler) Reconcile(ctx context.Context, request ctrl.Reques
 		return ctrl.Result{}, err
 	}
 	installedComponentValue, _ := instanceList.Items[0].Status.InstalledComponents["dashboard"]
-	d.DeployManifests(ctx, d.Client, d.Log, obj, obj.Spec.ComponentSpec, installedComponentValue)
+	return ctrl.Result{}, d.DeployManifests(ctx, d.Client, d.Log, obj, &obj.Spec.ComponentSpec, installedComponentValue)
 }
-
 
 var (
 	ComponentNameUpstream = "dashboard"
@@ -118,9 +113,9 @@ var (
 
 // Dashboard struct holds the configuration for the Dashboard component.
 // +kubebuilder:object:generate=true
-type Dashboard struct {
-	components.Component `json:""`
-}
+// type Dashboard struct {
+// 	components.Component `json:""`
+// }
 
 func (d *DashboardReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
 	componentName := ComponentNameUpstream
@@ -134,19 +129,19 @@ func (d *DashboardReconciler) CreateComponentCR(ctx context.Context, cli client.
 			APIVersion: "components.opendatahub.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-dashboard",
+			Name:            "default",
 			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
 		},
 		Spec: dsccomponentv1alpha1.DashboardComponentSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         "dashboard",
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
-					// DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
-					// 	Manifests: [], // TODO
-					// },
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: componentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+						// TODO
+					},
 				},
 			},
 		},
@@ -172,16 +167,6 @@ func (d *DashboardReconciler) OverrideManifests(ctx context.Context, platform cl
 	}
 	return nil
 }
-var (
-	ComponentNameUpstream = "dashboard"
-	PathUpstream          = deploy.DefaultManifestPath + "/" + ComponentNameUpstream + "/odh"
-
-	ComponentNameDownstream = "rhods-dashboard"
-	PathDownstream          = deploy.DefaultManifestPath + "/" + ComponentNameUpstream + "/rhoai"
-	PathSelfDownstream      = PathDownstream + "/onprem"
-	PathManagedDownstream   = PathDownstream + "/addon"
-	OverridePath            = ""
-)
 
 func (d *DashboardReconciler) GetComponentName() string {
 	return ComponentNameUpstream
@@ -200,9 +185,9 @@ func (d *DashboardReconciler) DeployManifests(ctx context.Context,
 		cluster.OpenDataHub:      PathUpstream,
 		cluster.Unknown:          PathUpstream,
 	}[componentSpec.Platform]
+	obj := (owner).(*dsccomponentv1alpha1.Dashboard)
+	enabled := operatorv1.Managed
 
-	enabled :=  == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
 	imageParamMap := make(map[string]string)
 
 	if enabled {
@@ -234,7 +219,7 @@ func (d *DashboardReconciler) DeployManifests(ctx context.Context,
 		}
 
 		// 3. Append or Update variable for component to consume
-		extraParamsMap, err := updateKustomizeVariable(ctx, cli, componentSpec.Platform, componentSpec)
+		extraParamsMap, err := d.updateKustomizeVariable(ctx, cli, componentSpec.Platform, componentSpec)
 		if err != nil {
 			return errors.New("failed to set variable for extraParamsMap")
 		}
@@ -259,25 +244,6 @@ func (d *DashboardReconciler) DeployManifests(ctx context.Context,
 		}
 		l.Info("apply manifests done")
 
-		if enabled {
-			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentNameDownstream, componentSpec.DSCISpec.ApplicationsNamespace, 20, 3); err != nil {
-				return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentNameDownstream, err)
-			}
-		}
-
-		// CloudService Monitoring handling
-		if componentSpec.Platform == cluster.ManagedRhods {
-			if err := d.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentNameDownstream); err != nil {
-				return err
-			}
-			if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-				filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-				componentSpec.DSCISpec.Monitoring.Namespace,
-				"prometheus", true); err != nil {
-				return err
-			}
-			l.Info("updating SRE monitoring done")
-		}
 		return nil
 
 	default:
@@ -286,11 +252,6 @@ func (d *DashboardReconciler) DeployManifests(ctx context.Context,
 			return err
 		}
 		l.Info("apply manifests done")
-		if enabled {
-			if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentNameUpstream, componentSpec.DSCISpec.ApplicationsNamespace, 20, 3); err != nil {
-				return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentNameUpstream, err)
-			}
-		}
 
 		return nil
 	}
@@ -323,3 +284,35 @@ func (d *DashboardReconciler) cleanOauthClient(ctx context.Context, cli client.C
 	return nil
 }
 
+func (d *DashboardReconciler) updateKustomizeVariable(ctx context.Context, cli client.Client, platform cluster.Platform, componentSpec *dsccomponentv1alpha1.ComponentSpec) (map[string]string, error) {
+	adminGroups := map[cluster.Platform]string{
+		cluster.SelfManagedRhods: "rhods-admins",
+		cluster.ManagedRhods:     "dedicated-admins",
+		cluster.OpenDataHub:      "odh-admins",
+		cluster.Unknown:          "odh-admins",
+	}[platform]
+
+	sectionTitle := map[cluster.Platform]string{
+		cluster.SelfManagedRhods: "OpenShift Self Managed Services",
+		cluster.ManagedRhods:     "OpenShift Managed Services",
+		cluster.OpenDataHub:      "OpenShift Open Data Hub",
+		cluster.Unknown:          "OpenShift Open Data Hub",
+	}[platform]
+
+	consoleLinkDomain, err := cluster.GetDomain(ctx, cli)
+	if err != nil {
+		return nil, fmt.Errorf("error getting console route URL %s : %w", consoleLinkDomain, err)
+	}
+	consoleURL := map[cluster.Platform]string{
+		cluster.SelfManagedRhods: "https://rhods-dashboard-" + componentSpec.DSCISpec.ApplicationsNamespace + "." + consoleLinkDomain,
+		cluster.ManagedRhods:     "https://rhods-dashboard-" + componentSpec.DSCISpec.ApplicationsNamespace + "." + consoleLinkDomain,
+		cluster.OpenDataHub:      "https://odh-dashboard-" + componentSpec.DSCISpec.ApplicationsNamespace + "." + consoleLinkDomain,
+		cluster.Unknown:          "https://odh-dashboard-" + componentSpec.DSCISpec.ApplicationsNamespace + "." + consoleLinkDomain,
+	}[platform]
+
+	return map[string]string{
+		"admin_groups":  adminGroups,
+		"dashboard-url": consoleURL,
+		"section-title": sectionTitle,
+	}, nil
+}

@@ -119,7 +119,7 @@ func NewDSCInitialization(ctx context.Context, cli client.Client, dsciName, ns s
 	}
 
 	_, errCreate := controllerutil.CreateOrUpdate(ctx, cli, dsci, func() error {
-		dsci.Spec = dsciv1.DSCInitializationSpec{
+		dsci.Spec = dsciv1.DSCISpec{
 			ApplicationsNamespace: ns,
 			ServiceMesh: &infrav1.ServiceMeshSpec{
 				ManagementState: "Managed",

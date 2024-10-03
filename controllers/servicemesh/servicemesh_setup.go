@@ -50,6 +50,7 @@ func (k *Kserve) defineServiceMeshFeatures(ctx context.Context, cli client.Clien
 						Include(
 							path.Join(Resources.ServiceMeshDir, "activator-envoyfilter.tmpl.yaml"),
 							path.Join(Resources.ServiceMeshDir, "envoy-oauth-temp-fix.tmpl.yaml"),
+							// TODO: remove to kserve component?
 							path.Join(Resources.ServiceMeshDir, "kserve-predictor-authorizationpolicy.tmpl.yaml"),
 							path.Join(Resources.ServiceMeshDir, "z-migrations"),
 						),

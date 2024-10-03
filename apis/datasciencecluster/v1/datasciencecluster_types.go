@@ -24,21 +24,24 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/opendatahub-io/opendatahub-operator/v2/components"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components"
+	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
+	// "github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
 
-	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
+	//"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
+
+	operatorv1 "github.com/openshift/api/operator/v1"
 )
 
 // DataScienceClusterSpec defines the desired state of the cluster.
@@ -48,46 +51,77 @@ type DataScienceClusterSpec struct {
 	Components Components `json:"components,omitempty"`
 }
 
+type Dashboard struct {
+	Component `json:""`
+}
+type Workbenches struct {
+	Component `json:""`
+}
+type ModelMeshServing struct {
+	Component `json:""`
+}
+type DataSciencePipelines struct {
+	Component `json:""`
+}
+type Kserve struct {
+	Component `json:""`
+}
+type Kueue struct {
+	Component `json:""`
+}
+type CodeFlare struct {
+	Component `json:""`
+}
+type Ray struct {
+	Component `json:""`
+}
+type TrainingOperator struct {
+	Component `json:""`
+}
+
+type TrustyAI struct {
+	Component `json:""`
+}
 type Components struct {
 	// Dashboard component configuration.
-	Dashboard dashboard.Dashboard `json:"dashboard,omitempty"`
+	Dashboard Dashboard `json:"dashboard,omitempty"`
 	// Workbenches component configuration.
-	Workbenches workbenches.Workbenches `json:"workbenches,omitempty"`
+	Workbenches Workbenches `json:"workbenches,omitempty"`
 
 	// ModelMeshServing component configuration.
 	// Does not support enabled Kserve at the same time
-	ModelMeshServing modelmeshserving.ModelMeshServing `json:"modelmeshserving,omitempty"`
+	ModelMeshServing ModelMeshServing `json:"modelmeshserving,omitempty"`
 
 	// DataServicePipeline component configuration.
 	// Require OpenShift Pipelines Operator to be installed before enable component
-	DataSciencePipelines datasciencepipelines.DataSciencePipelines `json:"datasciencepipelines,omitempty"`
+	DataSciencePipelines DataSciencePipelines `json:"datasciencepipelines,omitempty"`
 
 	// Kserve component configuration.
 	// Require OpenShift Serverless and OpenShift Service Mesh Operators to be installed before enable component
 	// Does not support enabled ModelMeshServing at the same time
-	Kserve kserve.Kserve `json:"kserve,omitempty"`
+	Kserve Kserve `json:"kserve,omitempty"`
 
 	// Kueue component configuration.
-	Kueue kueue.Kueue `json:"kueue,omitempty"`
+	Kueue Kueue `json:"kueue,omitempty"`
 
 	// CodeFlare component configuration.
 	// If CodeFlare Operator has been installed in the cluster, it should be uninstalled first before enabled component.
-	CodeFlare codeflare.CodeFlare `json:"codeflare,omitempty"`
+	CodeFlare CodeFlare `json:"codeflare,omitempty"`
 
 	// Ray component configuration.
-	Ray ray.Ray `json:"ray,omitempty"`
+	Ray Ray `json:"ray,omitempty"`
 
 	// TrustyAI component configuration.
-	TrustyAI trustyai.TrustyAI `json:"trustyai,omitempty"`
+	TrustyAI TrustyAI `json:"trustyai,omitempty"`
 
-	//Training Operator component configuration.
-	TrainingOperator trainingoperator.TrainingOperator `json:"trainingoperator,omitempty"`
+	//TrainingOperator component configuration.
+	TrainingOperator TrainingOperator `json:"trainingoperator,omitempty"`
 }
 
 // ComponentsStatus defines the custom status of DataScienceCluster components.
 type ComponentsStatus struct {
 	// ModelRegistry component status
-	ModelRegistry *status.ModelRegistryStatus `json:"modelregistry,omitempty"`
+	ModelRegistry dsccomponentv1alpha1.ModelRegistryStatus `json:"modelregistry,omitempty"`
 }
 
 // DataScienceClusterStatus defines the observed state of DataScienceCluster.
@@ -131,6 +165,26 @@ type DataScienceCluster struct {
 	Status DataScienceClusterStatus `json:"status,omitempty"`
 }
 
+// +groupName=datasciencecluster.opendatahub.io
+type Component struct {
+	// Set to one of the following values:
+	//
+	// - "Managed" : the operator is actively managing the component and trying to keep it active.
+	//               It will only upgrade the component if it is safe to do so
+	//
+	// - "Removed" : the operator is actively managing the component and will not install it,
+	//               or if it is installed, the operator will try to remove it
+	//
+	// +kubebuilder:validation:Enum=Managed;Removed
+	ManagementState operatorv1.ManagementState `json:"managementState,omitempty"`
+	// Add any other common fields across components below
+
+	// Add developer fields
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,order=2
+	DevFlags *dsccomponentv1alpha1.DSCDevFlags `json:"devFlags,omitempty"`
+}
+
 //+kubebuilder:object:root=true
 
 // DataScienceClusterList contains a list of DataScienceCluster.
@@ -140,12 +194,27 @@ type DataScienceClusterList struct {
 	Items           []DataScienceCluster `json:"items"`
 }
 
+// type ComponentInterface interface {
+// 	GetManagementState() operatorv1.ManagementState
+// 	NewMethod() string
+// }
+
 func init() {
-	SchemeBuilder.Register(&DataScienceCluster{}, &DataScienceClusterList{})
+	SchemeBuilder.Register(
+		&DataScienceCluster{},
+		&DataScienceClusterList{},
+	)
 }
 
-func (d *DataScienceCluster) GetComponents() ([]components.ComponentInterface, error) {
-	var allComponents []components.ComponentInterface
+func (d DataScienceCluster) NewMethod() string {
+	return "TODO!"
+}
+func (c *Component) GetManagementState() operatorv1.ManagementState {
+	return c.ManagementState
+}
+
+func (d *DataScienceCluster) GetComponents() ([]ComponentInterface, error) {
+	var allComponents []ComponentInterface
 
 	c := &d.Spec.Components
 
@@ -153,7 +222,7 @@ func (d *DataScienceCluster) GetComponents() ([]components.ComponentInterface, e
 	for i := 0; i < definedComponents.NumField(); i++ {
 		c := definedComponents.Field(i)
 		if c.CanAddr() {
-			component, ok := c.Addr().Interface().(components.ComponentInterface)
+			component, ok := c.Addr().Interface().(ComponentInterface)
 			if !ok {
 				return allComponents, errors.New("this is not a pointer to ComponentInterface")
 			}

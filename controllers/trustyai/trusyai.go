@@ -9,6 +9,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -18,13 +19,11 @@ import (
 
 	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	annotations "github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/annotations"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type TrustyAIReconciler struct {
@@ -32,6 +31,14 @@ type TrustyAIReconciler struct {
 	Scheme *runtime.Scheme
 	Log    logr.Logger
 }
+
+var (
+	ComponentName     = "trustyai"
+	ComponentPathName = "trustyai-service-operator"
+	PathUpstream      = deploy.DefaultManifestPath + "/" + ComponentPathName + "/overlays/odh"
+	PathDownstream    = deploy.DefaultManifestPath + "/" + ComponentPathName + "/overlays/rhoai"
+	OverridePath      = ""
+)
 
 // SetupWithManager sets up the controller with the Manager.
 func (t *TrustyAIReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager) error {
@@ -52,7 +59,7 @@ func (t *TrustyAIReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Mana
 var componentDeploymentPredicates = predicate.Funcs{
 	UpdateFunc: func(e event.UpdateEvent) bool {
 		namespace := e.ObjectNew.GetNamespace()
-		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == trustyai.ComponentName {
+		if (namespace == "opendatahub" || namespace == "redhat-ods-applications") && e.ObjectNew.GetLabels()[labels.K8SCommon.PartOf] == ComponentName {
 			oldManaged, oldExists := e.ObjectOld.GetAnnotations()[annotations.ManagedByODHOperator]
 			newManaged := e.ObjectNew.GetAnnotations()[annotations.ManagedByODHOperator]
 			// only reoncile if annotation from "not exist" to "set to true", or from "non-true" value to "true"
@@ -68,9 +75,6 @@ var componentDeploymentPredicates = predicate.Funcs{
 func (t *TrustyAIReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
 	obj := &dsccomponentv1alpha1.TrustyAI{}
 	err := t.Client.Get(ctx, request.NamespacedName, obj)
-	if obj.GetName() != request.Name && obj.GetOwnerReferences()[0].Name != "default-dsc" {
-		return ctrl.Result{}, nil
-	}
 	// deletion case
 	if err != nil {
 		if k8serr.IsNotFound(err) || obj.GetDeletionTimestamp() != nil {
@@ -83,7 +87,7 @@ func (t *TrustyAIReconciler) Reconcile(ctx context.Context, request ctrl.Request
 		return ctrl.Result{}, err
 	}
 	t.Log.Info("TrustyAI CR has been createt.", "Request.Name", request.Name)
-	t.DeployManifests(ctx, t.Client, t.Log, obj, &obj.Spec.ComponentSpec, true)
+	return ctrl.Result{}, t.DeployManifests(ctx, t.Client, t.Log, obj, &obj.Spec.ComponentSpec, true)
 }
 
 func (t *TrustyAIReconciler) CreateComponentCR(ctx context.Context, cli client.Client, owner metav1.Object, dsci *dsciv1.DSCInitialization, enabled bool) error {
@@ -94,16 +98,18 @@ func (t *TrustyAIReconciler) CreateComponentCR(ctx context.Context, cli client.C
 			APIVersion: "components.opendatahub.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "default-trustyai",
+			Name:            "default",
 			OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(owner, gvk.DataScienceCluster)},
 		},
 		Spec: dsccomponentv1alpha1.TrustyAIComponentSpec{
 			ComponentSpec: dsccomponentv1alpha1.ComponentSpec{
-				Platform:              dsci.Status.Release.Name,
-				ComponentName:         ComponentName,
-				DSCInitializationSpec: dsci.Spec,
-				ComponentDevFlags: dsccomponentv1alpha1.DevFlags{
-					LoggerMode: dsci.Spec.DevFlags.LogMode,
+				Platform:      dsci.Status.Release.Name,
+				ComponentName: ComponentName,
+				DSCISpec:      dsci.Spec,
+				DSCComponentSpec: dsccomponentv1alpha1.DSCComponentSpec{
+					DSCDevFlags: dsccomponentv1alpha1.DSCDevFlags{
+						LoggerMode: "default",
+					},
 				},
 			},
 		},
@@ -148,25 +154,25 @@ func (t *TrustyAIReconciler) DeployManifests(ctx context.Context, cli client.Cli
 		cluster.OpenDataHub:      PathUpstream,
 		cluster.Unknown:          PathUpstream,
 	}[componentSpec.Platform]
-
+	TrustyAI
 	enabled := t.GetManagementState() == operatorv1.Managed
-	monitoringEnabled := componentSpec.DSCISpec.Monitoring.ManagementState == operatorv1.Managed
 
 	if enabled {
-		if t.DevFlags != nil {
-			// Download manifests and update paths
-			if err := t.OverrideManifests(ctx, componentSpec.Platform); err != nil {
-				return err
-			}
-			if OverridePath != "" {
-				entryPath = OverridePath
-			}
-		}
-		if t.DevFlags == nil || len(t.DevFlags.Manifests) == 0 {
-			if err := deploy.ApplyParams(entryPath, imageParamMap); err != nil {
-				return fmt.Errorf("failed to update image %s: %w", entryPath, err)
-			}
-		}
+		// TODO
+		// if t.DevFlags != nil {
+		// 	// Download manifests and update paths
+		// 	if err := t.OverrideManifests(ctx, componentSpec.Platform); err != nil {
+		// 		return err
+		// 	}
+		// 	if OverridePath != "" {
+		// 		entryPath = OverridePath
+		// 	}
+		// }
+		// if t.DevFlags == nil || len(t.DevFlags.Manifests) == 0 {
+		// 	if err := deploy.ApplyParams(entryPath, imageParamMap); err != nil {
+		// 		return fmt.Errorf("failed to update image %s: %w", entryPath, err)
+		// 	}
+		// }
 	}
 	// Deploy TrustyAI Operator
 	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, entryPath, componentSpec.DSCISpec.ApplicationsNamespace, t.GetComponentName(), enabled); err != nil {
@@ -174,25 +180,5 @@ func (t *TrustyAIReconciler) DeployManifests(ctx context.Context, cli client.Cli
 	}
 	l.Info("apply manifests done")
 
-	// Wait for deployment available
-	if enabled {
-		if err := cluster.WaitForDeploymentAvailable(ctx, cli, ComponentName, componentSpec.DSCISpec.ApplicationsNamespace, 10, 2); err != nil {
-			return fmt.Errorf("deployment for %s is not ready to server: %w", ComponentName, err)
-		}
-	}
-
-	// CloudService Monitoring handling
-	if componentSpec.Platform == cluster.ManagedRhods {
-		if err := t.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
-			return err
-		}
-		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
-			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
-			componentSpec.DSCISpec.Monitoring.Namespace,
-			"prometheus", true); err != nil {
-			return err
-		}
-		l.Info("updating SRE monitoring done")
-	}
 	return nil
 }

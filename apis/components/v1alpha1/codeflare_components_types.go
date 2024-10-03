@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
 )
 
 // +kubebuilder:object:root=true
@@ -37,13 +36,25 @@ type CodeFlare struct {
 	Spec   CodeFlareSpec   `json:"spec,omitempty"`
 	Status CodeFlareStatus `json:"status,omitempty"`
 }
+//+kubebuilder:object:root=true
+type CodeFlareList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []CodeFlare `json:"items"`
+}
 
 type CodeFlareSpec struct {
-	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	CodeFlare codeflare.CodeFlare `json:"codeflare,omitempty"`
+	ComponentSpec // Embedded DSCComponentSpec
 }
 
 // CodeFlareStatus defines the custom status of CodeFlare.
 type CodeFlareStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&CodeFlare{},
+		&CodeFlareList{},
+	)
 }

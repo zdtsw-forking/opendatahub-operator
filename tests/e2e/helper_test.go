@@ -24,18 +24,6 @@ import (
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
 	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
 	infrav1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/infrastructure/v1"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/codeflare"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/dashboard"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/datasciencepipelines"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kserve"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelmeshserving"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/modelregistry"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trainingoperator"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/trustyai"
-	"github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
 )
 
 const (
@@ -86,7 +74,7 @@ func setupDSCICR(name string) *dsciv1.DSCInitialization {
 		ObjectMeta: metav1.ObjectMeta{
 			Name: name,
 		},
-		Spec: dsciv1.DSCInitializationSpec{
+		Spec: dsciv1.DSCISpec{
 			ApplicationsNamespace: "opendatahub",
 			Monitoring: dsciv1.Monitoring{
 				ManagementState: "Managed",

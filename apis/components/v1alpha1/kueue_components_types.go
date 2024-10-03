@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/kueue"
 )
 
 // +kubebuilder:object:root=true
@@ -40,10 +39,22 @@ type Kueue struct {
 
 type KueueComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	Kueue kueue.Kueue `json:"kueue,omitempty"`
 }
 
 // KueueComponentStatus defines the custom status.
 type KueueComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+//+kubebuilder:object:root=true
+type KueueList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Kueue `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&Kueue{},
+		&KueueList{},
+	)
 }

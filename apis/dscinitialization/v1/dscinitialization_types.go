@@ -28,8 +28,8 @@ import (
 
 // +operator-sdk:csv:customresourcedefinitions:order=1
 
-// DSCInitializationSpec defines the desired state of DSCInitialization.
-type DSCInitializationSpec struct {
+// DSCISpec defines the desired state of DSCInitialization.
+type DSCISpec struct {
 	// Namespace for applications to be installed, non-configurable, default to "opendatahub"
 	// +kubebuilder:default:=opendatahub
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="ApplicationsNamespace is immutable"
@@ -130,7 +130,7 @@ type DSCInitialization struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   DSCInitializationSpec   `json:"spec,omitempty"`
+	Spec   DSCISpec                `json:"spec,omitempty"`
 	Status DSCInitializationStatus `json:"status,omitempty"`
 }
 

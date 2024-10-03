@@ -62,7 +62,7 @@ type DataScienceClusterReconciler struct {
 
 // DataScienceClusterConfig passing Spec of DSCI for reconcile DataScienceCluster.
 type DataScienceClusterConfig struct {
-	DSCISpec *dsciv1.DSCInitializationSpec
+	DSCISpec *dsciv1.DSCISpec
 }
 
 const (
@@ -233,15 +233,18 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 	var componentErrors *multierror.Error
 
 	for _, component := range allComponents {
-		if err = component.CreateComponentCR(ctx, r.Client, instance, &dsciInstances.Items[0], component.GetManagementState() == operatorv1.Managed); err != nil {
-			componentErrors = multierror.Append(componentErrors, err)
-		}
+		// TODO : start component CR creation in parallel
+		go func() {
+			if err = component.CreateComponentCR(r.Client, instance, component); err != nil {
+				componentErrors = multierror.Append(componentErrors, err)
+			}
+		}()
 	}
 
 	// Process errors for components CR creation
 	// TODO: set to check component's status
 	if componentErrors != nil {
-		r.Log.Info("DataScienceCluster Deployment Incomplete.")
+		r.Log.Info("Failed to create component CRs.")
 		instance, err = status.UpdateWithRetry(ctx, r.Client, instance, func(saved *dscv1.DataScienceCluster) {
 			status.SetCompleteCondition(&saved.Status.Conditions, status.ReconcileCompletedWithComponentErrors,
 				fmt.Sprintf("DataScienceCluster resource reconciled with component errors: %v", componentErrors))
@@ -280,8 +283,8 @@ func (r *DataScienceClusterReconciler) Reconcile(ctx context.Context, req ctrl.R
 // newComponentLogger is a wrapper to add DSC name and extract log mode from DSCISpec.
 func newComponentLogger(logger logr.Logger, component string, componentSpec *dsccomponentv1alpha1.ComponentSpec) logr.Logger {
 	mode := ""
-	if componentSpec.ComponentDevFlags.LoggerMode != nil {
-		mode = componentSpec.ComponentDevFlags.LoggerMode
+	if componentSpec.DSCComponentSpec.LoggerMode != nil {
+		mode = componentSpec.DSCComponentSpec.LoggerMode
 	}
 	return ctrlogger.NewNamedLogger(logger, "DSC.Components."+componentName, mode)
 }
@@ -371,7 +374,7 @@ func (r *DataScienceClusterReconciler) watchDataScienceClusterResources(ctx cont
 			}}
 		}
 	}
-	return  []reconcile.Request{}
+	return []reconcile.Request{}
 }
 
 func (r *DataScienceClusterReconciler) getRequestName(ctx context.Context) (string, error) {
@@ -390,5 +393,3 @@ func (r *DataScienceClusterReconciler) getRequestName(ctx context.Context) (stri
 		return "", errors.New("multiple DataScienceCluster instances found")
 	}
 }
-
-

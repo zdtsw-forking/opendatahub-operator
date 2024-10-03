@@ -1,65 +1,128 @@
-// +groupName=datasciencecluster.opendatahub.io
-package components
+package monitoring
 
 import (
 	"context"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	"github.com/go-logr/logr"
-	operatorv1 "github.com/openshift/api/operator/v1"
 	"gopkg.in/yaml.v2"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/event"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	dsccomponentv1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
-	dsciv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/dscinitialization/v1"
+	dscservicev1alpha1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/services/v1alpha1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 )
 
-// Component struct defines the basis for each OpenDataHub component configuration.
-// +kubebuilder:object:generate=true
-type Component struct {
-	// Set to one of the following values:
-	//
-	// - "Managed" : the operator is actively managing the component and trying to keep it active.
-	//               It will only upgrade the component if it is safe to do so
-	//
-	// - "Removed" : the operator is actively managing the component and will not install it,
-	//               or if it is installed, the operator will try to remove it
-	//
-	// +kubebuilder:validation:Enum=Managed;Removed
-	ManagementState operatorv1.ManagementState `json:"managementState,omitempty"`
-	// Add any other common fields across components below
-
-	// Add developer fields
-	// +optional
-	// +operator-sdk:csv:customresourcedefinitions:type=spec,order=2
-	DevFlags *dsccomponentv1alpha1.DSCDevFlags `json:"devFlags,omitempty"`
+type MonitoringReconciler struct {
+	Client client.Client
+	Scheme *runtime.Scheme
+	Log    logr.Logger
 }
 
-func (c *Component) GetManagementState() operatorv1.ManagementState {
-	return c.ManagementState
+// SetupWithManager sets up the controller with the Manager.
+func (m *MonitoringReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&dscservicev1alpha1.DSCServices{}).
+		Owns(
+			&corev1.Service{}).
+		// TODO: remove if we are not gonna use customized Prom stack
+		Watches(
+			&corev1.ConfigMap{},
+			handler.EnqueueRequestsFromMapFunc(m.watchMonitoringConfigMapResource),
+			builder.WithPredicates(CMContentChangedPredicate),
+		).
+		// TODO: remove if we are not gonna use customized Prom stack
+		Watches(
+			&corev1.Secret{},
+			handler.EnqueueRequestsFromMapFunc(m.watchMonitoringSecretResource),
+			builder.WithPredicates(SecretContentChangedPredicate),
+		).
+		Owns(&corev1.Namespace{},
+			builder.WithPredicates(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{}), monidtoringNSPredicates),
+		).
+		WithEventFilter(predicate.Or(predicate.GenerationChangedPredicate{}, predicate.LabelChangedPredicate{})).
+		Complete(m)
 }
 
-func (c *Component) Cleanup(_ context.Context, _ client.Client, _ metav1.Object, _ *dsccomponentv1alpha1.ComponentSpec) error {
-	// noop
-	return nil
+var SecretContentChangedPredicate = predicate.Funcs{
+	UpdateFunc: func(e event.UpdateEvent) bool {
+		oldSecret, _ := e.ObjectOld.(*corev1.Secret)
+		newSecret, _ := e.ObjectNew.(*corev1.Secret)
+
+		return !reflect.DeepEqual(oldSecret.Data, newSecret.Data)
+	},
 }
 
+var CMContentChangedPredicate = predicate.Funcs{
+	UpdateFunc: func(e event.UpdateEvent) bool {
+		oldCM, _ := e.ObjectOld.(*corev1.ConfigMap)
+		newCM, _ := e.ObjectNew.(*corev1.ConfigMap)
 
+		return !reflect.DeepEqual(oldCM.Data, newCM.Data)
+	},
+}
 
-type ComponentInterface interface {
-	GetManagementState() operatorv1.ManagementState
-	
-	UpdatePrometheusConfig(cli client.Client, logger logr.Logger, enable bool, component string) error
+var monidtoringNSPredicates = predicate.Funcs{
+	DeleteFunc: func(e event.DeleteEvent) bool {
+		return true
+	},
+}
 
+func (m *MonitoringReconciler) watchMonitoringConfigMapResource(_ context.Context, a client.Object) []reconcile.Request {
+	if a.GetName() == "prometheus" && a.GetNamespace() == "redhat-ods-monitoring" {
+		m.Log.Info("Found monitoring configmap has updated, start reconcile")
+
+		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "prometheus", Namespace: "redhat-ods-monitoring"}}}
+	}
+	return []reconcile.Request{}
+}
+
+func (m *MonitoringReconciler) watchMonitoringSecretResource(_ context.Context, a client.Object) []reconcile.Request {
+	operatorNs, err := cluster.GetOperatorNamespace()
+	if err != nil {
+		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "prometheus", Namespace: "redhat-ods-monitoring"}}}
+	}
+
+	if a.GetName() == "addon-managed-odh-parameters" && a.GetNamespace() == operatorNs {
+		m.Log.Info("Found monitoring secret has updated, start reconcile")
+
+		return []reconcile.Request{{NamespacedName: types.NamespacedName{Name: "addon-managed-odh-parameters", Namespace: operatorNs}}}
+	}
+	return []reconcile.Request{}
+}
+
+func (m *MonitoringReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
+	// TODO
+	if componentSpec.Platform == cluster.ManagedRhods {
+		if err := w.UpdatePrometheusConfig(cli, l, enabled && monitoringEnabled, ComponentName); err != nil {
+			return err
+		}
+		if err := deploy.DeployManifestsFromPath(ctx, cli, owner,
+			filepath.Join(deploy.DefaultManifestPath, "monitoring", "prometheus", "apps"),
+			componentSpec.Monitoring.Namespace,
+			"prometheus", true); err != nil {
+			return err
+		}
+		l.Info("updating SRE monitoring done")
+	}
+	return ctrl.Result{}, nil
 }
 
 // UpdatePrometheusConfig update prometheus-configs.yaml to include/exclude <component>.rules
 // parameter enable when set to true to add new rules, when set to false to remove existing rules.
-func (c *Component) UpdatePrometheusConfig(_ client.Client, logger logr.Logger, enable bool, component string) error {
+// TODO: remove if we are not gonna use customized Prom stack
+func (m *MonitoringReconciler) UpdatePrometheusConfig(_ client.Client, logger logr.Logger, enable bool, component string) error {
 	prometheusconfigPath := filepath.Join("/opt/manifests", "monitoring", "prometheus", "apps", "prometheus-configs.yaml")
 
 	// create a struct to mock poremtheus.yml

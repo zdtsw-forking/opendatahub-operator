@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	github.com/opendatahub-io/opendatahub-operator/v2/components/workbenches"
 )
 
 // +kubebuilder:object:root=true
@@ -30,7 +29,7 @@ import (
 // +kubebuilder:printcolumn:name="Ready",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].status`,description="Ready"
 // +kubebuilder:printcolumn:name="Reason",type=string,JSONPath=`.status.conditions[?(@.type=="Ready")].reason`,description="Reason"
 // +kubebuilder:printcolumn:name="Message",type=string,priority=1,JSONPath=`.status.conditions[?(@.type=="Ready")].message`,description="Message"
-type Workbench struct {
+type Workbenches struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
@@ -40,11 +39,22 @@ type Workbench struct {
 
 type WBComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	// AdditionSpecWen string `json:"additionSpecWen,omitempty"`
-	Workbenches workbenches.Workbenches `json:"workbenches,omitempty"`
 }
 
-// WBComponentStatus defines the custom status of CodeFlare.
+// WBComponentStatus defines the custom status.
 type WBComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+//+kubebuilder:object:root=true
+type WorkbenchesList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Workbenches `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&Workbenches{},
+		&WorkbenchesList{},
+	)
 }

@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-		"github.com/opendatahub-io/opendatahub-operator/v2/components/ray"
 )
 
 // +kubebuilder:object:root=true
@@ -40,10 +39,23 @@ type Ray struct {
 
 type RayComponentSpec struct {
 	ComponentSpec `json:",inline"` // Embedded ComponentSpec
-	Ray ray.Ray `json:"ray,omitempty"`
 }
 
 // RayComponentStatus defines the custom status.
 type RayComponentStatus struct {
 	ComponentStatus `json:",inline"` // Embedded ComponentStatus
+}
+
+//+kubebuilder:object:root=true
+type RayList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Ray `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(
+		&Ray{},
+		&RayList{},
+	)
 }
