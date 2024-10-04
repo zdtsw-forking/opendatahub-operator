@@ -30,7 +30,7 @@ import (
 )
 
 type DashboardReconciler struct {
-	Client client.Client
+	// Client client.Client
 	Scheme *runtime.Scheme
 	Log    logr.Logger
 }
