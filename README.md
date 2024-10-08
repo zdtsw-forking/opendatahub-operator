@@ -160,6 +160,31 @@ e.g `make image-build -e IMAGE_BUILD_FLAGS="--build-arg USE_LOCAL=true"`
   export KUBECONFIG=<path to kubeconfig>
   ```
 
+- Build bundle image
+
+  ```commandline
+  make bundle
+  ```
+
+- Build catalogsource image (SQLite based)
+
+  ```commandline
+  make catalog-build
+  ```
+
+- Build catalogsource image (File based)
+
+  ```commandline
+  make fbc
+  ```
+
+  if you want to change the from version to use 2.19.0:
+
+  ```commandline
+  make -e CATALOG_BASE_VERSION=2.19.0 fbc
+  ```
+
+
 #### Deployment
 
 **Deploying operator locally**

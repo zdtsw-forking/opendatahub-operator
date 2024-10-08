@@ -3,13 +3,16 @@
 # To re-generate a bundle for another specific version without changing the standard setup, you can:
 # - use the VERSION as arg of the bundle target (e.g make bundle VERSION=0.0.2)
 # - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
+# - user CATALOG_BASE_VERSION to set the version should be replaced in catalog.yaml by FBC build
 VERSION ?= 2.18.2
+CATALOG_BASE_VERSION ?= 2.18.2
+OPERATOR_NAME=opendatahub-operator
 # IMAGE_TAG_BASE defines the opendatahub.io namespace and part of the image name for remote images.
 # This variable is used to construct full image tags for bundle and catalog images.
 #
 # For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
 # opendatahub.io/opendatahub-operator-bundle:$VERSION and opendatahub.io/opendatahub-operator-catalog:$VERSION.
-IMAGE_TAG_BASE ?= quay.io/opendatahub/opendatahub-operator
+IMAGE_TAG_BASE ?= quay.io/opendatahub/$(OPERATOR_NAME)
 
 # keep the name based on IMG which already used from command line
 IMG_TAG ?= latest
@@ -19,8 +22,9 @@ IMG ?= $(IMAGE_TAG_BASE):$(IMG_TAG)
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
+OPM_VERSION ?= v1.47.0
 IMAGE_BUILDER ?= podman
-OPERATOR_NAMESPACE ?= opendatahub-operator-system
+OPERATOR_NAMESPACE ?= $(OPERATOR_NAME)-system
 DEFAULT_MANIFESTS_PATH ?= opt/manifests
 
 
@@ -69,7 +73,7 @@ KUSTOMIZE_VERSION ?= v5.0.2
 CONTROLLER_GEN_VERSION ?= v0.16.1
 OPERATOR_SDK_VERSION ?= v1.31.0
 GOLANGCI_LINT_VERSION ?= v1.60.2
-YQ_VERSION ?= v4.12.2
+YQ_VERSION ?= v4.44.3
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.31.0
 ENVTEST_PACKAGE_VERSION = v0.0.0-20240813183042-b901db121e1f
@@ -228,7 +232,8 @@ undeploy: prepare ## Undeploy controller from the K8s cluster specified in ~/.ku
 	$(KUSTOMIZE) build config/default | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 ## Location to install dependencies to
-LOCALBIN ?= $(shell pwd)/bin
+ROOTDIR = $(shell pwd)
+LOCALBIN ?= $(ROOTDIR)/bin
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 CLEANFILES += $(LOCALBIN)
@@ -307,7 +312,7 @@ ifeq (,$(shell command -v opm 2>/dev/null))
 	set -e ;\
 	mkdir -p $(dir $(OPM)) ;\
 	OS=$(shell go env GOOS) && ARCH=$(shell go env GOARCH) && \
-	curl -sSLo $(OPM) https://github.com/operator-framework/operator-registry/releases/download/v1.23.0/$${OS}-$${ARCH}-opm ;\
+	curl -sSLo $(OPM) https://github.com/operator-framework/operator-registry/releases/download/$(OPM_VERSION)/$${OS}-$${ARCH}-opm ;\
 	chmod +x $(OPM) ;\
 	}
 else
@@ -376,3 +381,46 @@ clean: $(GOLANGCI_LINT)
 	$(GOLANGCI_LINT) cache clean
 	chmod u+w -R $(LOCALBIN) # envtest makes its dir RO
 	rm -rf $(CLEANFILES)
+
+#######################################################################################################################################################
+FBCTOPDIR=$(ROOTDIR)
+CATALOG_DIR=$(FBCTOPDIR)/catalogs
+CATALOG_TEMPLATE_DIR = $(FBCTOPDIR)/catalog-templates
+
+# to simplily devel experience, we only set to use the latest GA version (current suppored: 4.13 to 4.17)
+OCP_VERSIONS=$(shell echo "v4.17")
+
+.PHONY: fbc
+fbc: fbc-clean fbc-render-catalog fbc-basic-fragment fbc-basic-iib-bnp
+
+.PHONY: fbc-clean
+fbc-clean:
+	find $(CATALOG_DIR) -type f -name "*.yaml" -exec rm -rf {} +
+
+# update catalog-tempaltes by adding new entry not update eixsting one
+
+.PHONY: fbc-render-catalog
+fbc-render-catalog: opm yq
+	for version in $(OCP_VERSIONS); do \
+		$(YQ) eval '.entries += [{"schema": "olm.bundle", "image": "$(BUNDLE_IMG)"}]' -i $(CATALOG_TEMPLATE_DIR)/ocp-$${version}.yaml; \
+		$(YQ) eval '.entries[] |= (select(.schema == "olm.channel" and .name == $(CHANNELS))).entries += [{"name" : "$(OPERATOR_NAME).v$(VERSION)", "replaces": "$(OPERATOR_NAME).v$(CATALOG_BASE_VERSION)"}]' -i $(CATALOG_TEMPLATE_DIR)/ocp-$${version}.yaml; \
+	done
+
+# generate catalog used for local development
+.PHONY: fbc-basic-fragment
+fbc-basic-fragment: opm
+	for version in $(OCP_VERSIONS); do \
+		$(OPM) alpha render-template basic ${CATALOG_TEMPLATE_DIR}/ocp-$${version}.yaml -o yaml  > ${CATALOG_DIR}/$${version}/catalog.yaml; \
+	done
+
+# build final catalog image and push to quay.io
+.PHONY: fbc-basic-iib-bnp
+fbc-basic-iib-bnp:
+	for version in $(OCP_VERSIONS); do \
+		$(IMAGE_BUILDER) build -f ${CATALOG_DIR}/$${version}/catalogs.Dockerfile -t $(CATALOG_IMG) . ; \
+		$(MAKE) image-push IMG=$(CATALOG_IMG); \
+	done
+
+PHONY: fbc-validate
+fbc-validate: opm
+	$(OPM) validate $(CATALOG_DIR) && echo "FBC validation passed" || echo "FBC validation failed"
