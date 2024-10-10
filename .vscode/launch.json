@@ -19,9 +19,10 @@
             "request": "launch",
             "mode": "debug",
             "env": {
-                "DEFAULT_MANIFESTS_PATH": "//home/wenzhou/test/wen/opendatahub-operator/opt/manifests",
+                "DEFAULT_MANIFESTS_PATH": "/home/wenzhou/test/wen/opendatahub-operator/opt/manifests",
                 "DISABLE_DSC_CONFIG": "false",
-                "OPERATOR_NAMESPACE": "openshift-operators"
+                "OPERATOR_NAMESPACE": "openshift-operators",
+                "ODH_PLATFORM_TYPE": "OpenDataHub",
             },
             "program": "main.go"
         },
@@ -31,11 +32,32 @@
             "request": "launch",
             "mode": "exec",
             "env": {
-                "DEFAULT_MANIFESTS_PATH": "/home/wenzhou/test/wen/opendatahub-operator/opt/manifests",
+                "DEFAULT_MANIFESTS_PATH": "./opt/manifests",
                 "DISABLE_DSC_CONFIG": "false",
-                "OPERATOR_NAMESPACE": "openshift-operators"
+                "OPERATOR_NAMESPACE": "openshift-operators",
+                "ODH_PLATFORM_TYPE": "OpenDataHub",
             },
             "program": "/home/wenzhou/test/wen/opendatahub-operator/bin/manager"
         },
+        { 
+            "name": "Debug Operator without Webhook",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "main.go",
+            "buildFlags": [
+                "-tags", "nowebhook"
+            ],
+            "env": {
+                "OPERATOR_NAMESPACE": "openshift-operators",
+                "DISABLE_DSC_CONFIG": "true",
+                "DEFAULT_MANIFESTS_PATH": "./opt/manifests",
+                "ODH_PLATFORM_TYPE": "OpenDataHub",
+            },
+            "args": [
+                "--log-mode=devel"
+            ],
+            "cwd": "${workspaceFolder}",
+        }
     ]
 }
