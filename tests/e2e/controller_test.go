@@ -44,6 +44,7 @@ var (
 		"modelregistry": modelRegistryTestSuite,
 		"trustyai":      trustyAITestSuite,
 		"kueue":         kueueTestSuite,
+		"trainingoperator": trainingoperatorTestSuite,
 	}
 )
 
