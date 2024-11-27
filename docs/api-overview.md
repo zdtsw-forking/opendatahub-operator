@@ -243,7 +243,6 @@ DSCModelRegistryStatus struct holds the status for the ModelRegistry component e
 
 
 _Appears in:_
-- [ComponentsStatus](#componentsstatus)
 - [ModelRegistryStatus](#modelregistrystatus)
 
 | Field | Description | Default | Validation |
@@ -403,6 +402,7 @@ DashboardStatus defines the observed state of Dashboard
 
 
 _Appears in:_
+- [ComponentsStatus](#componentsstatus)
 - [Dashboard](#dashboard)
 
 | Field | Description | Default | Validation |
@@ -878,6 +878,7 @@ ModelRegistryStatus defines the observed state of ModelRegistry
 
 
 _Appears in:_
+- [ComponentsStatus](#componentsstatus)
 - [ModelRegistry](#modelregistry)
 
 | Field | Description | Default | Validation |
@@ -1388,6 +1389,7 @@ _Appears in:_
 
 _Appears in:_
 - [CodeFlareStatus](#codeflarestatus)
+- [ComponentsStatus](#componentsstatus)
 - [DashboardStatus](#dashboardstatus)
 - [DataSciencePipelinesStatus](#datasciencepipelinesstatus)
 - [KserveStatus](#kservestatus)
@@ -1534,7 +1536,17 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `modelregistry` _[DSCModelRegistryStatus](#dscmodelregistrystatus)_ | ModelRegistry component status |  |  |
+| `modelregistry` _[ModelRegistryStatus](#modelregistrystatus)_ |  |  |  |
+| `dashboard` _[DashboardStatus](#dashboardstatus)_ |  |  |  |
+| `codeflare` _[Status](#status)_ |  |  |  |
+| `ray` _[Status](#status)_ |  |  |  |
+| `trustyai` _[Status](#status)_ |  |  |  |
+| `trainingoperator` _[Status](#status)_ |  |  |  |
+| `kueue` _[Status](#status)_ |  |  |  |
+| `datasciencepipelines` _[Status](#status)_ |  |  |  |
+| `kserve` _[Status](#status)_ |  |  |  |
+| `modelmeshserving` _[Status](#status)_ |  |  |  |
+| `workbenches` _[Status](#status)_ |  |  |  |
 
 
 #### ControlPlaneSpec
