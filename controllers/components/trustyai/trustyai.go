@@ -1,14 +1,19 @@
 package trustyai
 
 import (
+	"context"
 	"fmt"
 
 	operatorv1 "github.com/openshift/api/operator/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/opendatahub-io/opendatahub-operator/v2/apis/components"
 	componentsv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1"
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	cr "github.com/opendatahub-io/opendatahub-operator/v2/pkg/componentsregistry"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -44,6 +49,23 @@ func (s *componentHandler) GetManagementState(dsc *dscv1.DataScienceCluster) ope
 		return operatorv1.Managed
 	}
 	return operatorv1.Removed
+}
+func (s *componentHandler) UpdateDSCStatus(ctx context.Context, dsc *dscv1.DataScienceCluster, c client.Object) string {
+	t, _ := c.(*componentsv1.TrustyAI)
+	if dsc.Status.Components.TrustyAI == nil {
+		dsc.Status.Components.TrustyAI = &components.Status{}
+	}
+	dsc.Status.Components.TrustyAI.Phase = t.Status.Phase
+
+	var r, m string
+	st := corev1.ConditionUnknown
+	if rc := meta.FindStatusCondition(t.Status.Conditions, status.ConditionTypeReady); rc != nil {
+		r = rc.Reason
+		m = rc.Message
+		st = corev1.ConditionStatus(rc.Status)
+	}
+	status.SetComponentCondition(&dsc.Status.Conditions, componentsv1.TrustyAIKind, r, m, st)
+	return t.Status.Phase
 }
 
 func (s *componentHandler) NewCRObject(dsc *dscv1.DataScienceCluster) client.Object {

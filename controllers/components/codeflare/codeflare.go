@@ -1,14 +1,19 @@
 package codeflare
 
 import (
+	"context"
 	"fmt"
 
 	operatorv1 "github.com/openshift/api/operator/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/opendatahub-io/opendatahub-operator/v2/apis/components"
 	componentsv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1"
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	cr "github.com/opendatahub-io/opendatahub-operator/v2/pkg/componentsregistry"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -38,6 +43,24 @@ func (s *componentHandler) GetManagementState(dsc *dscv1.DataScienceCluster) ope
 	return operatorv1.Removed
 }
 
+func (s *componentHandler) UpdateDSCStatus(ctx context.Context, dsc *dscv1.DataScienceCluster, c client.Object) string {
+	cf, _ := c.(*componentsv1.CodeFlare)
+	if dsc.Status.Components.CodeFlare == nil {
+		dsc.Status.Components.CodeFlare = &components.Status{}
+	}
+	dsc.Status.Components.CodeFlare.Phase = cf.Status.Phase
+
+	var r, m string
+	st := corev1.ConditionUnknown
+	if rc := meta.FindStatusCondition(cf.Status.Conditions, status.ConditionTypeReady); rc != nil {
+
+		r = rc.Reason
+		m = rc.Message
+		st = corev1.ConditionStatus(rc.Status)
+	}
+	status.SetComponentCondition(&dsc.Status.Conditions, componentsv1.CodeFlareKind, r, m, st)
+	return cf.Status.Phase
+}
 func (s *componentHandler) NewCRObject(dsc *dscv1.DataScienceCluster) client.Object {
 	codeflareAnnotations := make(map[string]string)
 	codeflareAnnotations[annotations.ManagementStateAnnotation] = string(s.GetManagementState(dsc))

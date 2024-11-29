@@ -297,12 +297,12 @@ func (r *DataScienceClusterReconciler) ReconcileComponent(
 			saved.Status.InstalledComponents = make(map[string]bool)
 		}
 		saved.Status.InstalledComponents[componentName] = enabled
-		if enabled {
-			status.SetComponentCondition(&saved.Status.Conditions, componentName, status.ReconcileCompleted, "Component reconciled successfully", corev1.ConditionTrue)
-			// TODO: 	reflect.ValueOf(&saved.Status.Components).Elem().FieldByName(componentName).SetString(s.Phase)
-		} else {
-			status.RemoveComponentCondition(&saved.Status.Conditions, componentName)
+		if saved.Status.Components == nil {
+			saved.Status.Components = &dscv1.ComponentsStatus{}
 		}
+		// handles, enabled, disable, failed, unknonw all cases
+		component.UpdateDSCStatus(ctx, saved, componentCR)
+		
 	})
 	if err != nil {
 		return instance, fmt.Errorf("failed to update DataScienceCluster status after reconciling %s: %w", componentName, err)

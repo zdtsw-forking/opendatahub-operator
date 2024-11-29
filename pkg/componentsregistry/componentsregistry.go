@@ -22,6 +22,7 @@ type ComponentHandler interface {
 	// all components, but I could not find a way to avoid it
 	GetName() string
 	GetManagementState(dsc *dscv1.DataScienceCluster) operatorv1.ManagementState
+	UpdateDSCStatus(ctx context.Context, dsc *dscv1.DataScienceCluster, c client.Object) string
 	// NewCRObject constructs components specific Custom Resource
 	// e.g. Dashboard in datasciencecluster.opendatahub.io group
 	// It returns interface, but it simplifies DSC reconciler code a lot

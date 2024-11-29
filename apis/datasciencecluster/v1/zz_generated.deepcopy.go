@@ -221,7 +221,11 @@ func (in *DataScienceClusterStatus) DeepCopyInto(out *DataScienceClusterStatus) 
 			(*out)[key] = val
 		}
 	}
-	in.Components.DeepCopyInto(&out.Components)
+	if in.Components != nil {
+		in, out := &in.Components, &out.Components
+		*out = new(ComponentsStatus)
+		(*in).DeepCopyInto(*out)
+	}
 	in.Release.DeepCopyInto(&out.Release)
 }
 

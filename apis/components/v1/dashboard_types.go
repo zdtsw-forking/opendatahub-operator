@@ -29,27 +29,6 @@ const (
 	DashboardKind         = "Dashboard"
 )
 
-// DashboardCommonSpec spec defines the shared desired state of Dashboard
-type DashboardCommonSpec struct {
-	// dashboard spec exposed to DSC api
-	components.DevFlagsSpec `json:",inline"`
-	// dashboard spec exposed only to internal api
-}
-
-// DashboardSpec defines the desired state of Dashboard
-type DashboardSpec struct {
-	// dashboard spec exposed to DSC api
-	DashboardCommonSpec `json:",inline"`
-	// dashboard spec exposed only to internal api
-}
-
-// DashboardStatus defines the observed state of Dashboard
-type DashboardStatus struct {
-	components.Status `json:",inline"`
-
-	URL string `json:"url,omitempty"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster
@@ -67,12 +46,29 @@ type Dashboard struct {
 	Status DashboardStatus `json:"status,omitempty"`
 }
 
-func (c *Dashboard) GetDevFlags() *components.DevFlags {
-	return c.Spec.DevFlags
+// DashboardSpec defines the desired state of Dashboard
+type DashboardSpec struct {
+	// dashboard spec exposed to DSC api
+	DashboardCommonSpec `json:",inline"`
+	// dashboard spec exposed only to internal api
 }
 
-func (c *Dashboard) GetStatus() *components.Status {
-	return &c.Status.Status
+// DashboardCommonSpec spec defines the shared desired state of Dashboard
+type DashboardCommonSpec struct {
+	// dashboard spec exposed to DSC api
+	components.DevFlagsSpec `json:",inline"`
+	// dashboard spec exposed only to internal api
+}
+
+// DashboardStatus defines the observed state of Dashboard
+type DashboardStatus struct {
+	components.Status `json:",inline"`
+
+	URL string `json:"url,omitempty"`
+}
+
+type DashboardCommonStatus struct {
+	URL string `json:"url,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -84,14 +80,22 @@ type DashboardList struct {
 	Items           []Dashboard `json:"items"`
 }
 
-func init() {
-	SchemeBuilder.Register(&Dashboard{}, &DashboardList{})
-}
-
 // DSCDashboard contains all the configuration exposed in DSC instance for Dashboard component
 type DSCDashboard struct {
 	// configuration fields common across components
 	components.ManagementSpec `json:",inline"`
 	// dashboard specific field
 	DashboardCommonSpec `json:",inline"`
+}
+
+func init() {
+	SchemeBuilder.Register(&Dashboard{}, &DashboardList{})
+}
+
+func (c *Dashboard) GetDevFlags() *components.DevFlags {
+	return c.Spec.DevFlags
+}
+
+func (c *Dashboard) GetStatus() *components.Status {
+	return &c.Status.Status
 }

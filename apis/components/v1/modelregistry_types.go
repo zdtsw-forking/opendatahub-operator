@@ -29,31 +29,6 @@ const (
 	ModelRegistryKind         = "ModelRegistry"
 )
 
-// ModelRegistryCommonSpec spec defines the shared desired state of ModelRegistry
-type ModelRegistryCommonSpec struct {
-	// model registry spec exposed to DSC api
-	components.DevFlagsSpec `json:",inline"`
-
-	// Namespace for model registries to be installed, configurable only once when model registry is enabled, defaults to "odh-model-registries"
-	// +kubebuilder:default="odh-model-registries"
-	// +kubebuilder:validation:Pattern="^([a-z0-9]([-a-z0-9]*[a-z0-9])?)?$"
-	// +kubebuilder:validation:MaxLength=63
-	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
-}
-
-// ModelRegistrySpec defines the desired state of ModelRegistry
-type ModelRegistrySpec struct {
-	// model registry spec exposed to DSC api
-	ModelRegistryCommonSpec `json:",inline"`
-	//  model registry spec exposed only to internal api
-}
-
-// ModelRegistryStatus defines the observed state of ModelRegistry
-type ModelRegistryStatus struct {
-	components.Status      `json:",inline"`
-	DSCModelRegistryStatus `json:",inline"`
-}
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster
@@ -70,12 +45,34 @@ type ModelRegistry struct {
 	Status ModelRegistryStatus `json:"status,omitempty"`
 }
 
-func (c *ModelRegistry) GetDevFlags() *components.DevFlags {
-	return c.Spec.DevFlags
+// ModelRegistrySpec defines the desired state of ModelRegistry
+type ModelRegistrySpec struct {
+	// model registry spec exposed to DSC api
+	ModelRegistryCommonSpec `json:",inline"`
+	//  model registry spec exposed only to internal api
 }
 
-func (c *ModelRegistry) GetStatus() *components.Status {
-	return &c.Status.Status
+// ModelRegistryCommonSpec spec defines the shared desired state of ModelRegistry
+type ModelRegistryCommonSpec struct {
+	// model registry spec exposed to DSC api
+	components.DevFlagsSpec `json:",inline"`
+
+	// Namespace for model registries to be installed, configurable only once when model registry is enabled, defaults to "odh-model-registries"
+	// +kubebuilder:default="odh-model-registries"
+	// +kubebuilder:validation:Pattern="^([a-z0-9]([-a-z0-9]*[a-z0-9])?)?$"
+	// +kubebuilder:validation:MaxLength=63
+	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
+}
+
+// ModelRegistryStatus defines the observed state of ModelRegistry
+type ModelRegistryStatus struct {
+	components.Status      `json:",inline"`
+	DSCModelRegistryStatus `json:",inline"`
+}
+
+// DSCModelRegistryStatus struct holds the status for the ModelRegistry component exposed in the DSC
+type DSCModelRegistryStatus struct {
+	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -91,6 +88,14 @@ func init() {
 	SchemeBuilder.Register(&ModelRegistry{}, &ModelRegistryList{})
 }
 
+func (c *ModelRegistry) GetDevFlags() *components.DevFlags {
+	return c.Spec.DevFlags
+}
+
+func (c *ModelRegistry) GetStatus() *components.Status {
+	return &c.Status.Status
+}
+
 // +kubebuilder:object:generate=true
 // +kubebuilder:validation:XValidation:rule="(self.managementState != 'Managed') || (oldSelf.registriesNamespace == '') || (oldSelf.managementState != 'Managed')|| (self.registriesNamespace == oldSelf.registriesNamespace)",message="RegistriesNamespace is immutable when model registry is Managed"
 //nolint:lll
@@ -101,9 +106,4 @@ type DSCModelRegistry struct {
 	components.ManagementSpec `json:",inline"`
 	// model registry specific field
 	ModelRegistryCommonSpec `json:",inline"`
-}
-
-// DSCModelRegistryStatus struct holds the status for the ModelRegistry component exposed in the DSC
-type DSCModelRegistryStatus struct {
-	RegistriesNamespace string `json:"registriesNamespace,omitempty"`
 }

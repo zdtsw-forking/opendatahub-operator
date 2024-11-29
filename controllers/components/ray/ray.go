@@ -1,14 +1,19 @@
 package ray
 
 import (
+	"context"
 	"fmt"
 
 	operatorv1 "github.com/openshift/api/operator/v1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/opendatahub-io/opendatahub-operator/v2/apis/components"
 	componentsv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1"
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	cr "github.com/opendatahub-io/opendatahub-operator/v2/pkg/componentsregistry"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -39,6 +44,25 @@ func (s *componentHandler) GetManagementState(dsc *dscv1.DataScienceCluster) ope
 	}
 	return operatorv1.Removed
 }
+func (s *componentHandler) UpdateDSCStatus(ctx context.Context, dsc *dscv1.DataScienceCluster, c client.Object) string {
+	ray, _ := c.(*componentsv1.Ray)
+	if dsc.Status.Components.Ray == nil {
+		dsc.Status.Components.Ray = &components.Status{}
+	}
+	dsc.Status.Components.Ray.Phase = ray.Status.Phase
+
+	var r, m string
+	st := corev1.ConditionUnknown
+	if rc := meta.FindStatusCondition(ray.Status.Conditions, status.ConditionTypeReady); rc != nil {
+
+		r = rc.Reason
+		m = rc.Message
+		st = corev1.ConditionStatus(rc.Status)
+	}
+	status.SetComponentCondition(&dsc.Status.Conditions, componentsv1.RayKind, r, m, st)
+	return ray.Status.Phase
+}
+
 func (s *componentHandler) NewCRObject(dsc *dscv1.DataScienceCluster) client.Object {
 	rayAnnotations := make(map[string]string)
 	rayAnnotations[annotations.ManagementStateAnnotation] = string(s.GetManagementState(dsc))
