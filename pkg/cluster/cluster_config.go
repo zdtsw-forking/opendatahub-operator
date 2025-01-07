@@ -95,6 +95,16 @@ func GetDomain(ctx context.Context, c client.Client) (string, error) {
 	return domain, err
 }
 
+func GetOCPVersion(ctx context.Context, c client.Client) (semver.Version, error) {
+	clusterVersion := &configv1.ClusterVersion{}
+	if err := c.Get(ctx, client.ObjectKey{
+		Name: "version",
+	}, clusterVersion); err != nil {
+		return semver.Version{}, errors.New("unable to get OCP version")
+	}
+	return semver.Make(clusterVersion.Status.History[0].Version)
+}
+
 func getOperatorNamespace() (string, error) {
 	operatorNS, exist := os.LookupEnv("OPERATOR_NAMESPACE")
 	if exist && operatorNS != "" {

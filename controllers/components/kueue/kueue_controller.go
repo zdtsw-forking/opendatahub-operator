@@ -29,6 +29,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	componentApi "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/actions/deploy"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/actions/gc"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/actions/render/kustomize"
@@ -56,6 +57,18 @@ func (s *componentHandler) NewComponentReconciler(ctx context.Context, mgr ctrl.
 		Owns(&promv1.PrometheusRule{}).
 		Owns(&admissionregistrationv1.MutatingWebhookConfiguration{}).
 		Owns(&admissionregistrationv1.ValidatingWebhookConfiguration{}).
+		// We need to dynamically "own" these 2 resource types due to OCP version differences
+		// TODO: once we do not support 4.17-, could move it to :
+		// Owns(&admissionregistrationv1.ValidatingAdmissionPolicy{}).
+		// Owns(&admissionregistrationv1.ValidatingAdmissionPolicyBinding{}).
+		WatchesGVK(
+			gvk.ValidatingAdmissionPolicy,
+			reconciler.Dynamic(),
+		).
+		WatchesGVK(
+			gvk.ValidatingAdmissionPolicyBinding,
+			reconciler.Dynamic(),
+		).
 		Owns(&appsv1.Deployment{}, reconciler.WithPredicates(resources.NewDeploymentPredicate())).
 		Watches(
 			&extv1.CustomResourceDefinition{},

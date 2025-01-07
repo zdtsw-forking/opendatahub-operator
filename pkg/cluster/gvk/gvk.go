@@ -213,4 +213,16 @@ var (
 		Version: "v1beta1",
 		Kind:    "Gateway",
 	}
+
+	ValidatingAdmissionPolicy = schema.GroupVersionKind{
+		Group:   "admissionregistration.k8s.io",
+		Version: "v1",
+		Kind:    "ValidatingAdmissionPolicy",
+	}
+
+	ValidatingAdmissionPolicyBinding = schema.GroupVersionKind{
+		Group:   "admissionregistration.k8s.io",
+		Version: "v1",
+		Kind:    "ValidatingAdmissionPolicyBinding",
+	}
 )

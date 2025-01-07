@@ -4,13 +4,26 @@ import (
 	"context"
 	"fmt"
 
+	ctrl "sigs.k8s.io/controller-runtime"
+
 	componentApi "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	odhtypes "github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/types"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 )
 
-func initialize(_ context.Context, rr *odhtypes.ReconciliationRequest) error {
+func initialize(ctx context.Context, rr *odhtypes.ReconciliationRequest) error {
 	rr.Manifests = append(rr.Manifests, manifestsPath())
+	// Add OCP 4.17+ specific manifests if Minor > 16 {
+	ov, err := cluster.GetOCPVersion(ctx, rr.Client)
+	if err != nil {
+		return fmt.Errorf("failed to get OCP version: %w", err)
+	}
+	ctrl.Log.Info("OCP: ", "version", ov.String())
+	if ov.Minor > 16 { // it is safe to have to check only on minor, v3 has EOL last version is 11
+		ctrl.Log.Info("OCP version is over 4.16")
+		rr.Manifests = append(rr.Manifests, extramanifestsPath())
+	}
 
 	return nil
 }
