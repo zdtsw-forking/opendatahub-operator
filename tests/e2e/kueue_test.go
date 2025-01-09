@@ -15,6 +15,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/util/retry"
@@ -57,6 +58,11 @@ func kueueTestSuite(t *testing.T) {
 		t.Run("Validate Ownerrefrences exist", func(t *testing.T) {
 			err = kueueCtx.testOwnerReferences()
 			require.NoError(t, err, "error getting all Kueue's Ownerrefrences")
+		})
+
+		t.Run("Validate Kueue Dynamically create VAP", func(t *testing.T) {
+			err = kueueCtx.validateVAPReady()
+			require.NoError(t, err, "Kueue instance is not Ready")
 		})
 
 		t.Run("Validate Kueue Ready", func(t *testing.T) {
@@ -161,6 +167,29 @@ func (tc *KueueTestCtx) testOwnerReferences() error {
 			appDeployments.Items[0].OwnerReferences)
 	}
 
+	return nil
+}
+
+func (tc *KueueTestCtx) validateVAPReady() error {
+	// get OCP version from DSC
+	keydsc := types.NamespacedName{Name: "e2e-test-dsci"}
+	dsc := &dscv1.DataScienceCluster{}
+	err := tc.testCtx.customClient.Get(tc.testCtx.ctx, keydsc, dsc)
+	if err != nil {
+		return fmt.Errorf("expect one DSC CR to be found but got error: %w", err)
+	}
+
+	// if ocp is 4.17+ then VAP should be created.
+	if dsc.Status.Release.OCPVersion.Minor > 16 {
+		keyvap := types.NamespacedName{Name: "kueue-validating-admission-policy"}
+		vap := &unstructured.Unstructured{}
+		vap.SetGroupVersionKind(gvk.ValidatingAdmissionPolicy)
+
+		err := tc.testCtx.customClient.Get(tc.testCtx.ctx, keyvap, vap)
+		if err != nil {
+			return fmt.Errorf("expect validatingadminssionpolicy to be found but got error: %w", err)
+		}
+	}
 	return nil
 }
 

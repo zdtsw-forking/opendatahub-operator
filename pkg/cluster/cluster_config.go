@@ -28,8 +28,9 @@ type Platform string
 // Release includes information on operator version and platform
 // +kubebuilder:object:generate=true
 type Release struct {
-	Name    Platform                `json:"name,omitempty"`
-	Version version.OperatorVersion `json:"version,omitempty"`
+	Name       Platform                `json:"name,omitempty"`
+	Version    version.OperatorVersion `json:"version,omitempty"`
+	OCPVersion version.OperatorVersion `json:"ocpversion,omitempty"` // would like to just use semversion but it does not has deepcopy...
 }
 
 var clusterConfig struct {
@@ -95,14 +96,18 @@ func GetDomain(ctx context.Context, c client.Client) (string, error) {
 	return domain, err
 }
 
-func GetOCPVersion(ctx context.Context, c client.Client) (semver.Version, error) {
+func getOCPVersion(ctx context.Context, c client.Client) (version.OperatorVersion, error) {
 	clusterVersion := &configv1.ClusterVersion{}
 	if err := c.Get(ctx, client.ObjectKey{
-		Name: "version",
+		Name: OpenShiftVersionObj,
 	}, clusterVersion); err != nil {
-		return semver.Version{}, errors.New("unable to get OCP version")
+		return version.OperatorVersion{}, errors.New("unable to get OCP version")
 	}
-	return semver.Make(clusterVersion.Status.History[0].Version)
+	v, err := semver.ParseTolerant(clusterVersion.Status.History[0].Version)
+	if err != nil {
+		return version.OperatorVersion{}, errors.New("unable to parse OCP version")
+	}
+	return version.OperatorVersion{Version: v}, nil
 }
 
 func getOperatorNamespace() (string, error) {
@@ -209,6 +214,13 @@ func getRelease(ctx context.Context, cli client.Client) (Release, error) {
 			Version: semver.Version{},
 		},
 	}
+	// Set OCP
+	ocpVersion, err := getOCPVersion(ctx, cli)
+	if err != nil {
+		return initRelease, err
+	}
+	initRelease.OCPVersion = ocpVersion
+
 	// Set platform
 	platform, err := getPlatform(ctx, cli)
 	if err != nil {

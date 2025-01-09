@@ -1,10 +1,13 @@
 package kueue
 
 import (
+	"context"
+
 	conditionsv1 "github.com/openshift/custom-resource-status/conditions/v1"
 
 	componentApi "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/status"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	odhtypes "github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/types"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 )
@@ -40,4 +43,9 @@ func extramanifestsPath() odhtypes.ManifestInfo {
 		ContextDir: ComponentName,
 		SourcePath: "rhoai/ocp-4.17-addons",
 	}
+}
+
+// Add OCP 4.17+ specific manifests if Minor > 16 .
+func vapPredicate(context.Context, *odhtypes.ReconciliationRequest) bool {
+	return cluster.GetRelease().OCPVersion.Minor > 16
 }
