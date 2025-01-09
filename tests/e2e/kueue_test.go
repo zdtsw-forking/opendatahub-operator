@@ -172,14 +172,14 @@ func (tc *KueueTestCtx) testOwnerReferences() error {
 
 func (tc *KueueTestCtx) validateVAPReady() error {
 	// get OCP version from DSC
-	keydsc := types.NamespacedName{Name: "e2e-test-dsci"}
+	keydsc := types.NamespacedName{Name: "e2e-test-dsc"}
 	dsc := &dscv1.DataScienceCluster{}
 	err := tc.testCtx.customClient.Get(tc.testCtx.ctx, keydsc, dsc)
 	if err != nil {
 		return fmt.Errorf("expect one DSC CR to be found but got error: %w", err)
 	}
 
-	// if ocp is 4.17+ then VAP should be created.
+	// if ocp is 4.17+ then VAP and VAPB should be created
 	if dsc.Status.Release.OCPVersion.Minor > 16 {
 		keyvap := types.NamespacedName{Name: "kueue-validating-admission-policy"}
 		vap := &unstructured.Unstructured{}
@@ -188,6 +188,21 @@ func (tc *KueueTestCtx) validateVAPReady() error {
 		err := tc.testCtx.customClient.Get(tc.testCtx.ctx, keyvap, vap)
 		if err != nil {
 			return fmt.Errorf("expect validatingadminssionpolicy to be found but got error: %w", err)
+		}
+		if len(vap.GetOwnerReferences()) == 0 {
+			return errors.New("expect VAP to have ownerref set")
+		}
+
+		keyvapb := types.NamespacedName{Name: "kueue-validating-admission-policy-binding"}
+		vapb := &unstructured.Unstructured{}
+		vapb.SetGroupVersionKind(gvk.ValidatingAdmissionPolicyBinding)
+
+		err = tc.testCtx.customClient.Get(tc.testCtx.ctx, keyvapb, vapb)
+		if err != nil {
+			return fmt.Errorf("expect validatingadminssionpolicybinding to be found but got error: %w", err)
+		}
+		if len(vapb.GetOwnerReferences()) != 0 {
+			return errors.New("expect VAPB have no ownerref set")
 		}
 	}
 	return nil

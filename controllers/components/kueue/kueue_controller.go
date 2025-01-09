@@ -57,14 +57,12 @@ func (s *componentHandler) NewComponentReconciler(ctx context.Context, mgr ctrl.
 		Owns(&promv1.PrometheusRule{}).
 		Owns(&admissionregistrationv1.MutatingWebhookConfiguration{}).
 		Owns(&admissionregistrationv1.ValidatingWebhookConfiguration{}).
-		// We need to dynamically "own" these 2 resource types due to OCP version differences
-		// TODO: once we do not support 4.17-, could move it to :
-		// Owns(&admissionregistrationv1.ValidatingAdmissionPolicy{}).
-		// Owns(&admissionregistrationv1.ValidatingAdmissionPolicyBinding{}).
-		WatchesGVK(
+		// We need dynamically "watch" VAPB, because we want it to be configable by user and it can be left behind when kueue is removed.
+		OwnsGVK(
 			gvk.ValidatingAdmissionPolicy,
 			reconciler.Dynamic(vapPredicate),
 		).
+		// We need dynamically "own" VAP, because we want it has owner so when kueue is removed it gets cleaned.
 		WatchesGVK(
 			gvk.ValidatingAdmissionPolicyBinding,
 			reconciler.Dynamic(vapPredicate),
@@ -85,6 +83,7 @@ func (s *componentHandler) NewComponentReconciler(ctx context.Context, mgr ctrl.
 			kustomize.WithLabel(labels.ODH.Component(LegacyComponentName), labels.True),
 			kustomize.WithLabel(labels.K8SCommon.PartOf, LegacyComponentName),
 		)).
+		WithAction(customizeResources).
 		WithAction(deploy.NewAction(
 			deploy.WithCache(),
 		)).
