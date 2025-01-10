@@ -281,12 +281,6 @@ func manageResource(ctx context.Context, cli client.Client, res *resource.Resour
 	if err == nil {
 		// when resource is found
 		if enabled {
-			// Exception to not update kserve with managed annotation
-			// do not reconcile kserve resource with annotation "opendatahub.io/managed: false"
-			// TODO: remove this exception when we define managed annotation across odh
-			if found.GetAnnotations()[annotations.ManagedByODHOperator] == "false" && componentName == "kserve" {
-				return nil
-			}
 			return updateResource(ctx, cli, res, found, owner)
 		}
 		// Delete resource if it exists or do nothing if not found
@@ -354,7 +348,7 @@ func createResource(ctx context.Context, cli client.Client, res *resource.Resour
 	if err != nil {
 		return err
 	}
-	if obj.GetKind() != "CustomResourceDefinition" && obj.GetKind() != "OdhDashboardConfig" {
+	if obj.GetKind() != "CustomResourceDefinition" {
 		if err := ctrl.SetControllerReference(owner, metav1.Object(obj), cli.Scheme()); err != nil {
 			return err
 		}
@@ -364,10 +358,6 @@ func createResource(ctx context.Context, cli client.Client, res *resource.Resour
 
 // Exception to skip ODHDashboardConfig CR reconcile.
 func updateResource(ctx context.Context, cli client.Client, res *resource.Resource, found *unstructured.Unstructured, owner metav1.Object) error {
-	if found.GetKind() == "OdhDashboardConfig" {
-		return nil
-	}
-
 	// Operator reconcile allowedListfield only when resource is managed by operator(annotation is true)
 	// all other cases: no annotation at all, required annotation not present, of annotation is non-true value, skip reconcile
 	if managed := found.GetAnnotations()[annotations.ManagedByODHOperator]; managed != "true" {
