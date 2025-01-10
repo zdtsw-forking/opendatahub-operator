@@ -28,14 +28,19 @@ type Platform string
 // Release includes information on operator version and platform
 // +kubebuilder:object:generate=true
 type Release struct {
-	Name       Platform                `json:"name,omitempty"`
-	Version    version.OperatorVersion `json:"version,omitempty"`
-	OCPVersion version.OperatorVersion `json:"ocpversion,omitempty"` // would like to just use semversion but it does not has deepcopy...
+	Name    Platform                `json:"name,omitempty"`
+	Version version.OperatorVersion `json:"version,omitempty"`
+}
+
+type ClusterInfo struct {
+	Type    string                  `json:"type,omitempty"` // openshift , TODO: can be other value if we later support other type
+	Version version.OperatorVersion `json:"version,omitempty"`
 }
 
 var clusterConfig struct {
-	Namespace string
-	Release   Release
+	Namespace   string
+	Release     Release
+	ClusterInfo ClusterInfo
 }
 
 // Init initializes cluster configuration variables on startup
@@ -55,6 +60,11 @@ func Init(ctx context.Context, cli client.Client) error {
 		return err
 	}
 
+	clusterConfig.ClusterInfo, err = getClusterInfo(ctx, cli)
+	if err != nil {
+		return err
+	}
+
 	printClusterConfig(log)
 
 	return nil
@@ -62,8 +72,9 @@ func Init(ctx context.Context, cli client.Client) error {
 
 func printClusterConfig(log logr.Logger) {
 	log.Info("Cluster config",
-		"Namespace", clusterConfig.Namespace,
-		"Release", clusterConfig.Release)
+		"Operator Namespace", clusterConfig.Namespace,
+		"Release", clusterConfig.Release,
+		"Cluster", clusterConfig.ClusterInfo)
 }
 
 func GetOperatorNamespace() (string, error) {
@@ -75,6 +86,10 @@ func GetOperatorNamespace() (string, error) {
 
 func GetRelease() Release {
 	return clusterConfig.Release
+}
+
+func GetClusterInfo() ClusterInfo {
+	return clusterConfig.ClusterInfo
 }
 
 func GetDomain(ctx context.Context, c client.Client) (string, error) {
@@ -96,6 +111,7 @@ func GetDomain(ctx context.Context, c client.Client) (string, error) {
 	return domain, err
 }
 
+// This is an openshift speicifc implementation.
 func getOCPVersion(ctx context.Context, c client.Client) (version.OperatorVersion, error) {
 	clusterVersion := &configv1.ClusterVersion{}
 	if err := c.Get(ctx, client.ObjectKey{
@@ -214,12 +230,6 @@ func getRelease(ctx context.Context, cli client.Client) (Release, error) {
 			Version: semver.Version{},
 		},
 	}
-	// Set OCP
-	ocpVersion, err := getOCPVersion(ctx, cli)
-	if err != nil {
-		return initRelease, err
-	}
-	initRelease.OCPVersion = ocpVersion
 
 	// Set platform
 	platform, err := getPlatform(ctx, cli)
@@ -250,6 +260,23 @@ func getRelease(ctx context.Context, cli client.Client) (Release, error) {
 	}
 	initRelease.Version = csv.Spec.Version
 	return initRelease, nil
+}
+
+func getClusterInfo(ctx context.Context, cli client.Client) (ClusterInfo, error) {
+	c := ClusterInfo{
+		Version: version.OperatorVersion{
+			Version: semver.Version{},
+		},
+		Type: "OpenShift",
+	}
+	// Set OCP
+	ocpVersion, err := getOCPVersion(ctx, cli)
+	if err != nil {
+		return c, err
+	}
+	c.Version = ocpVersion
+
+	return c, nil
 }
 
 // IsDefaultAuthMethod returns true if the default authentication method is IntegratedOAuth or empty.

@@ -47,5 +47,5 @@ func extramanifestsPath() odhtypes.ManifestInfo {
 
 // Add OCP 4.17+ specific manifests if Minor > 16 .
 func vapPredicate(context.Context, *odhtypes.ReconciliationRequest) bool {
-	return cluster.GetRelease().OCPVersion.Minor > 16
+	return cluster.GetClusterInfo().Version.Minor > 16
 }

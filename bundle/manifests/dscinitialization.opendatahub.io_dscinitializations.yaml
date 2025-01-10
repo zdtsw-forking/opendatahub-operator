@@ -304,8 +304,6 @@ spec:
                 properties:
                   name:
                     type: string
-                  ocpversion:
-                    type: string
                   version:
                     type: string
                 type: object

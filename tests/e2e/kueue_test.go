@@ -24,6 +24,7 @@ import (
 	componentApi "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
 	dscv1 "github.com/opendatahub-io/opendatahub-operator/v2/apis/datasciencecluster/v1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/controllers/components/kueue"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
 )
@@ -171,16 +172,8 @@ func (tc *KueueTestCtx) testOwnerReferences() error {
 }
 
 func (tc *KueueTestCtx) validateVAPReady() error {
-	// get OCP version from DSC
-	keydsc := types.NamespacedName{Name: "e2e-test-dsc"}
-	dsc := &dscv1.DataScienceCluster{}
-	err := tc.testCtx.customClient.Get(tc.testCtx.ctx, keydsc, dsc)
-	if err != nil {
-		return fmt.Errorf("expect one DSC CR to be found but got error: %w", err)
-	}
-
 	// if ocp is 4.17+ then VAP and VAPB should be created
-	if dsc.Status.Release.OCPVersion.Minor > 16 {
+	if cluster.GetClusterInfo().Version.Minor > 16 {
 		keyvap := types.NamespacedName{Name: "kueue-validating-admission-policy"}
 		vap := &unstructured.Unstructured{}
 		vap.SetGroupVersionKind(gvk.ValidatingAdmissionPolicy)

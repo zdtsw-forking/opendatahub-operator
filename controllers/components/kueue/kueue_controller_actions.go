@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	componentApi "github.com/opendatahub-io/opendatahub-operator/v2/apis/components/v1alpha1"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
 	odhtypes "github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/types"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
@@ -15,7 +16,7 @@ import (
 func initialize(ctx context.Context, rr *odhtypes.ReconciliationRequest) error {
 	rr.Manifests = append(rr.Manifests, manifestsPath())
 	// Add OCP 4.17+ specific manifests if Minor > 16
-	if rr.Release.OCPVersion.Minor > 16 {
+	if cluster.GetClusterInfo().Version.Minor > 16 {
 		rr.Manifests = append(rr.Manifests, extramanifestsPath())
 	}
 	return nil
