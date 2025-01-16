@@ -41,6 +41,9 @@ spec:
         - namespaceSelector:
             matchLabels:
               opendatahub.io/generated-namespace: "true"
+        - namespaceSelector:
+            matchLabels:
+              opendatahub.io/application-namespace: "true"
   egress:
   - {}
   policyTypes:

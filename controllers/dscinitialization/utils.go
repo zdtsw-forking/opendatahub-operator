@@ -3,6 +3,7 @@ package dscinitialization
 import (
 	"context"
 	"crypto/rand"
+	"encoding/json"
 	"reflect"
 	"time"
 
@@ -74,9 +75,20 @@ func (r *DSCInitializationReconciler) createOdhNamespace(ctx context.Context, ds
 		// Patch Application Namespace if it exists
 	} else if dscInit.Spec.Monitoring.ManagementState == operatorv1.Managed {
 		log.Info("Patching application namespace for Managed cluster", "name", name)
-		labelPatch := `{"metadata":{"labels":{"openshift.io/cluster-monitoring":"true","pod-security.kubernetes.io/enforce":"baseline","opendatahub.io/generated-namespace": "true"}}}`
-		err = r.Patch(ctx, foundNamespace, client.RawPatch(types.MergePatchType,
-			[]byte(labelPatch)))
+		patchMap := map[string]interface{}{
+			"metadata": map[string]interface{}{
+				"labels": map[string]string{
+					labels.ClusterMonitoring:  labels.True,
+					labels.SecurityEnforce:    "baseline",
+					labels.ODH.OwnedNamespace: labels.True,
+				},
+			},
+		}
+		labelPatch, err := json.Marshal(patchMap)
+		if err != nil {
+			return err
+		}
+		err = r.Patch(ctx, foundNamespace, client.RawPatch(types.MergePatchType, labelPatch))
 		if err != nil {
 			return err
 		}
@@ -110,9 +122,20 @@ func (r *DSCInitializationReconciler) createOdhNamespace(ctx context.Context, ds
 			}
 		} else { // force to patch monitoring namespace with label for cluster-monitoring
 			log.Info("Patching monitoring namespace", "name", monitoringName)
-			labelPatch := `{"metadata":{"labels":{"openshift.io/cluster-monitoring":"true", "pod-security.kubernetes.io/enforce":"baseline","opendatahub.io/generated-namespace": "true"}}}`
-
-			err = r.Patch(ctx, foundMonitoringNamespace, client.RawPatch(types.MergePatchType, []byte(labelPatch)))
+			patchMap := map[string]interface{}{
+				"metadata": map[string]interface{}{
+					"labels": map[string]string{
+						labels.ClusterMonitoring:  labels.True,
+						labels.SecurityEnforce:    "baseline",
+						labels.ODH.OwnedNamespace: labels.True,
+					},
+				},
+			}
+			labelPatch, err := json.Marshal(patchMap)
+			if err != nil {
+				return err
+			}
+			err = r.Patch(ctx, foundMonitoringNamespace, client.RawPatch(types.MergePatchType, labelPatch))
 			if err != nil {
 				return err
 			}

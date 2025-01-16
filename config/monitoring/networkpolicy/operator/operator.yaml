@@ -30,6 +30,9 @@ spec:
               opendatahub.io/generated-namespace: "true"
         - namespaceSelector:
             matchLabels:
+              opendatahub.io/application-namespace: "true"
+        - namespaceSelector:
+            matchLabels:
               policy-group.network.openshift.io/host-network: ""
   policyTypes:
     - Ingress
