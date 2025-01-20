@@ -268,9 +268,6 @@ func main() { //nolint:funlen,maintidx,gocyclo
 			&rbacv1.RoleBinding{}: {
 				Namespaces: oDHCache,
 			},
-			&rbacv1.ClusterRole{}:                    {},
-			&rbacv1.ClusterRoleBinding{}:             {},
-			&securityv1.SecurityContextConstraints{}: {},
 		},
 	}
 
