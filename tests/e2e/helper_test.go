@@ -43,7 +43,7 @@ const (
 	componentReadyTimeout    = 7 * time.Minute // in component code is to set 2-3 mins, keep it 7 mins just the same value we used after introduce "Ready" check
 	componentDeletionTimeout = 1 * time.Minute
 	crdReadyTimeout          = 1 * time.Minute
-	csvWaitTimeout           = 1 * time.Minute
+	csvWaitTimeout           = 90 * time.Second // time required when check dependent operators are installed.
 	dsciCreationTimeout      = 20 * time.Second // time required to get a DSCI is created.
 	dscCreationTimeout       = 20 * time.Second // time required to wait till DSC is created.
 	generalRetryInterval     = 10 * time.Second
