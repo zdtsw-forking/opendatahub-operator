@@ -221,8 +221,10 @@ func CleanupExistingResource(ctx context.Context,
 	// Handling for dashboard OdhApplication Jupyterhub CR, see jira #443
 	multiErr = multierror.Append(multiErr, removOdhApplicationsCR(ctx, cli, gvk.OdhApplication, "jupyterhub", d.Spec.ApplicationsNamespace))
 
-	// cleanup for github.com/opendatahub-io/pull/888
-	deprecatedFeatureTrackers := []string{d.Spec.ApplicationsNamespace + "-kserve-temporary-fixes"}
+	deprecatedFeatureTrackers := []string{
+		d.Spec.ApplicationsNamespace + "-kserve-temporary-fixes", // cleanup for github.com/opendatahub-io/pull/888
+		d.Spec.ApplicationsNamespace + "-enable-proxy-injection-in-authorino-deployment",
+	}
 	multiErr = multierror.Append(multiErr, deleteDeprecatedResources(ctx, cli, d.Spec.ApplicationsNamespace, deprecatedFeatureTrackers, &featuresv1.FeatureTrackerList{}))
 
 	// Cleanup of deprecated default RoleBinding resources
