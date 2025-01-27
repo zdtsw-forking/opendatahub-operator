@@ -3,6 +3,7 @@ package dscinitialization
 import (
 	"context"
 	"crypto/rand"
+	"embed"
 	"errors"
 	"fmt"
 	"reflect"
@@ -203,96 +204,121 @@ func (r *DSCInitializationReconciler) reconcileDefaultNetworkPolicy(
 		}
 		return nil
 	}
-	// Expected namespace for the given name in ODH
-	desiredNetworkPolicy := &networkingv1.NetworkPolicy{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "NetworkPolicy",
-			APIVersion: "v1",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: name,
-		},
-		Spec: networkingv1.NetworkPolicySpec{
-			// open ingress for all port for now, TODO: add explicit port per component
-			// Ingress: []networkingv1.NetworkPolicyIngressRule{{}},
-			// open ingress for only operator created namespaces
-			Ingress: []networkingv1.NetworkPolicyIngressRule{
-				{
-					From: []networkingv1.NetworkPolicyPeer{
-						{ /* allow ODH namespace <->ODH namespace:
-							- default notebook project: rhods-notebooks
-							- redhat-odh-monitoring
-							- redhat-odh-applications / opendatahub
-							*/
-							NamespaceSelector: &metav1.LabelSelector{ // AND logic
-								MatchLabels: map[string]string{
-									labels.ODH.OwnedNamespace: labels.True,
-								},
-							},
-						},
-					},
-				},
-				{ // OR logic
-					From: []networkingv1.NetworkPolicyPeer{
-						{ // need this to access external-> dashboard
-							NamespaceSelector: &metav1.LabelSelector{
-								MatchLabels: map[string]string{
-									"network.openshift.io/policy-group": "ingress",
-								},
-							},
-						},
-					},
-				},
-				{ // OR logic for PSI
-					From: []networkingv1.NetworkPolicyPeer{
-						{ // need this to access external->dashboard
-							NamespaceSelector: &metav1.LabelSelector{
-								MatchLabels: map[string]string{
-									"kubernetes.io/metadata.name": "openshift-host-network",
-								},
-							},
-						},
-					},
-				},
-				{
-					From: []networkingv1.NetworkPolicyPeer{
-						{ // need this for cluster-monitoring work: cluster-monitoring->ODH namespaces
-							NamespaceSelector: &metav1.LabelSelector{
-								MatchLabels: map[string]string{
-									"kubernetes.io/metadata.name": "openshift-monitoring",
-								},
-							},
-						},
-					},
-				},
-			},
-			PolicyTypes: []networkingv1.PolicyType{
-				networkingv1.PolicyTypeIngress,
-			},
-		},
+
+	// TODO:
+	// go:embed resources
+	var commonDSCIFS embed.FS
+
+	dsciData := map[string]string{
+		"ApplicationsNamespace": dscInit.Spec.ApplicationsNamespace,
 	}
 
-	// Create NetworkPolicy if it doesn't exist
-	foundNetworkPolicy := &networkingv1.NetworkPolicy{}
-	justCreated := false
-	err := r.Client.Get(ctx, client.ObjectKeyFromObject(desiredNetworkPolicy), foundNetworkPolicy)
-	if err != nil {
-		if !k8serr.IsNotFound(err) {
-			return err
-		}
-		// Set Controller reference
-		err = ctrl.SetControllerReference(dscInit, desiredNetworkPolicy, r.Scheme)
-		if err != nil {
-			log.Error(err, "Unable to add OwnerReference to the Network policy")
-			return err
-		}
-		err = r.Client.Create(ctx, desiredNetworkPolicy)
-		if err != nil && !k8serr.IsAlreadyExists(err) {
-			return err
-		}
-		justCreated = true
+	if err := deploy.Wen(ctx, r.Client, dsciData, dscInit, commonDSCIFS, "resources/common/application-nwp.tmpl.yaml"); err != nil {
+		log.Error(err, "error to set networkpolicy in applications namespace")
+		return err
 	}
+
+	// // Expected namespace for the given name in ODH
+	// desiredNetworkPolicy := &networkingv1.NetworkPolicy{
+	// 	TypeMeta: metav1.TypeMeta{
+	// 		Kind:       "NetworkPolicy",
+	// 		APIVersion: "v1",
+	// 	},
+	// 	ObjectMeta: metav1.ObjectMeta{
+	// 		Name:      name,
+	// 		Namespace: name,
+	// 	},
+	// 	Spec: networkingv1.NetworkPolicySpec{
+	// 		// open ingress for all port for now, TODO: add explicit port per component
+	// 		// Ingress: []networkingv1.NetworkPolicyIngressRule{{}},
+	// 		// open ingress for only operator created namespaces
+	// 		Ingress: []networkingv1.NetworkPolicyIngressRule{
+	// 			{
+	// 				From: []networkingv1.NetworkPolicyPeer{
+	// 					{ /* allow ODH namespace <->ODH namespace:
+	// 						- default notebook project: rhods-notebooks
+	// 						- redhat-odh-monitoring
+	// 						- redhat-odh-applications / opendatahub
+	// 						*/
+	// 						NamespaceSelector: &metav1.LabelSelector{ // AND logic
+	// 							MatchLabels: map[string]string{
+	// 								labels.ODH.OwnedNamespace: labels.True,
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 			},
+	// 			{ // OR logic to minic customized application namespace
+	// 				From: []networkingv1.NetworkPolicyPeer{
+	// 					{
+	// 						NamespaceSelector: &metav1.LabelSelector{ // AND logic
+	// 							MatchLabels: map[string]string{
+	// 								labels.CustomizedAppNamespace: labels.True,
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 			},
+	// 			{ // OR logic
+	// 				From: []networkingv1.NetworkPolicyPeer{
+	// 					{ // need this to access external-> dashboard
+	// 						NamespaceSelector: &metav1.LabelSelector{
+	// 							MatchLabels: map[string]string{
+	// 								"network.openshift.io/policy-group": "ingress",
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 			},
+	// 			{ // OR logic for PSI
+	// 				From: []networkingv1.NetworkPolicyPeer{
+	// 					{ // need this to access external->dashboard
+	// 						NamespaceSelector: &metav1.LabelSelector{
+	// 							MatchLabels: map[string]string{
+	// 								"kubernetes.io/metadata.name": "openshift-host-network",
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 			},
+	// 			{
+	// 				From: []networkingv1.NetworkPolicyPeer{
+	// 					{ // need this for cluster-monitoring work: cluster-monitoring->ODH namespaces
+	// 						NamespaceSelector: &metav1.LabelSelector{
+	// 							MatchLabels: map[string]string{
+	// 								"kubernetes.io/metadata.name": "openshift-monitoring",
+	// 							},
+	// 						},
+	// 					},
+	// 				},
+	// 			},
+	// 		},
+	// 		PolicyTypes: []networkingv1.PolicyType{
+	// 			networkingv1.PolicyTypeIngress,
+	// 		},
+	// 	},
+	// }
+
+	// // Create NetworkPolicy if it doesn't exist
+	// foundNetworkPolicy := &networkingv1.NetworkPolicy{}
+	// justCreated := false
+	// err := r.Client.Get(ctx, client.ObjectKeyFromObject(desiredNetworkPolicy), foundNetworkPolicy)
+	// if err != nil {
+	// 	if !k8serr.IsNotFound(err) {
+	// 		return err
+	// 	}
+	// 	// Set Controller reference
+	// 	err = ctrl.SetControllerReference(dscInit, desiredNetworkPolicy, r.Scheme)
+	// 	if err != nil {
+	// 		log.Error(err, "Unable to add OwnerReference to the Network policy")
+	// 		return err
+	// 	}
+	// 	err = r.Client.Create(ctx, desiredNetworkPolicy)
+	// 	if err != nil && !k8serr.IsAlreadyExists(err) {
+	// 		return err
+	// 	}
+	// 	justCreated = true
+	// }
 
 	// Reconcile the NetworkPolicy spec if it has been manually modified
 	if !justCreated && !CompareNotebookNetworkPolicies(*desiredNetworkPolicy, *foundNetworkPolicy) {
