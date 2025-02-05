@@ -250,4 +250,10 @@ var (
 		Version: "v1",
 		Kind:    "ValidatingAdmissionPolicyBinding",
 	}
+
+	InferenceServices = schema.GroupVersionKind{
+		Group:   "serving.kserve.io",
+		Version: "v1beta1",
+		Kind:    "InferenceService",
+	}
 )
