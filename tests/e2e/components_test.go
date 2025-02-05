@@ -2,6 +2,7 @@ package e2e_test
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -211,7 +212,7 @@ func (c *ComponentTestCtx) ValidateComponentDisabled(t *testing.T) {
 	))
 }
 
-func (c *ComponentTestCtx) ValidateCRDReinstated(t *testing.T, name string, version ...string) {
+func (c *ComponentTestCtx) ValidateCRDReinstated(t *testing.T, name string, versions ...string) {
 	t.Helper()
 
 	g := c.NewWithT(t)
@@ -258,12 +259,14 @@ func (c *ComponentTestCtx) ValidateCRDReinstated(t *testing.T, name string, vers
 	g.List(gvk.CustomResourceDefinition, crdSel).Eventually().Should(
 		HaveLen(1),
 	)
-	if len(version) != 0 {
+	if len(versions) != 0 {
+		slices.Sort(versions)
+		sortedVersions := strings.Join(versions, ",")
 		g.Get(
 			gvk.CustomResourceDefinition,
 			types.NamespacedName{Name: name},
 		).Eventually(5*time.Second, 500*time.Millisecond).Should(
-			jq.Match(`.status.storedVersions[0] == "%s"`, version[0]),
+			jq.Match(`.status.storedVersions | sort | join(",") == "%s"`, sortedVersions),
 		)
 	}
 }
