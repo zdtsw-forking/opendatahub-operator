@@ -195,7 +195,7 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     repository: https://github.com/red-hat-data-services/rhods-operator
     support: Red Hat OpenShift AI
-  name: rhods-operator.v2.17.0
+  name: rhods-operator.v2.18.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -855,6 +855,14 @@ spec:
         - apiGroups:
           - features.opendatahub.io
           resources:
+          - featuretrackers/finalizers
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - features.opendatahub.io
+          resources:
           - featuretrackers/status
           verbs:
           - delete
@@ -1074,6 +1082,14 @@ spec:
           - knativeservings
           verbs:
           - '*'
+        - apiGroups:
+          - operator.knative.dev
+          resources:
+          - knativeservings/finalizers
+          verbs:
+          - get
+          - patch
+          - update
         - apiGroups:
           - operator.openshift.io
           resources:
@@ -1456,7 +1472,7 @@ spec:
   minKubeVersion: 1.25.0
   provider:
     name: Red Hat
-  version: 2.17.0
+  version: 2.18.0
   webhookdefinitions:
   - admissionReviewVersions:
     - v1
