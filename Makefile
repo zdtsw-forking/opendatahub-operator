@@ -312,9 +312,14 @@ bundle: prepare operator-sdk ## Generate bundle manifests and metadata, then val
 	mv bundle.Dockerfile Dockerfiles/
 	rm -f bundle/manifests/opendatahub-operator-webhook-service_v1_service.yaml
 
+.PHONY: bundle-vap
+bundle-vap:
+	$(KUSTOMIZE) build config/vap > bundle/manifests/hardwareprofile-vap.yaml
+
 .PHONY: bundle-build
-bundle-build: bundle
+bundle-build: bundle bundle-vap
 	$(IMAGE_BUILDER) build --no-cache -f Dockerfiles/bundle.Dockerfile --platform $(PLATFORM) -t $(BUNDLE_IMG) .
+	rm -f bundle/manifests/hardwareprofile-vap.yaml
 
 .PHONY: bundle-push
 bundle-push: ## Push the bundle image.
