@@ -174,10 +174,10 @@ func ValidateInferenceServiceConnectionAnnotation(ctx context.Context,
 	if annotationValue == "" {
 		// removal case
 		if req.Operation == "UPDATE" {
-			return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value, cleanup if present already", annotations.Connection)), ConnectionActionRemove, "", ""
+			return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value on UPDATE, cleanup if present already", annotations.Connection)), ConnectionActionRemove, "", ""
 		}
 		if req.Operation == "CREATE" {
-			return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value, skipping validation", annotations.Connection)), ConnectionActionNone, "", ""
+			return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value on CREATE, skipping validation", annotations.Connection)), ConnectionActionNone, "", ""
 		}
 	}
 

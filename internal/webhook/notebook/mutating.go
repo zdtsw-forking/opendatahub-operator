@@ -73,40 +73,67 @@ func (w *NotebookWebhook) Handle(ctx context.Context, req admission.Request) adm
 		return admission.Allowed("Object marked for deletion, skipping connection logic")
 	}
 
-	var resp admission.Response
-
 	switch req.Operation {
 	case admissionv1.Create, admissionv1.Update:
-		validationResp, shouldInject, secretRefs := w.validateNotebookConnectionAnnotation(ctx, notebook, &req)
+		validationResp, action, secretRefs := w.validateNotebookConnectionAnnotation(ctx, notebook, &req)
 		if !validationResp.Allowed {
 			return validationResp
 		}
 
 		// Skip proceeding to injection if shouldInject is false or the secretRefs nil
-		if !shouldInject || secretRefs == nil {
+		if secretRefs == nil {
 			return admission.Allowed(fmt.Sprintf("Connection annotation validation passed in namespace %s for %s, no injection needed", req.Namespace, req.Kind.Kind))
 		}
 
-		injectionPerformed, obj, err := w.performConnectionInjection(notebook, secretRefs)
-		if err != nil {
-			log.Error(err, "Failed to perform connection injection")
-			return admission.Errored(http.StatusInternalServerError, err)
-		}
-
-		if injectionPerformed {
-			marshaledObj, err := json.Marshal(obj)
+		// Handle different actions based on the ConnectionAction value
+		switch action {
+		case webhookutils.ConnectionActionInject:
+			// Perform injection for valid connection secrets
+			injectionPerformed, obj, err := w.performConnectionInjection(notebook, secretRefs)
 			if err != nil {
-				log.Error(err, "Failed to marshal modified object")
+				log.Error(err, "Failed to perform connection injection")
 				return admission.Errored(http.StatusInternalServerError, err)
 			}
-			return admission.PatchResponseFromRaw(req.Object.Raw, marshaledObj)
+			if injectionPerformed {
+				marshaledObj, err := json.Marshal(obj)
+				if err != nil {
+					log.Error(err, "Failed to marshal modified object")
+					return admission.Errored(http.StatusInternalServerError, err)
+				}
+				return admission.PatchResponseFromRaw(req.Object.Raw, marshaledObj)
+			}
+			return admission.Allowed(fmt.Sprintf("No connection injection performed for %s in namespace %s", req.Kind.Kind, req.Namespace))
+
+		case webhookutils.ConnectionActionRemove:
+			fmt.Println("WEN: performing connection cleanup")
+			// Perform cleanup when annotation is removed
+			cleanupPerformed, err := w.performConnectionCleanup(notebook)
+			if err != nil {
+				log.Error(err, "Failed to perform connection cleanup")
+				return admission.Errored(http.StatusInternalServerError, err)
+			}
+			if cleanupPerformed {
+				marshaledObj, err := json.Marshal(notebook)
+				if err != nil {
+					return admission.Errored(http.StatusInternalServerError, err)
+				}
+				fmt.Println("WEN: marshaledObj", string(marshaledObj))
+				return admission.PatchResponseFromRaw(req.Object.Raw, marshaledObj)
+			}
+			return admission.Allowed(fmt.Sprintf("No need connection cleanup for %s in namespace %s", req.Kind.Kind, req.Namespace))
+
+		case webhookutils.ConnectionActionNone:
+			// No action needed
+			return admission.Allowed(fmt.Sprintf("Connection annotation validation passed in namespace %s for %s, no action needed", req.Namespace, req.Kind.Kind))
+
+		default:
+			log.V(1).Info("Unknown", "action", action)
+			return admission.Allowed(fmt.Sprintf("Connection validation passed in namespace %s for %s, unknown action: %s", req.Namespace, req.Kind.Kind, action))
 		}
 
-	default:
-		resp = admission.Allowed(fmt.Sprintf("Operation %s on %s allowed", req.Operation, req.Kind.Kind))
+	default: // Delete operation
+		return admission.Allowed(fmt.Sprintf("Operation %s on %s allowed in namespace %s", req.Operation, req.Kind.Kind, req.Namespace))
 	}
-
-	return resp
 }
 
 // validateNotebookConnectionAnnotation validates the connection annotation "opendatahub.io/connections"
@@ -117,38 +144,47 @@ func (w *NotebookWebhook) validateNotebookConnectionAnnotation(
 	ctx context.Context,
 	nb *unstructured.Unstructured,
 	req *admission.Request,
-) (admission.Response, bool, []corev1.SecretReference) {
+) (admission.Response, webhookutils.ConnectionAction, []corev1.SecretReference) {
 	log := logf.FromContext(ctx)
 
 	annotationValue := resources.GetAnnotation(nb, annotations.Connection)
 	if annotationValue == "" {
-		return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value, skipping validation", annotations.Connection)), false, nil
+		if req.Operation == "UPDATE" {
+			return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value on UPDATE, cleanup if present already",
+				annotations.Connection)), webhookutils.ConnectionActionRemove, nil
+		}
+		if req.Operation == "CREATE" {
+			return admission.Allowed(fmt.Sprintf("Annotation '%s' not present or empty value on CREATE, skipping validation",
+				annotations.Connection)), webhookutils.ConnectionActionNone, nil
+		}
 	}
 
 	// Parse the connections annotation
 	connectionSecrets, err := parseConnectionsAnnotation(annotationValue)
 	if err != nil {
 		log.Error(err, "failed to parse connections annotation", "annotationValue", annotationValue)
-		return admission.Denied(fmt.Sprintf("failed to parse connections annotation: %v", err)), false, nil
+		return admission.Denied(fmt.Sprintf("failed to parse connections annotation: %v", err)), webhookutils.ConnectionActionNone, nil
 	}
 
 	// Validate each connection secret exists and the user has permission to get each secret
 	secretExistsErrors, permissionsErrors, err := w.checkSecretsExistsAndUserHasPermissions(ctx, req, connectionSecrets)
 	if err != nil {
 		log.Error(err, "error verifying secret(s) exist or confirming user has get permissions for the secret(s)", "connectionSecrets", connectionSecrets)
-		return admission.Errored(http.StatusInternalServerError, fmt.Errorf("error verifying secret(s) exist/user has permissions for them %s: %w", connectionSecrets, err)), false, nil
+		return admission.Errored(http.StatusInternalServerError,
+			fmt.Errorf("error verifying secret(s) exist/user has permissions for them %s: %w", connectionSecrets, err)), webhookutils.ConnectionActionNone, nil
 	}
 
 	if len(secretExistsErrors) > 0 {
 		return admission.Denied(fmt.Sprintf("some of the connection secret(s) do not exist or are outside the Notebook's namespace: %s",
-			strings.Join(secretExistsErrors, ", "))), false, nil
+			strings.Join(secretExistsErrors, ", "))), webhookutils.ConnectionActionNone, nil
 	}
 
 	if len(permissionsErrors) > 0 {
-		return admission.Denied(fmt.Sprintf("user does not have permission to access the following connection secret(s): %s", strings.Join(permissionsErrors, ", "))), false, nil
+		return admission.Denied(fmt.Sprintf("user does not have permission to access the following connection secret(s): %s",
+			strings.Join(permissionsErrors, ", "))), webhookutils.ConnectionActionNone, nil
 	}
 
-	return admission.Allowed("Connection permissions validated successfully"), true, connectionSecrets
+	return admission.Allowed("Connection permissions validated successfully"), webhookutils.ConnectionActionInject, connectionSecrets
 }
 
 // parseConnectionsAnnotation parses the connections annotation value into a list of secret references.
@@ -273,7 +309,10 @@ func (w *NotebookWebhook) performConnectionInjection(nb *unstructured.Unstructur
 	}
 
 	// Get existing envFrom from the container
-	existingEnvFrom, _ := container["envFrom"].([]interface{})
+	existingEnvFrom, ok := container["envFrom"].([]interface{})
+	if !ok {
+		return false, nil, errors.New("envFrom is not a list")
+	}
 
 	// Keep only non-secretRef entries (like configMapRef)
 	var preservedEntries []interface{}
@@ -308,4 +347,57 @@ func (w *NotebookWebhook) performConnectionInjection(nb *unstructured.Unstructur
 	}
 
 	return true, nb, nil
+}
+
+// performConnectionCleanup removes previously injected connection fields when the annotation is removed on UPDATE operation.
+func (w *NotebookWebhook) performConnectionCleanup(nb *unstructured.Unstructured) (bool, error) {
+	// Get the notebook containers
+	containers, found, err := unstructured.NestedSlice(nb.Object, NotebookContainersPath...)
+	if err != nil {
+		return false, fmt.Errorf("failed to get containers array: %w", err)
+	}
+	if !found || len(containers) == 0 {
+		return false, nil
+	}
+
+	// The notebook only has one container, so we can get the envFrom from the first container
+	// TODO: we might need to double check once kube-auth-proxy is in place will order be preserved as-is
+	container, ok := containers[0].(map[string]interface{})
+	if !ok {
+		return false, errors.New("first container is not a map[string]interface{}")
+	}
+
+	// Get all existing envFrom from the container
+	existingEnvFrom, ok := container["envFrom"].([]interface{})
+	if !ok {
+		return false, errors.New("envFrom is not a list")
+	}
+
+	// Keep only non-secretRef entries,e.g configMapRef
+	var nonSecretRef []interface{}
+	for _, entry := range existingEnvFrom {
+		if entryMap, ok := entry.(map[string]interface{}); ok {
+			if _, hasSecretRef := entryMap["secretRef"]; !hasSecretRef {
+				nonSecretRef = append(nonSecretRef, entry)
+			}
+		}
+	}
+
+	if len(nonSecretRef) == len(existingEnvFrom) {
+		// No secretRef entries were found, so no cleanup needed, fast exit
+		return false, nil
+	}
+
+	container["envFrom"] = nonSecretRef
+	fmt.Println("WEN: container", nonSecretRef)
+
+	// Update the first container in the containers array
+	containers[0] = container
+
+	// Set the modified containers array back to the object
+	if err := unstructured.SetNestedSlice(nb.Object, containers, NotebookContainersPath...); err != nil {
+		return false, fmt.Errorf("failed to set containers array: %w", err)
+	}
+
+	return true, nil
 }
