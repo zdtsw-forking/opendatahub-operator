@@ -2,7 +2,6 @@ package dashboard
 
 import (
 	"context"
-	"embed"
 	"fmt"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -28,9 +27,6 @@ const (
 	LegacyComponentNameUpstream   = "dashboard"
 	LegacyComponentNameDownstream = "rhods-dashboard"
 )
-
-//go:embed vap
-var resourcesFS embed.FS
 
 var (
 	sectionTitle = map[common.Platform]string{
@@ -98,13 +94,4 @@ func computeComponentName() string {
 	}
 
 	return name
-}
-
-func addTemplateFiles(ctx context.Context, rr *odhtypes.ReconciliationRequest) error {
-
-	rr.Templates = append(rr.Templates, odhtypes.TemplateInfo{
-		FS:   resourcesFS,
-		Path: "vap",
-	})
-	return nil
 }

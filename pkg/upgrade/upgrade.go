@@ -35,6 +35,7 @@ import (
 	serviceApi "github.com/opendatahub-io/opendatahub-operator/v2/api/services/v1alpha1"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/cluster/gvk"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/metadata/labels"
 	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/resources"
 )
@@ -837,4 +838,77 @@ func updateSpecFields(obj *unstructured.Unstructured, updates map[string][]any) 
 	}
 
 	return updated, nil
+}
+
+func CreateVAP(ctx context.Context, cli client.Client) error {
+	log := logf.FromContext(ctx)
+	// first check if VAP/VAPB in the cluster, if yes, quick exit
+
+	vapbAP := &admissionregistrationv1.ValidatingAdmissionPolicyBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "block-dashboard-acceleratorprofile-cr-binding",
+		},
+	}
+
+	vapbHP := &admissionregistrationv1.ValidatingAdmissionPolicyBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "block-dashboard-hardwareprofile-cr-binding",
+		},
+	}
+
+	// Check if VAPB resources already exist
+	apExists := false
+	hpExists := false
+	if err := cli.Get(ctx, client.ObjectKey{Name: vapbAP.Name}, vapbAP); err == nil {
+		log.Info("ValidatingAdmissionPolicyBinding for acceleratorprofiles already exists", "name", vapbAP.Name)
+		apExists = true
+	} else if !k8serr.IsNotFound(err) {
+		return fmt.Errorf("failed to check if VAPB %s exists: %w", vapbAP.Name, err)
+	}
+
+	if err := cli.Get(ctx, client.ObjectKey{Name: vapbHP.Name}, vapbHP); err == nil {
+		log.Info("ValidatingAdmissionPolicyBinding for hardwareprofiles already exists", "name", vapbHP.Name)
+		hpExists = true
+	} else if !k8serr.IsNotFound(err) {
+		return fmt.Errorf("failed to check if VAPB %s exists: %w", vapbHP.Name, err)
+	}
+
+	if apExists && hpExists {
+		log.Info("Both VAPB CRs already exist, skipping creation")
+		return nil
+	}
+
+	// then check if CRD in cluster, if no, quick exit, treat error as not found
+	crd := &apiextv1.CustomResourceDefinition{}
+	apCRDExists := false
+	hpCRDExists := false
+
+	if err := cli.Get(ctx, client.ObjectKey{Name: "acceleratorprofiles.dashboard.opendatahub.io"}, crd); err == nil {
+		apCRDExists = true
+	}
+
+	if err := cli.Get(ctx, client.ObjectKey{Name: "hardwareprofiles.dashboard.opendatahub.io"}, crd); err == nil {
+		hpCRDExists = true
+	}
+	// proceed if any CRDs exist
+	if !apCRDExists && !hpCRDExists {
+		log.Info("Both CRD not exist, skipping creation VAPB")
+		return nil
+	}
+
+	// apply resources/vap using DeployManifestsFromPath
+	log.Info("Applying VAP resources using DeployManifestsFromPath")
+
+	// just need a owner which will be use in client.FieldOwner(owner.GetName()))
+	owner := &metav1.ObjectMeta{
+		Name: "opendatahub-operator",
+	}
+
+	// Deploy VAP manifests from config/vap folder
+	if err := deploy.DeployManifestsFromPath(ctx, cli, owner, "config/vap", "", "validating-admission-policy", true); err != nil {
+		return fmt.Errorf("failed to deploy VAP/VAPB manifests: %w", err)
+	}
+
+	log.Info("Successfully applied VAP/VAPB resources")
+	return nil
 }

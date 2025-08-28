@@ -438,6 +438,10 @@ func main() { //nolint:funlen,maintidx,gocyclo
 			setupLog.Error(err, "Unable to patch the odhdashboardconfig")
 			return err
 		}
+		if err := upgrade.CreateVAP(ctx, setupClient); err != nil {
+			setupLog.Error(err, "Unable to create VAP for HWProfile/AcceleratorProfile")
+			return err
+		}
 		return nil
 	}
 
