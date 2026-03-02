@@ -2,7 +2,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
   value: "quay.io/rhoai/odh-built-in-detector-rhel9@sha256:169f8cb72d0472b6d67502d69b77059aca6213c9ea1459214456d58535dd6de9"
 - name: RELATED_IMAGE_ODH_CLI_IMAGE
-  value: "quay.io/rhoai/odh-cli-rhel9@sha256:a9e0ff484476f4295193d1f3ec0692b2d5952e408ee1d936700aa8071802510b"
+  value: "quay.io/rhoai/odh-cli-rhel9@sha256:c15c459f0f962daa4df0b12f6423d4cad3f61ef47d95bbfba98de9e7d8865388"
 - name: RELATED_IMAGE_ODH_DASHBOARD_IMAGE
   value: "quay.io/rhoai/odh-dashboard-rhel9@sha256:2af6c58d63662a456be9efa72acab55a7b5455a8a61ba28ed60ec3adb69033fb"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_ARGOEXEC_IMAGE
@@ -36,7 +36,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KUBE_AUTH_PROXY_IMAGE
   value: "quay.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:508d45e1da0c5d4c8239f0ac0973dafc90c5f42131bf65976af87fa9becf834f"
 - name: RELATED_IMAGE_ODH_LLAMA_STACK_CORE_IMAGE
-  value: "quay.io/rhoai/odh-llama-stack-core-rhel9@sha256:5d231f143e55fbb89025b1a3444028b2266a858915f9e502a368922a6323f403"
+  value: "quay.io/rhoai/odh-llama-stack-core-rhel9@sha256:808856bebe51d7b57929e91663ba7620f2f2422c8c77929a726c85204a87f2ef"
 - name: RELATED_IMAGE_ODH_LLAMA_STACK_K8S_OPERATOR_IMAGE
   value: "quay.io/rhoai/odh-llama-stack-k8s-operator-rhel9@sha256:5ab1b5c43c9d1b1dbc729e83e8dc07bab133f920f757c7d74273d576bf26063e"
 - name: RELATED_IMAGE_ODH_LLM_D_INFERENCE_SCHEDULER_IMAGE
