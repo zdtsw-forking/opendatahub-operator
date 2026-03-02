@@ -14,12 +14,12 @@ map:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 40951fb1606f50406fb0a29b96b221152d2a7670
+    git.commit: d660b2c8c49f0563165d2035b1ffe946bfb634a5
   odh-notebook-controller:
     src: components/odh-notebook-controller/config
     dest: workbenches/odh-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 40951fb1606f50406fb0a29b96b221152d2a7670
+    git.commit: d660b2c8c49f0563165d2035b1ffe946bfb634a5
   odh-data-science-pipelines-operator-controller:
     src: config
     dest: datasciencepipelines
@@ -44,7 +44,7 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: 605e492a54a973c5a244d526aa717b7e247bab86
+    git.commit: 3e64042a17e5cc33867de5960c93757acdbbdd6f
   odh-dashboard:
     src: manifests
     dest: dashboard
@@ -64,7 +64,7 @@ map:
     src: config
     dest: llamastackoperator
     git.url: https://github.com/red-hat-data-services/llama-stack-k8s-operator
-    git.commit: 121e01f767af9384f370fbe85232282a728179ed
+    git.commit: 836670874d11a2c367ec98a958f114cda538738e
   odh-trainer:
     src: manifests
     dest: trainer
@@ -74,7 +74,7 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 6bb56e45af05d65c8bae5b6dae200cf208493298
+    git.commit: 8616c303ee51b32faa36b8d6e3aae2912b957488
   odh-maas-api:
     src: deployment
     dest: maas
@@ -100,7 +100,7 @@ additional_meta:
     git.commit: 7d945aa86f3e6c1cf058488377c1135cf9738a0f
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: fee33ab6253207a6e0ce0ae97e2c798673bf2239
+    git.commit: 9ae97bfc758b8e230616a6283fb6aeaaa12f62d5
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: ba57cf509265c440aa1e85cd74a7079f2c8165b8
@@ -286,4 +286,4 @@ additional_meta:
     git.commit: d860879ff841758ca0f34a67574ae8fd7d32c10a
   odh-workload-variant-autoscaler-controller:
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
-    git.commit: 1851ea85dbaf55017a3f6bc720e72fc25891ee63
+    git.commit: 58386c3de2532262ee0f7e8fbac777afbd6eaaf2
