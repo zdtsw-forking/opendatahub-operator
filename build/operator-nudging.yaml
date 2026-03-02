@@ -38,7 +38,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_LLAMA_STACK_CORE_IMAGE
   value: quay.io/rhoai/odh-llama-stack-core-rhel9@19697942f84cb8aa281bf6f49195a2af10bdaebd8bcf5522407b2e5665094c21
 - name: RELATED_IMAGE_ODH_LLAMA_STACK_K8S_OPERATOR_IMAGE
-  value: quay.io/rhoai/odh-llama-stack-k8s-operator-rhel9@sha256:2a6371079f35b57d9757384b18d9c78a1f2b346e6245b05c5610befc4e6b1347
+  value: quay.io/rhoai/odh-llama-stack-k8s-operator-rhel9@sha256:ad79cb44354503c0d74d536eec4df3c469d004843ab6a39d9b4fdf971430e521
 - name: RELATED_IMAGE_ODH_LLM_D_INFERENCE_SCHEDULER_IMAGE
   value: quay.io/rhoai/odh-llm-d-inference-scheduler-rhel9@sha256:bcfc674dc5749fe873c197a80805785414fdac1f26b3a883d9a114d73ec4f442
 - name: RELATED_IMAGE_ODH_LLM_D_ROUTING_SIDECAR_IMAGE
