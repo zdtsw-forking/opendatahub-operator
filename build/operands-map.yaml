@@ -82,7 +82,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MODEL_REGISTRY_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-model-registry-rhel9@sha256:962f823f1115e95056fc38812526dd039f7fe1519eac754844bde6cc88a94348"
 - name: RELATED_IMAGE_ODH_MUST_GATHER_IMAGE
-  value: "quay.io/rhoai/odh-must-gather-rhel9@sha256:9005be71e73063dc5e27eaf0afe2a125602bea5c6317153fa5c1d17abb4761dd"
+  value: "quay.io/rhoai/odh-must-gather-rhel9@sha256:c8912ec633e6ee89ff1b93dc54c7d1264f1ee11e12a6395dc908011715f7d2c6"
 - name: RELATED_IMAGE_ODH_NOTEBOOK_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-notebook-controller-rhel9@sha256:144ca43f5573b58a0acbcb85d2e1dc2f511ffadbde53425ef24713cf3169a7ca"
 - name: RELATED_IMAGE_ODH_OPENVINO_MODEL_SERVER_IMAGE
@@ -102,7 +102,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_TENSORFLOW_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-tensorflow-rocm-py312-rhel9@sha256:40b5bdb6761a355466cd338beca39685970bf30ef9c6962958b6435b427a5e82"
 - name: RELATED_IMAGE_ODH_SPARK_OPERATOR_IMAGE
-  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:8021d421d4233f4c76d3dc6dcbe2d9abd0816e38fe252e47b0b599dffb9639e1"
+  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:349025620510446f46ac2c7784df2078df16094fd1009dbf6534dbf625a9d1e2"
 - name: RELATED_IMAGE_ODH_TA_LMES_DRIVER_IMAGE
   value: "quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:1588cf410fdf1a2c070433747bd50dd9e4659ccf58c18f6dcc42039188e463c2"
 - name: RELATED_IMAGE_ODH_TA_LMES_JOB_IMAGE
@@ -146,7 +146,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:a89ec49988f013fdfa7d33aa0c887ee0596b2d315b6f68f46154643741ec7b1e"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:cfffc01a0608a32bc5fe86b73b51172a4ad99d59f6ecd696ac2a26938a907ab1"
+  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:ae2ee5d36afca9d15f8c6e21bea29da94d44f169f1bb829f4fd060ba61788ace"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CUDA_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cuda-py312-rhel9@sha256:94f6f3c1703cc0db213d55f6773b8342aab9275b21463304e9e21f282fb3a171"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_ROCM_PY312_IMAGE
