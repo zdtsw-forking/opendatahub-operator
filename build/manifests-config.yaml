@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 6392b450b270a1aafaba4a4afafe661ad08a2421
+    git.commit: cf317e3715440e873f6135282d9b6e50599af340
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -172,7 +172,7 @@ additional_meta:
     git.commit: 5ec9b2e9acfad44327869ccec98674d986c9a205
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 50e37fcb61f1c61988a840ffa1c65b0822a7c148
+    git.commit: db3cc83956afdd69d71bf9786d15acd96cc7f6b7
   odh-mod-arch-model-registry:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: e0a05bcd3d9fb94797843dbfc12191ae74a71e2f
@@ -247,7 +247,7 @@ additional_meta:
     git.commit: 84020c7b4f8c9d8d36b9d9285199e367d1b21a5f
   odh-vllm-cpu:
     git.url: https://github.com/red-hat-data-services/vllm-cpu
-    git.commit: 3c1c14701e4fb12d023cdb891aaefc456316f94f
+    git.commit: 59942effee0bc9196ddcdc884ff6505b48e18860
   odh-vllm-gaudi:
     git.url: https://github.com/red-hat-data-services/vllm-gaudi
     git.commit: 403c7b4338de3cc05112a562bbd3565a096a030f
