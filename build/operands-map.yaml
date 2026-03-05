@@ -6,9 +6,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_DASHBOARD_IMAGE
   value: "quay.io/rhoai/odh-dashboard-rhel9@sha256:0313ce95719fb75daa212e33171316a849592978c2d03c84c5c657fc4d0819ad"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_ARGOEXEC_IMAGE
-  value: "quay.io/rhoai/odh-data-science-pipelines-argo-argoexec-rhel9@sha256:748bf9b57256e4d36fe14ad08c6d35bdfe5ba961e6b32349573957c9eddfe5c3"
+  value: "quay.io/rhoai/odh-data-science-pipelines-argo-argoexec-rhel9@sha256:93203b122cb7266b332938bcf8ed9993f12d3b967c93dc1b28e0511f87593578"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_WORKFLOWCONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-data-science-pipelines-argo-workflowcontroller-rhel9@sha256:3ad5cd496e773afb3bfeb28f20aa7affe0e5843422f252a295bcb0715bca495d"
+  value: "quay.io/rhoai/odh-data-science-pipelines-argo-workflowcontroller-rhel9@sha256:0bffd8c760065076eb326d21c25b77e984fcd9e9e89e3d19a0be8b75912a940c"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_OPERATOR_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-data-science-pipelines-operator-controller-rhel9@sha256:0e7ad4afbdf21ace72a24c0ff81bedafd1e22d0e03eda2b3863f0291e36e9fd4"
 - name: RELATED_IMAGE_ODH_EVAL_HUB_IMAGE
@@ -72,7 +72,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MODEL_PERFORMANCE_DATA_IMAGE
   value: "quay.io/rhoai/odh-model-performance-data-rhel9@sha256:c9bf93bd59cfb2c579f9579915e17c24b90531c48a07239f78810ce1e00e1555"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_IMAGE
-  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:62cd4e136656512e739c4918f620476ea29cab40497e8f42fb1687372f0c23c9"
+  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:750aacc81ce1dd4883444a2e3e29fca21ae442b3a0da3797d4c68c595e04ce44"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_JOB_ASYNC_UPLOAD_IMAGE
   value: "quay.io/rhoai/odh-model-registry-job-async-upload-rhel9@sha256:bc79548071d59481af68c98395c59197854f6c9193976f794b9f732958809226"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_OPERATOR_IMAGE
@@ -144,7 +144,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_VLLM_GAUDI_IMAGE
   value: "quay.io/rhoai/odh-vllm-gaudi-rhel9@sha256:ee0ffaeb58be427164b5633ca6f0a55aabd7f21e02bbd39e247368c9eb887595"
 - name: RELATED_IMAGE_ODH_WORKBENCH_CODESERVER_DATASCIENCE_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:7fd308a60d20a8e2f71e217e7921bf9418d26b10593bc1a8a882e31c6d9bbfbf"
+  value: "quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:d00980dc0e23aed8d2807951d994d3fb01eeb0c0473a376de50b4864a0bbc1c8"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:a89ec49988f013fdfa7d33aa0c887ee0596b2d315b6f68f46154643741ec7b1e"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE

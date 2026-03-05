@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: cf317e3715440e873f6135282d9b6e50599af340
+    git.commit: 649c375f162d4b1768aaf95b2a4e600c6e57da40
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -94,10 +94,10 @@ additional_meta:
     git.commit: 4f67b7ddef1d104e826df89ef1cfa511736484ec
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
-    git.commit: 7d945aa86f3e6c1cf058488377c1135cf9738a0f
+    git.commit: c6d6f2850e9b04284470d7a757111fc223dab2a1
   odh-data-science-pipelines-argo-workflowcontroller:
     git.url: https://github.com/red-hat-data-services/argo-workflows
-    git.commit: 7d945aa86f3e6c1cf058488377c1135cf9738a0f
+    git.commit: c6d6f2850e9b04284470d7a757111fc223dab2a1
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
     git.commit: dafa368176517ff265feefdfab5c7825747728d0
@@ -166,7 +166,7 @@ additional_meta:
     git.commit: 96c39c5776ac7fcabb07b5d410bcd37cac892e74
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: a5ec6d6cf2e94c185805757824ae50f59f1cdbe3
+    git.commit: 5ac5cc76ff3365fce971cf6f4e33c1cff62a6d7c
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: a5ec6d6cf2e94c185805757824ae50f59f1cdbe3
@@ -256,7 +256,7 @@ additional_meta:
     git.commit: 403c7b4338de3cc05112a562bbd3565a096a030f
   odh-workbench-codeserver-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 61bab769ea82244da09006721124e37ba08c90c7
+    git.commit: cf317e3715440e873f6135282d9b6e50599af340
   odh-workbench-jupyter-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: d860879ff841758ca0f34a67574ae8fd7d32c10a
