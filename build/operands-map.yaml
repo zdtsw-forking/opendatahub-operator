@@ -2,7 +2,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
   value: "quay.io/rhoai/odh-built-in-detector-rhel9@sha256:169f8cb72d0472b6d67502d69b77059aca6213c9ea1459214456d58535dd6de9"
 - name: RELATED_IMAGE_ODH_CLI_IMAGE
-  value: "quay.io/rhoai/odh-cli-rhel9@sha256:56f74f79b0fa3af011dee8c3049d4d3e890ec3b807c07c8928bc93b135a73dca"
+  value: "quay.io/rhoai/odh-cli-rhel9@sha256:ad87d23c10dfaac856c63335e89a0b25cda51e1a13ec2d870db4cf6856417053"
 - name: RELATED_IMAGE_ODH_DASHBOARD_IMAGE
   value: "quay.io/rhoai/odh-dashboard-rhel9@sha256:88b8429ea9985d0072e91d746635dc352fc57092020f0a3fc4e5ef8d46e7780c"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_ARGOEXEC_IMAGE
@@ -24,11 +24,11 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KF_NOTEBOOK_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-kf-notebook-controller-rhel9@sha256:7ce72a8de3c327a4938b84cad433caeb62ab39a6f66303f66e3dbd1363113c03"
 - name: RELATED_IMAGE_ODH_KSERVE_AGENT_IMAGE
-  value: "quay.io/rhoai/odh-kserve-agent-rhel9@sha256:c7f8698748c448f4d364ec51f2316177e8025b0d8517a5812fbd5f8f772a7c48"
+  value: "quay.io/rhoai/odh-kserve-agent-rhel9@sha256:a76c16282f6f5387eb5dedbd6a59f8b0298806106817882796b52590be1367d8"
 - name: RELATED_IMAGE_ODH_KSERVE_CONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-kserve-controller-rhel9@sha256:5f8104705995bcf038b4c3733e54b1e0b0e99e3511f731098f78826653568838"
+  value: "quay.io/rhoai/odh-kserve-controller-rhel9@sha256:31952d57ff983696d1abb9bd95ea1601f66580391a989fc73619660c72168f78"
 - name: RELATED_IMAGE_ODH_KSERVE_ROUTER_IMAGE
-  value: "quay.io/rhoai/odh-kserve-router-rhel9@sha256:1e260436a71e9f1de11297e4d043e47513b6c9b727f813fbf3549a95c47b0217"
+  value: "quay.io/rhoai/odh-kserve-router-rhel9@sha256:7ae5f849459a63649670f86cad56348f425c31d4223182e9d570820f6c9b9ae6"
 - name: RELATED_IMAGE_ODH_KSERVE_STORAGE_INITIALIZER_IMAGE
   value: "quay.io/rhoai/odh-kserve-storage-initializer-rhel9@sha256:8acf85af165cd1d2a07016a37da13ef5342bfc67464bd0e46ae08dcdf352d9c6"
 - name: RELATED_IMAGE_ODH_KUBERAY_OPERATOR_CONTROLLER_IMAGE
@@ -80,7 +80,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTOML_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-automl-rhel9@sha256:67c42968b6882c2c4514a1a9437d00666b6301f69bc08e1baaa001b838605b5c"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTORAG_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-autorag-rhel9@sha256:9e52eda39704b9910f699da7e62ccc6a4c041be1deb709e3c32ca5556a6faafd"
+  value: "quay.io/rhoai/odh-mod-arch-autorag-rhel9@sha256:c908357377f1f08e54bd99b1827aa038dcb9dbd60abb2f83cf70e5a72e2d6040"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_GEN_AI_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-gen-ai-rhel9@sha256:5d4fd7541b49c3d5ddf8812a69779c0bc3a02099139dca726138ff4220aa6bed"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MAAS_IMAGE
