@@ -29,7 +29,7 @@ map:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: 35ac08117b025df3d12b99832f712e816567628c
+    git.commit: eac6f55d4b6ad0581c3918c4114fe9846b37471b
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -74,12 +74,12 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 8616c303ee51b32faa36b8d6e3aae2912b957488
+    git.commit: 0dee51e9d78db64803c367bb34c0c9cd44181245
   odh-maas-api:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 1ff0a0a59565071b6c884ab2c785fc5bf2be4f07
+    git.commit: b4c00e9438d1fa8ca87e4181021c7387404ec3cd
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -172,10 +172,10 @@ additional_meta:
     git.commit: a5ec6d6cf2e94c185805757824ae50f59f1cdbe3
   odh-mod-arch-automl:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 83015b5f7488a9006b2cd66540cabfd490dd18d2
+    git.commit: 5838f86a4fd50da77205c398d10b09e345d5fa57
   odh-mod-arch-autorag:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 9b8236d64a35df81b159dac897658d4b60334f1a
+    git.commit: 5838f86a4fd50da77205c398d10b09e345d5fa57
   odh-mod-arch-gen-ai:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: db3cc83956afdd69d71bf9786d15acd96cc7f6b7
