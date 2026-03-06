@@ -2,9 +2,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
   value: "quay.io/rhoai/odh-built-in-detector-rhel9@sha256:169f8cb72d0472b6d67502d69b77059aca6213c9ea1459214456d58535dd6de9"
 - name: RELATED_IMAGE_ODH_CLI_IMAGE
-  value: "quay.io/rhoai/odh-cli-rhel9@sha256:d8a01314aac4719559029299d3fe46b74d260a2799cbad5939af53a888967d6a"
+  value: "quay.io/rhoai/odh-cli-rhel9@sha256:debb00d9e9d6b8d788bc23a283008e0cba6768f0e2473db96f64c0594fdee926"
 - name: RELATED_IMAGE_ODH_DASHBOARD_IMAGE
-  value: "quay.io/rhoai/odh-dashboard-rhel9@sha256:29d8ed1e573f34adcf88db63ac55973cd6e7a9da4885fbef9adc43e3ce9030db"
+  value: "quay.io/rhoai/odh-dashboard-rhel9@sha256:5e6152b9016cfeed0167379ab45d6d026218c327929f7edf2de75f2af0e7dd82"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_ARGOEXEC_IMAGE
   value: "quay.io/rhoai/odh-data-science-pipelines-argo-argoexec-rhel9@sha256:93203b122cb7266b332938bcf8ed9993f12d3b967c93dc1b28e0511f87593578"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_WORKFLOWCONTROLLER_IMAGE
@@ -66,27 +66,27 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_ML_PIPELINES_SCHEDULEDWORKFLOW_V2_IMAGE
   value: "quay.io/rhoai/odh-ml-pipelines-scheduledworkflow-v2-rhel9@sha256:012b0c05e3f90a2a98047e5cab84ef92154b3cf8d638bb0df8a6be5c10caf895"
 - name: RELATED_IMAGE_ODH_MODEL_CONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-model-controller-rhel9@sha256:6be5de3a9f7cbbc5fc5da4adb1c9abfc3839d39667ef0c0572dfdeaf17b1d4ff"
+  value: "quay.io/rhoai/odh-model-controller-rhel9@sha256:47faa2d8d7a00f437ea08300044ae4e0500d72979b6935141d6dd6b8e2f941b1"
 - name: RELATED_IMAGE_ODH_MODEL_METADATA_COLLECTION_IMAGE
   value: "quay.io/rhoai/odh-model-metadata-collection-rhel9@sha256:998dc0ea37ba40e8f240f2f978df037ab4ae2842ecbdec90fda04f26e7a95709"
 - name: RELATED_IMAGE_ODH_MODEL_PERFORMANCE_DATA_IMAGE
   value: "quay.io/rhoai/odh-model-performance-data-rhel9@sha256:c9bf93bd59cfb2c579f9579915e17c24b90531c48a07239f78810ce1e00e1555"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_IMAGE
-  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:e04214220433f629253884a16e5f084bb9cf3842af3cf5e09a7703b087d38647"
+  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:643ae99bfdb65c482193fa0d5696a5f3cf142f3e06deb2f9f411ee06f883a885"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_JOB_ASYNC_UPLOAD_IMAGE
   value: "quay.io/rhoai/odh-model-registry-job-async-upload-rhel9@sha256:bc79548071d59481af68c98395c59197854f6c9193976f794b9f732958809226"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_OPERATOR_IMAGE
-  value: "quay.io/rhoai/odh-model-registry-operator-rhel9@sha256:85dab18dbea6417f1c1ec8516ba4d9980c79c7d8048410594455e8960091e082"
+  value: "quay.io/rhoai/odh-model-registry-operator-rhel9@sha256:ecd21b637ecf468b3f0ca255964af8b4b60e1164657ccfb130c04e9a1c69f354"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTOML_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-automl-rhel9@sha256:0994ff0a8746d0091ab44dfee01d1b291028bca5d68547940677629a0c4e670c"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTORAG_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-autorag-rhel9@sha256:3461f9d0bb21a35b18e578823fc74d8a0e2e73c9b4a958319b3adf479a7cd1b0"
+  value: "quay.io/rhoai/odh-mod-arch-autorag-rhel9@sha256:85be54df54bd3eda0df5696317ee4afdf34f120b14ddf2f57298b780ee04f3df"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_EVAL_HUB_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-eval-hub-rhel9@sha256:a843474790be3b7d9a7d7c577402bf41b4190e0adb61ddc9f9d9645517d33f7e"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_GEN_AI_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-gen-ai-rhel9@sha256:5d4fd7541b49c3d5ddf8812a69779c0bc3a02099139dca726138ff4220aa6bed"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MAAS_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:7b68b75524d50265e8c11b440c9037049a0fcbd47eec86aa0d9ea2484a939d9d"
+  value: "quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:289b0a1a505d2f9fde68e9f29611d423f420f81c7be7195cf4a6c5e6562ad946"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MODEL_REGISTRY_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-model-registry-rhel9@sha256:3fa01dfe557ecf709286f947ad77f0ea0446502403195901901371eb3f126d5b"
 - name: RELATED_IMAGE_ODH_MUST_GATHER_IMAGE
