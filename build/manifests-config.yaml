@@ -29,7 +29,7 @@ map:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: 9a717b4a1520ef0aa96f21468e852cd51e8697af
+    git.commit: 3940f0d35249df4957252a16ded87f54bad82857
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -74,12 +74,12 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 2a68e96ebfa32f168ba8fa28de2c5016eff3614a
+    git.commit: 257424bc973213ac0c6bd7242ccc555539ec2722
   odh-maas-api:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 973d6335eb819871df6a1d28a9b91c692fa945a1
+    git.commit: 178b22faec3e7a6ca95f4e62f7d08763954b439a
   odh-spark-operator:
     src: config
     dest: sparkoperator
