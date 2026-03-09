@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 5642d8bbc7060ec9c21e170921c47548d17451c6
+    git.commit: c678d6cadc971d481c17213a053dca436cc2e358
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -91,7 +91,7 @@ additional_meta:
     git.commit: 0fc610f9c7d1245abe26d30f8690071063d25592
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: bde10393a7ab9ef9bc1b70c34657f640b9f659b6
+    git.commit: 95b05cf7dd91b2333aaadb7e4bd5c6a153009316
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: c6d6f2850e9b04284470d7a757111fc223dab2a1
@@ -100,7 +100,7 @@ additional_meta:
     git.commit: c6d6f2850e9b04284470d7a757111fc223dab2a1
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: 9b00ec9404e43efcf62fb68db256d3e09fd063ac
+    git.commit: e44e059b1ef5157b2bea0a82abba0c425815afcb
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: ba57cf509265c440aa1e85cd74a7079f2c8165b8
