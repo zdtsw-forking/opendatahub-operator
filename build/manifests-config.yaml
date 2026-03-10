@@ -44,7 +44,7 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: 4aa51442d684cdc2342565b1202a7e8cadc3d56f
+    git.commit: ef05fdc329cb2911230b06dcb3e6ffb033e8713e
   odh-dashboard:
     src: manifests
     dest: dashboard
@@ -64,7 +64,7 @@ map:
     src: config
     dest: llamastackoperator
     git.url: https://github.com/red-hat-data-services/llama-stack-k8s-operator
-    git.commit: 089179f40e41042765e0abefc9e0528d414cbc2e
+    git.commit: 16037aa8cba196a353a5e9399319d85d696775b5
   odh-trainer:
     src: manifests
     dest: trainer
@@ -166,7 +166,7 @@ additional_meta:
     git.commit: 96c39c5776ac7fcabb07b5d410bcd37cac892e74
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 4ace3d74d960e3f1f22e0e945d8f0617c3b89768
+    git.commit: 6d43652c58ee316be54458282f0af2c15e110fbc
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: a5ec6d6cf2e94c185805757824ae50f59f1cdbe3
@@ -298,4 +298,4 @@ additional_meta:
     git.commit: 649c375f162d4b1768aaf95b2a4e600c6e57da40
   odh-workload-variant-autoscaler-controller:
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
-    git.commit: e6d7f4612f8c62c86df5fa4c00018cf63b9635aa
+    git.commit: d0e64ca09eeaee2e71ad040282b9807a4233b3a8
