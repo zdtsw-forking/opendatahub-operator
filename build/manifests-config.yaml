@@ -84,7 +84,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: 11263969e5d95afe92ad695c48bfb6d43d0a8469
+    git.commit: 041ea64680677dabd32b55a2bae178632ef2a5ff
 additional_meta:
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
@@ -100,7 +100,7 @@ additional_meta:
     git.commit: c6d6f2850e9b04284470d7a757111fc223dab2a1
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: d4fa6bc6615c19f868208da0668a47d9390457c0
+    git.commit: 8d33071b0af50701795676360062ea0ddfefb5a7
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: ba57cf509265c440aa1e85cd74a7079f2c8165b8
@@ -142,7 +142,7 @@ additional_meta:
     git.commit: 9c6981d86c75cfb947a7b3b3e92363464cc78ca9
   odh-mlserver:
     git.url: https://github.com/red-hat-data-services/MLServer
-    git.commit: 6286bf7bae0463784545721573b41261dcd1a57e
+    git.commit: 057744dd6eace81be260d20d9971efaba754cfd4
   odh-ml-pipelines-api-server-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
     git.commit: 3b35cb1f25d52c0a59f0cf00353f77f4bfde84a5
@@ -166,7 +166,7 @@ additional_meta:
     git.commit: 96c39c5776ac7fcabb07b5d410bcd37cac892e74
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: cf93d98b7533f3b823caf75a4e832dea6d99cd76
+    git.commit: 3c0dc9ef3d9eb02620d4b6eacd7e93505d3aab57
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: a5ec6d6cf2e94c185805757824ae50f59f1cdbe3
