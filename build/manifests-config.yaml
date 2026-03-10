@@ -14,12 +14,12 @@ map:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 5f5bf28f1c39750e611dc44f865fa29f340b5e4e
+    git.commit: c76686547168d7a43130a81196c929025daf1166
   odh-notebook-controller:
     src: components/odh-notebook-controller/config
     dest: workbenches/odh-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 5f5bf28f1c39750e611dc44f865fa29f340b5e4e
+    git.commit: c76686547168d7a43130a81196c929025daf1166
   odh-data-science-pipelines-operator-controller:
     src: config
     dest: datasciencepipelines
@@ -29,7 +29,7 @@ map:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: 83ff3bcbb987d68583e0a4d90e08eed2b3cbe067
+    git.commit: ef9228b750c89b2d612063306c6e2c00e037f67c
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: c84aed694ec74fa3048e3077f1a2e41f39767351
+    git.commit: 4d70bf0ec0728c72253d6668427525344f8625ff
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -74,12 +74,12 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 40704dbed4d116ce1a6ea0d877b8bbf2194d58c1
+    git.commit: 8b81e8a07b8a0db79fcc90446616c453d7fca95c
   odh-maas-api:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: b1dfd33b9bb57d23f05a444d762c23e096f3b254
+    git.commit: 6df1bbf404f0fbefbdd86da2bb732c734722d309
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -91,7 +91,7 @@ additional_meta:
     git.commit: 0fc610f9c7d1245abe26d30f8690071063d25592
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: 7ce08514a039d36cf47acfe416f5814f79cff214
+    git.commit: 6d8e02f7b99560ea508a184ad7970d02110a772e
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: c6d6f2850e9b04284470d7a757111fc223dab2a1
