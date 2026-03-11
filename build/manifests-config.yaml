@@ -271,10 +271,10 @@ additional_meta:
     git.commit: 7534b77f9ea3c48e8056cbada149882cbbefbd53
   odh-workbench-jupyter-minimal-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 7534b77f9ea3c48e8056cbada149882cbbefbd53
+    git.commit: f8f4b4fad5e21208a467412c2db35bc960f56d43
   odh-workbench-jupyter-minimal-cuda-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: a232b092ee55fd2415145c02be46ed5a1cf81ddc
+    git.commit: f8f4b4fad5e21208a467412c2db35bc960f56d43
   odh-workbench-jupyter-minimal-rocm-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 7534b77f9ea3c48e8056cbada149882cbbefbd53
@@ -295,7 +295,7 @@ additional_meta:
     git.commit: eff35c700e4a12f2fca44fae6e815acbeb6de4d5
   odh-workbench-jupyter-trustyai-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 649c375f162d4b1768aaf95b2a4e600c6e57da40
+    git.commit: f8f4b4fad5e21208a467412c2db35bc960f56d43
   odh-workload-variant-autoscaler-controller:
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
     git.commit: 337d0337bbde2d97c9c801554e1b66d1ed979350

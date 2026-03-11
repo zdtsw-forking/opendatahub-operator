@@ -154,9 +154,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:078065daca4fa708d7ed569c561a25cadc6adfcfd0ab94507803569a10e5b575"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:2cdad7b4f46fb21b5a3a69c0292ed9e59cb8fd743a3550b7a9d956afe1c8eeba"
+  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:b454973d8da012243b9407e2c7591c57852133730e042db5f0bb20d48d49d9f1"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CUDA_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cuda-py312-rhel9@sha256:8fbb4b9d77a16bd257da55c8871896b54ed329d7ab65e7167be274a2585781cc"
+  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cuda-py312-rhel9@sha256:7b84af0e40528b610fe2759a38019d3a706b42f020da66cb9aa5f3f9af7736a3"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-minimal-rocm-py312-rhel9@sha256:6fc94b85d743405389ea85c826f6a9817aab2924a9eebf88ac78384d39ca6d95"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_CUDA_PY312_IMAGE
@@ -170,7 +170,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_TENSORFLOW_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-tensorflow-rocm-py312-rhel9@sha256:5ed9c0eab50e0488c8310acc8a157b0eb8c26393a9bbbb8f86f9d0700ea19726"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_TRUSTYAI_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-trustyai-cpu-py312-rhel9@sha256:4c469d8ab938252cfa292e694a33fe4c8ea7e51340543aed2a3ab3bbeae4b3be"
+  value: "quay.io/rhoai/odh-workbench-jupyter-trustyai-cpu-py312-rhel9@sha256:4cc64eec3e9c749ebcbce067e51c961c8346aff0c6e8677dd732cdb81cd5657b"
 - name: RELATED_IMAGE_ODH_WORKLOAD_VARIANT_AUTOSCALER_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-workload-variant-autoscaler-controller-rhel9@sha256:dd7e8056c8d77a38f218f2ae9e90b77d00924863da4015107b2dc60fc0f06477"
 - name: RELATED_IMAGE_OSE_KUBE_RBAC_PROXY_IMAGE
