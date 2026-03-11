@@ -54,7 +54,7 @@ map:
     src: manifests
     dest: trainingoperator
     git.url: https://github.com/red-hat-data-services/training-operator
-    git.commit: 76973ffac05d66f8e53ece90ac842881e8c56ce4
+    git.commit: 82408ed62dac496d9594d7632717dff3b8159f94
   odh-feast-operator:
     src: infra/feast-operator/config
     dest: feastoperator
@@ -298,4 +298,4 @@ additional_meta:
     git.commit: f8f4b4fad5e21208a467412c2db35bc960f56d43
   odh-workload-variant-autoscaler-controller:
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
-    git.commit: 337d0337bbde2d97c9c801554e1b66d1ed979350
+    git.commit: 88eb6675951f9c9de9fd4e1aec75bcc69c5b37f8
