@@ -136,7 +136,7 @@ additional_meta:
     git.commit: 2598b6baa8a5d6a77c433c0280ea98c91ab7d453
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
-    git.commit: 43cada3d8b7bd5a341640e1d5a172e4493a583cd
+    git.commit: 5d331396451526a3a9bc8a40ad8b83004de47cc6
   odh-mlmd-grpc-server:
     git.url: https://github.com/red-hat-data-services/ml-metadata
     git.commit: 9c6981d86c75cfb947a7b3b3e92363464cc78ca9
