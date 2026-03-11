@@ -48,7 +48,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MAAS_API_IMAGE
   value: "quay.io/rhoai/odh-maas-api-rhel9@sha256:5595893cefaafa13262220a892944ebfb63bee04bc1614cda6f03937faaead98"
 - name: RELATED_IMAGE_ODH_MLFLOW_IMAGE
-  value: "quay.io/rhoai/odh-mlflow-rhel9@sha256:375feb4526128d3220b884264cc0eaa058c36ba8360692d4593c6e03fcea7de0"
+  value: "quay.io/rhoai/odh-mlflow-rhel9@sha256:386c7e8cf4e43d12bcb525aa8efb0b4bdbd245f59226baf8aa6bf403f602f03e"
 - name: RELATED_IMAGE_ODH_MLFLOW_OPERATOR_IMAGE
   value: "quay.io/rhoai/odh-mlflow-operator-rhel9@sha256:71ce95c164f528159dd8926b0f23cadc055cc4365016cd76313e82e9845022ab"
 - name: RELATED_IMAGE_ODH_MLMD_GRPC_SERVER_IMAGE
