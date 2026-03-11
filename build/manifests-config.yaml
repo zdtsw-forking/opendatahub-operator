@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: fa39138980c9ac0610041ebd849d74e337a21fae
+    git.commit: afb9c0cab85669a6c64cd166ce118dbe2f26b829
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -34,22 +34,22 @@ map:
     src: config
     dest: trustyai
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: c5f6a49e97e6bd8cba5b5ca5d109568a37e27390
+    git.commit: ee7e77053fd6fc9238b9a2d7eb2b2c52e37b2f18
   odh-model-controller:
     src: config
     dest: modelcontroller
     git.url: https://github.com/red-hat-data-services/odh-model-controller
-    git.commit: abfa6d27b1b4b081c0d3a391e78e2ff8f79596d9
+    git.commit: 6f8d21849d07ee85765bb01628479ac0ac390fb2
   odh-model-registry-operator:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: f81e92a506c2ec783b54f22eae2aa5511f1e73f1
+    git.commit: 2ec59ef69592d26670f9c40edc2f740349ea1cb1
   odh-dashboard:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 1e79b80dc8a92c132c41c63d8844bbf9edf8f100
+    git.commit: 26e2d57e173ae0df4828cb24b02a19a87a9e5fc7
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -74,7 +74,7 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 438fce1315d8013c285f831b1a93913b12d44abd
+    git.commit: 789aa6d4ae8186c6d88e46ce2ef402841ded404e
   odh-maas-api:
     src: deployment
     dest: maas
@@ -139,22 +139,22 @@ additional_meta:
     git.commit: 5d331396451526a3a9bc8a40ad8b83004de47cc6
   odh-mlmd-grpc-server:
     git.url: https://github.com/red-hat-data-services/ml-metadata
-    git.commit: 9c6981d86c75cfb947a7b3b3e92363464cc78ca9
+    git.commit: 78f785fa0e9dba86484e3f0602bc312bbcaf7675
   odh-mlserver:
     git.url: https://github.com/red-hat-data-services/MLServer
     git.commit: 057744dd6eace81be260d20d9971efaba754cfd4
   odh-ml-pipelines-api-server-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 3b35cb1f25d52c0a59f0cf00353f77f4bfde84a5
+    git.commit: 4a31a0f9ac4d5cb6fb338ffe7be1de1b78bf8b55
   odh-ml-pipelines-driver:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 4a31a0f9ac4d5cb6fb338ffe7be1de1b78bf8b55
+    git.commit: 6b5aaa86c5b0be739d55baf71649f44a3f6c46c8
   odh-ml-pipelines-launcher:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: e1a77cf6e7728c02eb5677ed9ab100204af375e1
+    git.commit: 539cfa3af9bc3209beb89838c953f796b690ca1c
   odh-ml-pipelines-persistenceagent-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 539cfa3af9bc3209beb89838c953f796b690ca1c
+    git.commit: 6b5aaa86c5b0be739d55baf71649f44a3f6c46c8
   odh-ml-pipelines-scheduledworkflow-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
     git.commit: 539cfa3af9bc3209beb89838c953f796b690ca1c
@@ -166,7 +166,7 @@ additional_meta:
     git.commit: 96c39c5776ac7fcabb07b5d410bcd37cac892e74
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 017878cfec3cdf3e15c00bb3b9ad1d91ac2d9a5f
+    git.commit: 09dd9753517f2c75ae3036ed36e781709d5921c6
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: 3c0dc9ef3d9eb02620d4b6eacd7e93505d3aab57
@@ -217,7 +217,7 @@ additional_meta:
     git.commit: eff35c700e4a12f2fca44fae6e815acbeb6de4d5
   odh-ta-lmes-driver:
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: c5f6a49e97e6bd8cba5b5ca5d109568a37e27390
+    git.commit: ee7e77053fd6fc9238b9a2d7eb2b2c52e37b2f18
   odh-ta-lmes-job:
     git.url: https://github.com/red-hat-data-services/lm-evaluation-harness
     git.commit: c0a5b6a2e06022f9f26d4800a160dd15062188f9
