@@ -91,7 +91,7 @@ additional_meta:
     git.commit: 0fc610f9c7d1245abe26d30f8690071063d25592
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: 67e5cd31473d656d9b11db9854a55fb5fdacb468
+    git.commit: f438b0bc897bc23300aaaf2b773e20c933c7589e
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: 5e3f47513c6f544274a13f0ffca16f713ac250d5
@@ -124,7 +124,7 @@ additional_meta:
     git.commit: ef465554fd86fad312d361198de0c319bb205e46
   odh-llama-stack-core:
     git.url: https://github.com/red-hat-data-services/llama-stack-distribution
-    git.commit: 2f09efaba6df6e00d6c803f4deaadddbfab20a6d
+    git.commit: 65e893c4a2e3d4df22024dd98e6f74c7f261f561
   odh-llm-d-inference-scheduler:
     git.url: https://github.com/red-hat-data-services/llm-d-inference-scheduler
     git.commit: 2598b6baa8a5d6a77c433c0280ea98c91ab7d453
@@ -175,13 +175,13 @@ additional_meta:
     git.commit: 7e5781b37ae7ad665b193b1c528e9ef6e37a6772
   odh-mod-arch-autorag:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 7e5781b37ae7ad665b193b1c528e9ef6e37a6772
+    git.commit: 4e58543cc29fd64d3f6e3ef2cba225019901f02a
   odh-mod-arch-eval-hub:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 7e5781b37ae7ad665b193b1c528e9ef6e37a6772
   odh-mod-arch-gen-ai:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 49564230ad3abc044ff80c29445a176ee71a452d
+    git.commit: 4e58543cc29fd64d3f6e3ef2cba225019901f02a
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 7f56ac0967925f337f2767e41c3c18743f4c7416
