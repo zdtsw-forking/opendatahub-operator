@@ -12,7 +12,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_OPERATOR_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-data-science-pipelines-operator-controller-rhel9@sha256:ea02fc6eba6fc2c337b206d85e748f942ab9fe7a0c65e93a745c086443621ec7"
 - name: RELATED_IMAGE_ODH_EVAL_HUB_IMAGE
-  value: "quay.io/rhoai/odh-eval-hub-rhel9@sha256:71e91f051cee01ba39017b60724207532bf2e5f10b432c5bc86ba01f7d7147fe"
+  value: "quay.io/rhoai/odh-eval-hub-rhel9@sha256:8c1bd3193cd057bed96631073380b90572ddb62d91526a5abcb622e1eb49f566"
 - name: RELATED_IMAGE_ODH_FEAST_OPERATOR_IMAGE
   value: "quay.io/rhoai/odh-feast-operator-rhel9@sha256:115b3f34c99dd75d43272bdbf63d1b080c18f55f3978eccb6095bbb04d2f70dd"
 - name: RELATED_IMAGE_ODH_FEATURE_SERVER_IMAGE
@@ -86,7 +86,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MOD_ARCH_GEN_AI_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-gen-ai-rhel9@sha256:d780006faeeea5334d4a9c7b1b3762eaa806b0b21832412bb7f86825be22dedc"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MAAS_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:3e9e4d3d157fbc54fb03163cce45adae9abbcc5ca3c9216af9d430b99446b3b3"
+  value: "quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:38e014b49b694e71132fc9da28170fd01a91b591cc6834b7a2d4e9a8e778e872"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MODEL_REGISTRY_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-model-registry-rhel9@sha256:f5aa4dc3da50572e25223b07d1a9b1624d3786df72abaf152436b5b21c6ad951"
 - name: RELATED_IMAGE_ODH_MUST_GATHER_IMAGE
@@ -110,7 +110,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_TENSORFLOW_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-tensorflow-rocm-py312-rhel9@sha256:0e60f5cb237d488daefccf6399166fbb6230fe0e101ed781b5df48211576c166"
 - name: RELATED_IMAGE_ODH_SPARK_OPERATOR_IMAGE
-  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:59a51faf0de10496e1a81fe6b00d3841fdb7aeab1fd5fbe3f34ee701a92c1ace"
+  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:c5002d8924fd70340528288d6598deb25716a99b69cc321b9553bfcc31316bac"
 - name: RELATED_IMAGE_ODH_TA_LMES_DRIVER_IMAGE
   value: "quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:7495758f737f084372bfefe36938e183030ec09c41666d37bea7cfba00dc6ea0"
 - name: RELATED_IMAGE_ODH_TA_LMES_JOB_IMAGE

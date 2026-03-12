@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: ff586b2d26dc3cb550a28694639c563c37bc1108
+    git.commit: 47ab6c4df53fef025e39a36583f1abb72d2a23cf
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -84,7 +84,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: 041ea64680677dabd32b55a2bae178632ef2a5ff
+    git.commit: 2110d0fbf65283790a02a616b480e27c74bed367
 additional_meta:
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
@@ -100,7 +100,7 @@ additional_meta:
     git.commit: 5e3f47513c6f544274a13f0ffca16f713ac250d5
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: e4e28b8ef0264fb8dc4a0c9ffae512f2a4890c3e
+    git.commit: 1f1cd0d4865bac198d9f7da6c468cc92f292c581
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: ba57cf509265c440aa1e85cd74a7079f2c8165b8
@@ -184,7 +184,7 @@ additional_meta:
     git.commit: 211fd3ba0607a7a386b6f1f44b6e4ea98f506490
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 211fd3ba0607a7a386b6f1f44b6e4ea98f506490
+    git.commit: 63361d60b623cbb6a832dfb80cf487da2929f42b
   odh-mod-arch-model-registry:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 4d70bf0ec0728c72253d6668427525344f8625ff
