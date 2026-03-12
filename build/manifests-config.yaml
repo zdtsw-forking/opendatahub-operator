@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 47ab6c4df53fef025e39a36583f1abb72d2a23cf
+    git.commit: d5a1dd676b64695fd8112205114922b70a430237
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -181,7 +181,7 @@ additional_meta:
     git.commit: 294b49c8df40b3bdf3c88694b5bca4c0f05f1d68
   odh-mod-arch-gen-ai:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 211fd3ba0607a7a386b6f1f44b6e4ea98f506490
+    git.commit: 49564230ad3abc044ff80c29445a176ee71a452d
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: a7941f5c9567838438dc699e935674d9c7063188
