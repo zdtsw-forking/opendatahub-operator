@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: a7941f5c9567838438dc699e935674d9c7063188
+    git.commit: 7f56ac0967925f337f2767e41c3c18743f4c7416
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -184,7 +184,7 @@ additional_meta:
     git.commit: 49564230ad3abc044ff80c29445a176ee71a452d
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 3552a707be11820f9ab79931d7cf799d677d93a1
+    git.commit: 7f56ac0967925f337f2767e41c3c18743f4c7416
   odh-mod-arch-model-registry:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 4d70bf0ec0728c72253d6668427525344f8625ff
@@ -196,7 +196,7 @@ additional_meta:
     git.commit: 420e0c357929c13a19b64b1c013107016e24f519
   odh-pipeline-runtime-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 7534b77f9ea3c48e8056cbada149882cbbefbd53
+    git.commit: 47ab6c4df53fef025e39a36583f1abb72d2a23cf
   odh-pipeline-runtime-minimal-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 76d287f66d25bff0c45bc8eb7f64cab8ac51d5da
@@ -307,4 +307,4 @@ additional_meta:
     git.commit: 76d287f66d25bff0c45bc8eb7f64cab8ac51d5da
   odh-workload-variant-autoscaler-controller:
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
-    git.commit: 9125aaec0a5c5df24466194a152ceda71946eb3e
+    git.commit: f5f1a544533df43ff558780c8bbfcf9c7d8bde9e
