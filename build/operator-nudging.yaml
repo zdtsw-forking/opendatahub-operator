@@ -115,12 +115,12 @@ relatedImages:
   value: quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:32bdf70b5c3d8967d94c01df5d8efeb2f16dfbc60c9720088badf93fec6250cb
 - name: RELATED_IMAGE_ODH_TA_LMES_JOB_IMAGE
   value: quay.io/rhoai/odh-ta-lmes-job-rhel9@sha256:b0decb95783ca2b2807b4efe4757d70c726cf8770590f9f94caef255654afffc
-- name: RELATED_IMAGE_ODH_THO06_CPU_TORCH291_PY312_IMAGE
-  value: quay.io/rhoai/odh-th06-cpu-torch291-py312-rhel9@sha256:312b68835ed976831aa355b1a4d18afd147ea939d36a12738df70eec785489a7
-- name: RELATED_IMAGE_ODH_THO06_CUDA130_TORCH291_PY312_IMAGE
-  value: quay.io/rhoai/odh-th06-cuda130-torch291-py312-rhel9@sha256:66cadae8932ccfffa40dd398474a70c5dfc72a33b3125913ab55ec95b1bd778e
-- name: RELATED_IMAGE_ODH_THO06_ROCM64_TORCH291_PY312_IMAGE
-  value: quay.io/rhoai/odh-th06-rocm64-torch291-py312-rhel9@sha256:40256a6d8a94a4fe22883204cd6978bd2ac420092e8742a539fd3a9522490bc1
+- name: RELATED_IMAGE_ODH_TH06_CPU_TORCH291_PY312_IMAGE
+  value: quay.io/rhoai/odh-th06-cpu-torch291-py312-rhel9@sha256:7a9031def058905165d131c6302b5f831575a002047c66e959745ccc36ec3ac9
+- name: RELATED_IMAGE_ODH_TH06_CUDA130_TORCH291_PY312_IMAGE
+  value: quay.io/rhoai/odh-th06-cuda130-torch291-py312-rhel9@sha256:7bc0b5b76f18e7751e7ec90d0c68d73f62a8b399527ed19b5b2513e7dfcdce19
+- name: RELATED_IMAGE_ODH_TH06_ROCM64_TORCH291_PY312_IMAGE
+  value: quay.io/rhoai/odh-th06-rocm64-torch291-py312-rhel9@sha256:02476fa53e338eba010b32c1188c12c7aa724797d153c4582727c5645212f0f7
 - name: RELATED_IMAGE_ODH_TRAINER_IMAGE
   value: quay.io/rhoai/odh-trainer-rhel9@sha256:e6f892a023402cd0c83646383a0277325fc77184b7bff61ee3f54ac33d57aa44
 - name: RELATED_IMAGE_ODH_TRAINING_CUDA121_TORCH24_PY311_IMAGE
