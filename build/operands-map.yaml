@@ -114,7 +114,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TA_LMES_DRIVER_IMAGE
   value: "quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:b7bb6a612e6eed4126f3bf088907688a36ccb2d09f005f38660552ea74fdfda0"
 - name: RELATED_IMAGE_ODH_TA_LMES_JOB_IMAGE
-  value: "quay.io/rhoai/odh-ta-lmes-job-rhel9@sha256:ad02e9d51dde2e0b1a844e8650f70bfba5b96346f94669725620d4a14d49dfbe"
+  value: "quay.io/rhoai/odh-ta-lmes-job-rhel9@sha256:e04d2161ca77f1ebbf9adc7cda99aa779a5220ded05bc6b6e885629dacc7dacb"
 - name: RELATED_IMAGE_ODH_TH06_CPU_TORCH291_PY312_IMAGE
   value: "quay.io/rhoai/odh-th06-cpu-torch291-py312-rhel9@sha256:c4772422b25ebdd2b4519192095699694bd0c421939b45aa52a67d1619c200e1"
 - name: RELATED_IMAGE_ODH_TH06_CUDA130_TORCH291_PY312_IMAGE
