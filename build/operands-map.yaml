@@ -68,7 +68,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MODEL_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-model-controller-rhel9@sha256:40fec96144ba94fbab5cbb5222e3c68029633590cab1a13867880ca39401946b"
 - name: RELATED_IMAGE_ODH_MODEL_METADATA_COLLECTION_IMAGE
-  value: "quay.io/rhoai/odh-model-metadata-collection-rhel9@sha256:cbe991462efc15c688fbc105e388c17bc5b605abe696dd9c2c503903429dab04"
+  value: "quay.io/rhoai/odh-model-metadata-collection-rhel9@sha256:a6a21e79a685ff2ffbb9d8f6a2a6b66d7abbd9457251619d6beb9bb7423d1c3e"
 - name: RELATED_IMAGE_ODH_MODEL_PERFORMANCE_DATA_IMAGE
   value: "quay.io/rhoai/odh-model-performance-data-rhel9@sha256:73a17720fc3720bc4b4f3121802fbd696d7c1406591d4ab38b5a5ed9053eb137"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_IMAGE
@@ -110,7 +110,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_TENSORFLOW_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-tensorflow-rocm-py312-rhel9@sha256:0e60f5cb237d488daefccf6399166fbb6230fe0e101ed781b5df48211576c166"
 - name: RELATED_IMAGE_ODH_SPARK_OPERATOR_IMAGE
-  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:e904b93a936c572ca2ce722d80a49600835d87b2f391ee2d8c53e04ba176adde"
+  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:7d6bf790c0ff0d99221f528d5c8041d01d6005ad79b4db0ad028a279f326c88b"
 - name: RELATED_IMAGE_ODH_TA_LMES_DRIVER_IMAGE
   value: "quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:32bdf70b5c3d8967d94c01df5d8efeb2f16dfbc60c9720088badf93fec6250cb"
 - name: RELATED_IMAGE_ODH_TA_LMES_JOB_IMAGE

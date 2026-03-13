@@ -84,7 +84,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: 6ac950bb8870a3539f9728ccc92c17d0f2df8649
+    git.commit: 9e80eb1cfb1a47d07d5b29c46f260f7b8988b46e
 additional_meta:
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
@@ -160,7 +160,7 @@ additional_meta:
     git.commit: 1897d58afb20018d913d598a9f654ddf529bd3a3
   odh-model-metadata-collection:
     git.url: https://github.com/red-hat-data-services/model-metadata-collection
-    git.commit: 65f324874ef379477b6011ecc08e698771e81938
+    git.commit: f2b4a860f83c2661fd167d69622499edaa95a889
   odh-model-performance-data:
     git.url: https://github.com/red-hat-data-services/models-perf-benchmark-data
     git.commit: dec3a420b33459cdfdc7cc1c502f781eacb840a7
