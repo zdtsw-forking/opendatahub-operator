@@ -34,7 +34,7 @@ map:
     src: config
     dest: trustyai
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 6c8fa86ab848aea69e111566fadd2c4650de83be
+    git.commit: cf61e0dc801af0fb0416ad443f010896f72135a4
   odh-model-controller:
     src: config
     dest: modelcontroller
@@ -64,12 +64,12 @@ map:
     src: config
     dest: llamastackoperator
     git.url: https://github.com/red-hat-data-services/llama-stack-k8s-operator
-    git.commit: ca361cdeb872dbc01aa26c4ad10a24660cbc6fe1
+    git.commit: 25b2cbf52fc9ee9b452180897199f99e898f8cd5
   odh-trainer:
     src: manifests
     dest: trainer
     git.url: https://github.com/red-hat-data-services/trainer
-    git.commit: 34cc84633c68308c0b7832bf1da3f91400d6b75d
+    git.commit: 08d2c8e2e99db85937f118976e9631e9396c50f7
   odh-mlflow-operator:
     src: config
     dest: mlflowoperator
@@ -84,7 +84,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: 77e25a1e1c27ed74d6649cbccd62f96f83bd3118
+    git.commit: e3d9a23226ab7c1ff16d45129c2cb52e99486fe1
 additional_meta:
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
@@ -166,7 +166,7 @@ additional_meta:
     git.commit: dec3a420b33459cdfdc7cc1c502f781eacb840a7
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 3d059beef6fef7758c03928f6032ff8bf0ba5a6a
+    git.commit: 752ad3bc6936ec935de2b6dac2b46123a28ecf86
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: 3c0dc9ef3d9eb02620d4b6eacd7e93505d3aab57
@@ -217,7 +217,7 @@ additional_meta:
     git.commit: 76d287f66d25bff0c45bc8eb7f64cab8ac51d5da
   odh-ta-lmes-driver:
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 6c8fa86ab848aea69e111566fadd2c4650de83be
+    git.commit: cf61e0dc801af0fb0416ad443f010896f72135a4
   odh-ta-lmes-job:
     git.url: https://github.com/red-hat-data-services/lm-evaluation-harness
     git.commit: 660b291efb31c95788032788da82e61265fb2842
