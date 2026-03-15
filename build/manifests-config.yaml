@@ -124,7 +124,7 @@ additional_meta:
     git.commit: ef465554fd86fad312d361198de0c319bb205e46
   odh-llama-stack-core:
     git.url: https://github.com/red-hat-data-services/llama-stack-distribution
-    git.commit: 02f463c02e1d31128c12d0eccc2b54ef1235b737
+    git.commit: a8a54f50c165c912322611abce72fa43b544f1e1
   odh-llm-d-inference-scheduler:
     git.url: https://github.com/red-hat-data-services/llm-d-inference-scheduler
     git.commit: 2598b6baa8a5d6a77c433c0280ea98c91ab7d453
