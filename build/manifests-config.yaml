@@ -91,7 +91,7 @@ additional_meta:
     git.commit: 0fc610f9c7d1245abe26d30f8690071063d25592
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: c42bc47bbcf5d1f66db55fad116066805ee456b9
+    git.commit: aad37dc2186df90c516ed0ed92fe1f9667a3721b
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: 5e3f47513c6f544274a13f0ffca16f713ac250d5
