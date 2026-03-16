@@ -229,7 +229,7 @@ additional_meta:
     git.commit: 41b1283e3c0e1c53ccf735f27efc0171a934e722
   odh-th06-rocm64-torch291-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: 41b1283e3c0e1c53ccf735f27efc0171a934e722
+    git.commit: 9fe888664d92dac06351b141aed77a0e2759ea94
   odh-training-cuda121-torch24-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
     git.commit: 41b1283e3c0e1c53ccf735f27efc0171a934e722
@@ -259,7 +259,7 @@ additional_meta:
     git.commit: 4c8c9e325db2af61a6f5a04296ece4ff08830d1b
   odh-trustyai-nemo-guardrails-server:
     git.url: https://github.com/red-hat-data-services/NeMo-Guardrails
-    git.commit: 9d43c2b1f96db39909318bfdecdde4c94dbc6b28
+    git.commit: d30bea1d1c58ca47b57873abf4d7776e939891aa
   odh-trustyai-service:
     git.url: https://github.com/red-hat-data-services/trustyai-explainability
     git.commit: eddd6bd5b878f444fdcea336f9013fb4af66fb30
