@@ -152,11 +152,11 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TRUSTYAI_VLLM_ORCHESTRATOR_GATEWAY_IMAGE
   value: "quay.io/rhoai/odh-trustyai-vllm-orchestrator-gateway-rhel9@sha256:83e110178dffd13b2f46b8a40a2079f334caada02891ab8841ee789cceba34e0"
 - name: RELATED_IMAGE_ODH_VLLM_CPU_IMAGE
-  value: "quay.io/rhoai/odh-vllm-cpu-rhel9@sha256:66e6a24b9626523b0f315709ac43617c9bbb1411c4ca623dbc9ad1a2664e1a11"
+  value: "quay.io/rhoai/odh-vllm-cpu-rhel9@sha256:95744779bd386e7d149ccc751e4fd0843c3b8db7600e291737721168d14a2af0"
 - name: RELATED_IMAGE_ODH_VLLM_GAUDI_IMAGE
   value: "quay.io/rhoai/odh-vllm-gaudi-rhel9@sha256:ee0ffaeb58be427164b5633ca6f0a55aabd7f21e02bbd39e247368c9eb887595"
 - name: RELATED_IMAGE_ODH_WORKBENCH_CODESERVER_DATASCIENCE_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:696e06926ca36a11c361cb38f4ae152473a56c60ac19eabfa693709513a378a1"
+  value: "quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:a10b87aa2c9a680e7371f60bda66fc253635c7a4fdaab283827557d3d21558bd"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:dda2e00beed55e7476af712814c5984a470f6875fd0375ca2f68920498009877"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE
