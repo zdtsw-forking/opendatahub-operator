@@ -9,7 +9,7 @@ map:
     src: config
     dest: kserve
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 118d0011712c74bc1fd093b9e50bb49f11d56911
+    git.commit: 47badd3f7aafa84d157047aac1878dc011e627a8
   odh-kf-notebook-controller:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
@@ -79,7 +79,7 @@ map:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: d776669138c89af6e744c0be83e36276714bcd58
+    git.commit: 8408ec3736ffa5a82113ebe4160defe959fd1c3b
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -112,10 +112,10 @@ additional_meta:
     git.commit: 0fc610f9c7d1245abe26d30f8690071063d25592
   odh-kserve-agent:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 118d0011712c74bc1fd093b9e50bb49f11d56911
+    git.commit: 47badd3f7aafa84d157047aac1878dc011e627a8
   odh-kserve-router:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 2f0b39c01f6b32ab67476bc9d7b46e26fb1e280c
+    git.commit: 47badd3f7aafa84d157047aac1878dc011e627a8
   odh-kserve-storage-initializer:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: 64b6396debac721278a1018257bf5ce208c7f052
