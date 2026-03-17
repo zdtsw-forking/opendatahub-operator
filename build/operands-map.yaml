@@ -138,9 +138,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM62_TORCH25_PY311_IMAGE
   value: "quay.io/rhoai/odh-training-rocm62-torch25-py311-rhel9@sha256:0faf6af83c6edcaa53f802852a19a085781e4b7d497c9acb2e63bf51eb70a49a"
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM64_TORCH28_PY312_IMAGE
-  value: "quay.io/rhoai/odh-training-rocm64-torch28-py312-rhel9@sha256:8bc269ff08aa4f4043cc608739299a490c542bfc840b728878e8d05c36833d58"
+  value: "quay.io/rhoai/odh-training-rocm64-torch28-py312-rhel9@sha256:94b23fe2437ba3e768e03f4ef25dd5a5cd6489f810dac2f608ddf8553273f91b"
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM64_TORCH29_PY312_IMAGE
-  value: "quay.io/rhoai/odh-training-rocm64-torch29-py312-rhel9@sha256:8b87f36f13305f86cac662a8ffa03ba98ece1ffcc235b91091cb2ac81982bd20"
+  value: "quay.io/rhoai/odh-training-rocm64-torch29-py312-rhel9@sha256:0aaa58a04af2590b841654dd34419f9704574284392208ac11b1271ac0f00087"
 - name: RELATED_IMAGE_ODH_TRUSTYAI_GARAK_LLS_PROVIDER_DSP_IMAGE
   value: "quay.io/rhoai/odh-trustyai-garak-lls-provider-dsp-rhel9@sha256:75e1d969d7f5dcea89a7139f1c3fb19f89c00b7baf2452881f551eed6757ca2f"
 - name: RELATED_IMAGE_ODH_TRUSTYAI_NEMO_GUARDRAILS_SERVER_IMAGE
