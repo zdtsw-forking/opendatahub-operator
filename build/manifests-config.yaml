@@ -188,6 +188,9 @@ additional_meta:
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 7a318bd65a7404163055990175907efb192fd91b
+  odh-mod-arch-mlflow:
+    git.url: https://github.com/red-hat-data-services/odh-dashboard
+    git.commit: e541dddbca9039bb4ba8f8dd5b735f10a264fa26
   odh-mod-arch-model-registry:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 7a318bd65a7404163055990175907efb192fd91b
@@ -310,4 +313,4 @@ additional_meta:
     git.commit: 76d287f66d25bff0c45bc8eb7f64cab8ac51d5da
   odh-workload-variant-autoscaler-controller:
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
-    git.commit: a21efb58ab07fdaef30ec092289e96f977afe493
+    git.commit: ef357edfd68fc9ac2a8c8046f86720838575465a
