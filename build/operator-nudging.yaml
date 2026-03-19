@@ -122,7 +122,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TH06_CPU_TORCH291_PY312_IMAGE
   value: quay.io/rhoai/odh-th06-cpu-torch291-py312-rhel9@sha256:8ca43d788c9f059095b24a5489773166c60ca461fffc9f82d4b9f3ebd16d72a0
 - name: RELATED_IMAGE_ODH_TH06_CUDA130_TORCH291_PY312_IMAGE
-  value: quay.io/rhoai/odh-th06-cuda130-torch291-py312-rhel9@sha256:5a0256b9d426ef096dc9996de1ee17c0be1097e5a12caf7b30c44f65bde78c60
+  value: quay.io/rhoai/odh-th06-cuda130-torch291-py312-rhel9@sha256:e8332f709f3ce80f3ed82059a5c678b8df69b161a60d9189ce846d793a65a6c6
 - name: RELATED_IMAGE_ODH_TH06_ROCM64_TORCH291_PY312_IMAGE
   value: quay.io/rhoai/odh-th06-rocm64-torch291-py312-rhel9@sha256:1f772bcb8ceadc3e2c9cb8b6c9e7ed6d0303ca3891c8e2eadb05ec6221ce3ca4
 - name: RELATED_IMAGE_ODH_TRAINER_IMAGE
