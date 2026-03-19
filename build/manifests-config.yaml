@@ -74,12 +74,12 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: b602d8dd0c45778d38917f880703c9b3933387b5
+    git.commit: 7cc86985f3668be69ea8ac432c55c828754dda42
   odh-maas-api:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: d3deedd34d212889061b0d65a9d52bb60a7e8412
+    git.commit: f2a6fe1722ea4fc18e8150d50adcf975a536e57c
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -121,7 +121,7 @@ additional_meta:
     git.commit: 47badd3f7aafa84d157047aac1878dc011e627a8
   odh-kserve-storage-initializer:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 64b6396debac721278a1018257bf5ce208c7f052
+    git.commit: b14d4f1d5fcb6b9b09490a2f45d08449fd5d65c7
   odh-kube-auth-proxy:
     git.url: https://github.com/red-hat-data-services/kube-auth-proxy
     git.commit: ef465554fd86fad312d361198de0c319bb205e46
@@ -148,19 +148,19 @@ additional_meta:
     git.commit: 057744dd6eace81be260d20d9971efaba754cfd4
   odh-ml-pipelines-api-server-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 1897d58afb20018d913d598a9f654ddf529bd3a3
+    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
   odh-ml-pipelines-driver:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 1897d58afb20018d913d598a9f654ddf529bd3a3
+    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
   odh-ml-pipelines-launcher:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 1897d58afb20018d913d598a9f654ddf529bd3a3
+    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
   odh-ml-pipelines-persistenceagent-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 1897d58afb20018d913d598a9f654ddf529bd3a3
+    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
   odh-ml-pipelines-scheduledworkflow-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 1897d58afb20018d913d598a9f654ddf529bd3a3
+    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
   odh-model-metadata-collection:
     git.url: https://github.com/red-hat-data-services/model-metadata-collection
     git.commit: 7f2ea929c60af87587dce3c4da62a913aa4ee127
