@@ -64,7 +64,7 @@ map:
     src: config
     dest: llamastackoperator
     git.url: https://github.com/red-hat-data-services/llama-stack-k8s-operator
-    git.commit: 25b2cbf52fc9ee9b452180897199f99e898f8cd5
+    git.commit: 359e554cb0c463a4c7ea457d2f8c95d1752b20e5
   odh-trainer:
     src: manifests
     dest: trainer
