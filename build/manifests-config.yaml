@@ -14,22 +14,22 @@ map:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 382366ce295887fe8f4a0c14c99194365fd9b047
+    git.commit: 09f812b0e93524a8ea73ec6c77b1773b38bf34cc
   odh-notebook-controller:
     src: components/odh-notebook-controller/config
     dest: workbenches/odh-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 382366ce295887fe8f4a0c14c99194365fd9b047
+    git.commit: 09f812b0e93524a8ea73ec6c77b1773b38bf34cc
   odh-data-science-pipelines-operator-controller:
     src: config
     dest: datasciencepipelines
     git.url: https://github.com/red-hat-data-services/data-science-pipelines-operator
-    git.commit: daaf16dedf19e703515698ba7e32325b4b76364d
+    git.commit: 50b00ae8d772c5c3e2d309859014f44917384e91
   odh-kuberay-operator-controller:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: 1e0ed0b91dacde9512c0da4f2a586617afca79cb
+    git.commit: b6009fec824f7ff8cd44f941068959ce7c7384bd
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -64,7 +64,7 @@ map:
     src: config
     dest: llamastackoperator
     git.url: https://github.com/red-hat-data-services/llama-stack-k8s-operator
-    git.commit: 359e554cb0c463a4c7ea457d2f8c95d1752b20e5
+    git.commit: 1fd43373abbc0873fa4c2298fa328a017f3b0f7e
   odh-trainer:
     src: manifests
     dest: trainer
@@ -94,10 +94,10 @@ additional_meta:
     git.commit: 2a5ca3b33bef07a0b729a24cf9884b20d69fe215
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
-    git.commit: 5e3f47513c6f544274a13f0ffca16f713ac250d5
+    git.commit: a75c02ffda0cad7412a5f504e96a7ad08fe0be91
   odh-data-science-pipelines-argo-workflowcontroller:
     git.url: https://github.com/red-hat-data-services/argo-workflows
-    git.commit: 5e3f47513c6f544274a13f0ffca16f713ac250d5
+    git.commit: a75c02ffda0cad7412a5f504e96a7ad08fe0be91
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
     git.commit: 01ee47ad8791a17beeeaba518e43dd2eae0e4f21
