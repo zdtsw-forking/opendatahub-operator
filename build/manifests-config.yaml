@@ -74,7 +74,7 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: f855af06a0ce32723203c6271727bf2dab7dee1b
+    git.commit: aa11c881c1f1668d3a545f47a8294dd85b32a502
   odh-maas-api:
     src: deployment
     dest: maas
@@ -148,19 +148,19 @@ additional_meta:
     git.commit: 057744dd6eace81be260d20d9971efaba754cfd4
   odh-ml-pipelines-api-server-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
+    git.commit: afb27f045338e82e8744de744a81353738c48f66
   odh-ml-pipelines-driver:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
+    git.commit: afb27f045338e82e8744de744a81353738c48f66
   odh-ml-pipelines-launcher:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
+    git.commit: afb27f045338e82e8744de744a81353738c48f66
   odh-ml-pipelines-persistenceagent-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
+    git.commit: afb27f045338e82e8744de744a81353738c48f66
   odh-ml-pipelines-scheduledworkflow-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: d1485724acacd0e42d7d598190b10b980a7170d4
+    git.commit: afb27f045338e82e8744de744a81353738c48f66
   odh-model-metadata-collection:
     git.url: https://github.com/red-hat-data-services/model-metadata-collection
     git.commit: 7f2ea929c60af87587dce3c4da62a913aa4ee127
