@@ -100,7 +100,7 @@ additional_meta:
     git.commit: a75c02ffda0cad7412a5f504e96a7ad08fe0be91
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: 01ee47ad8791a17beeeaba518e43dd2eae0e4f21
+    git.commit: 56d7fc677f8518bbd51ea0689c6dd800c2b494ac
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: ba57cf509265c440aa1e85cd74a7079f2c8165b8
@@ -175,7 +175,7 @@ additional_meta:
     git.commit: 3c0dc9ef3d9eb02620d4b6eacd7e93505d3aab57
   odh-mod-arch-automl:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 7a318bd65a7404163055990175907efb192fd91b
+    git.commit: d5c8d0eb14d7810084979123f7a5dd1d2b71a39b
   odh-mod-arch-autorag:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: fc445cba836cea022a9d993847dbe216b1239b02
