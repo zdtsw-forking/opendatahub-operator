@@ -54,7 +54,7 @@ map:
     src: manifests
     dest: trainingoperator
     git.url: https://github.com/red-hat-data-services/training-operator
-    git.commit: 4a700178e8078da9de0bcaaae621aef967088645
+    git.commit: ca4d09dddc8eda494203577b025dae92aff42584
   odh-feast-operator:
     src: infra/feast-operator/config
     dest: feastoperator
