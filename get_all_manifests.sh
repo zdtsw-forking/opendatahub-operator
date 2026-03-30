@@ -36,6 +36,7 @@ declare -A ODH_COMPONENT_MANIFESTS=(
 )
 
 # RHOAI Component Manifests
+RHOAI_BRANCH="${RHOAI_BRANCH:-main}"
 declare -A RHOAI_COMPONENT_MANIFESTS=(
     ["dashboard"]="red-hat-data-services:odh-dashboard:rhoai-3.4@9b2fc04e22645b047704590c6cd3c1f146fd468f:manifests"
     ["workbenches/kf-notebook-controller"]="red-hat-data-services:kubeflow:rhoai-3.4@242fd41c379c1ca22592e0540c65aeb1fca627d3:components/notebook-controller/config"
@@ -54,7 +55,7 @@ declare -A RHOAI_COMPONENT_MANIFESTS=(
     ["maas"]="red-hat-data-services:maas-billing:rhoai-3.4@0f334c3f807518e1eedf65982ef4716d1c595351:deployment"
     ["mlflowoperator"]="red-hat-data-services:mlflow-operator:rhoai-3.4@6bb5baa5524bdb7b7f14e73fb3730ccdada721c5:config"
     ["sparkoperator"]="red-hat-data-services:spark-operator:rhoai-3.4@6e878c4fadbabeca9f7f5b4411d10ffc6776f4a2:config"
-    ["wva"]="red-hat-data-services:workload-variant-autoscaler:rhoai-3.4-ea.2@ef549ae8e257eea78c097dd599855c75d374406c:config"
+    ["wva"]="red-hat-data-services:workload-variant-autoscaler:rhoai-3.4@e470adc99b859dab5c24d645a669ea25ccce987d:config"
 )
 
 # {ODH,RHOAI}_COMPONENT_CHARTS are lists of chart repositories info to fetch helm charts
