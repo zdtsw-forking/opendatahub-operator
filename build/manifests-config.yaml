@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: f24e1922570babbd9872cb59a97bb7545a449ad5
+    git.commit: 217334d7eba471c7b63b672c23fe41dd310823cf
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -93,7 +93,7 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: d4884a73fbfe2059ad8bb27447464cc6de845559
+    git.commit: 9a3827bf1bcfda43e8bd2e5e00563ec5f60662f9
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
     git.commit: 1ec18e6b395243c8997bdea924b58942d456dfa6
@@ -207,10 +207,10 @@ additional_meta:
     git.commit: 11a57aeee1eaa60f400642194074b66d67063d04
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 71836e0fb3d7a2606735fa653d0b63c8406bd188
+    git.commit: 87fab527e631ca282dd360d98b38e44b77516bcf
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: f837c79d919ddc4955293192346197e5e37b4cd3
+    git.commit: 71836e0fb3d7a2606735fa653d0b63c8406bd188
   odh-model-serving-api:
     git.url: https://github.com/red-hat-data-services/odh-model-controller
     git.commit: 55380b4bff87cb97d2ba87dc27b21f0ba1859fbe
@@ -225,7 +225,7 @@ additional_meta:
     git.commit: 5ed5f9b229a0901759e3bdd71ccea8c2d1c6d8db
   odh-mod-arch-gen-ai:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 88b3d1017be582469407141c76b6a7422f9f2df6
+    git.commit: 217334d7eba471c7b63b672c23fe41dd310823cf
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: f24e1922570babbd9872cb59a97bb7545a449ad5
@@ -246,7 +246,7 @@ additional_meta:
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
   odh-pipelines-components:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: 73edee5184e2a1c0633636cbe19236699df82dad
+    git.commit: 41d485d6edebb9ba915de7f514f335b1a3662494
   odh-pipeline-runtime-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 2507b7bec7b4249e1cbc094c948d8bb54511cd74
