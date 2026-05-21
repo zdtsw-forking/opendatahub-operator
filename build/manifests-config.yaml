@@ -74,7 +74,7 @@ map:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: af0eb7df3797191e087ddc2ca5ac740e08617306
+    git.commit: c550a9a43ca3c2dadbcf5bfbfa3e83d1740c72b9
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -102,7 +102,7 @@ additional_meta:
     git.commit: 978f9953411c50c7a4874744119963c90e87e93e
   odh-autorag:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: 1dce040b391382138bdff368857caa34024d3aff
+    git.commit: 73edee5184e2a1c0633636cbe19236699df82dad
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
     git.commit: b9800b3885859c2a77beb358488dd2d10c3a47ec
@@ -174,7 +174,7 @@ additional_meta:
     git.commit: 3118eb814db1f97f40f7141ac63367aa3f265206
   odh-maas-controller:
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: af0eb7df3797191e087ddc2ca5ac740e08617306
+    git.commit: c550a9a43ca3c2dadbcf5bfbfa3e83d1740c72b9
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
     git.commit: 983152991b125ef6b78de76f7b6593d5a187affc
