@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: c4b1842fc36aaab1b1befc52d0249f9be9ff7633
+    git.commit: 7dd049349625d8417a2c5fc276d45a9ccc9abf3c
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -29,7 +29,7 @@ map:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: fd36ad7ea19b107de414dc872fcb0aee02602fc6
+    git.commit: 0259b1a58a324adc27e3ea328fb11a15768cabb6
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -246,7 +246,7 @@ additional_meta:
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
   odh-pipelines-components:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: cc55e87c24a00b09c5dac765395cee77e2772e25
+    git.commit: 1dce040b391382138bdff368857caa34024d3aff
   odh-pipeline-runtime-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 2507b7bec7b4249e1cbc094c948d8bb54511cd74

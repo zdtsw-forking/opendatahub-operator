@@ -48,7 +48,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KSERVE_STORAGE_INITIALIZER_IMAGE
   value: "quay.io/rhoai/odh-kserve-storage-initializer-rhel9@sha256:0cf99daf3963a5b1ef859b6b54b0516e8cb2117874390989889db169ac387a86"
 - name: RELATED_IMAGE_ODH_KUBERAY_OPERATOR_CONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-kuberay-operator-controller-rhel9@sha256:b22196172213a435344ef66690302b6fb646377f605a8be1bd71fe360ff52545"
+  value: "quay.io/rhoai/odh-kuberay-operator-controller-rhel9@sha256:ca6932256b28a5ebf678bd60df3e96e63968921f95ff5b96b3211e13fbaf3884"
 - name: RELATED_IMAGE_ODH_KUBE_AUTH_PROXY_IMAGE
   value: "quay.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:b934430bd745b042b7ceb79a350b39177d047431bf7fd9290de60484771b4a71"
 - name: RELATED_IMAGE_ODH_KUBE_RBAC_PROXY_IMAGE
@@ -126,7 +126,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_OPENVINO_MODEL_SERVER_IMAGE
   value: "quay.io/rhoai/odh-openvino-model-server-rhel9@sha256:5bb57ef927e7481cfc768993faa8e1e70b27154ecc81a88991bd5428001c1ea6"
 - name: RELATED_IMAGE_ODH_PIPELINES_COMPONENTS_IMAGE
-  value: "quay.io/rhoai/odh-pipelines-components-rhel9@sha256:672fc26c1f3e4e70db4798d46d7d9ba55360fc22d5c6c96dccb9810bea834ed8"
+  value: "quay.io/rhoai/odh-pipelines-components-rhel9@sha256:9e9b4d58970aadd5312d95a8f3188e129e84d1451934f760dd417ce63f3e9de8"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-datascience-cpu-py312-rhel9@sha256:39cb62fc7ed501a9366550956b8793e5b5eb403a0293f880010a8be8adfa4787"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_MINIMAL_CPU_PY312_IMAGE
