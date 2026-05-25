@@ -102,7 +102,7 @@ additional_meta:
     git.commit: 978f9953411c50c7a4874744119963c90e87e93e
   odh-autorag:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: 55e1ee81a79cabe80422d727535c7e3563defadb
+    git.commit: 45df508cafaf2691f125afb297de1fd134e69d33
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
     git.commit: b9800b3885859c2a77beb358488dd2d10c3a47ec
@@ -303,10 +303,10 @@ additional_meta:
     git.commit: 502a6f19f969657a063a04d5fae4088c6921622f
   odh-training-rocm62-torch24-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: 502a6f19f969657a063a04d5fae4088c6921622f
+    git.commit: 6b8e92e2bea7317af8123cbabc97dab65b8182c5
   odh-training-rocm62-torch25-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: 502a6f19f969657a063a04d5fae4088c6921622f
+    git.commit: 6b8e92e2bea7317af8123cbabc97dab65b8182c5
   odh-training-rocm64-torch28-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
     git.commit: 502a6f19f969657a063a04d5fae4088c6921622f

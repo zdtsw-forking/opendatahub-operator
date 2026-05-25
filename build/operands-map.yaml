@@ -6,7 +6,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_AUTOML_IMAGE
   value: "quay.io/rhoai/odh-automl-rhel9@sha256:a23615cbff057b9f80e2badb70722a858483120beeef09f5e3577ff7c0156156"
 - name: RELATED_IMAGE_ODH_AUTORAG_IMAGE
-  value: "quay.io/rhoai/odh-autorag-rhel9@sha256:38908009bae6e5cfd9775a9a1f0f2206a79c22b65c0045538205c35cdecbaab0"
+  value: "quay.io/rhoai/odh-autorag-rhel9@sha256:9f821ea477956f5a81329932b037b5ea3b6580220ac012454142382084d76387"
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
   value: "quay.io/rhoai/odh-built-in-detector-rhel9@sha256:b9e830700704bba618a036a4677d4edfae3e93e034d068fff9b255afbd4033cc"
 - name: RELATED_IMAGE_ODH_CLI_IMAGE
@@ -170,9 +170,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TRAINING_OPERATOR_IMAGE
   value: "quay.io/rhoai/odh-training-operator-rhel9@sha256:4b598756acc343fe80c937861141903562789ce81c51f910dbbb3d3b16412771"
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM62_TORCH24_PY311_IMAGE
-  value: "quay.io/rhoai/odh-training-rocm62-torch24-py311-rhel9@sha256:2df841e6a1f11c32a7f78fb5f014db98b88ecb045f7cf8c63de2a8c997c25ad1"
+  value: "quay.io/rhoai/odh-training-rocm62-torch24-py311-rhel9@sha256:78a9a30028c6cf5c682e029251ccdb5cc343db02151284abad63a94739cf1c40"
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM62_TORCH25_PY311_IMAGE
-  value: "quay.io/rhoai/odh-training-rocm62-torch25-py311-rhel9@sha256:2751f7da9463cc3fd1d19c5832c41870facf1f298f2ef4d42d212958a522648b"
+  value: "quay.io/rhoai/odh-training-rocm62-torch25-py311-rhel9@sha256:af87975737acdff8b00eae5f834f54ddfc588c4522401b72f36685a7dc2ff29a"
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM64_TORCH28_PY312_IMAGE
   value: "quay.io/rhoai/odh-training-rocm64-torch28-py312-rhel9@sha256:2e43a9047b81926399da152fe12ea884163be559d77aa6e42c6373608029a139"
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM64_TORCH29_PY312_IMAGE
