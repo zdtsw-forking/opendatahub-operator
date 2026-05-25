@@ -79,7 +79,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: fb0273cf265129559f64cc12beea770378735fef
+    git.commit: fb25332590790e8ec0baec9026ee0ae4a2c6207a
   odh-workload-variant-autoscaler-controller:
     src: config
     dest: wva
