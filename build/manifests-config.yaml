@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: edb9aa4df7bd404f70039ce3d6fe9817e970e7af
+    git.commit: 3fb2cb592a23c8b85497c772f96eddb8b4737d9c
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -29,7 +29,7 @@ map:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: 0259b1a58a324adc27e3ea328fb11a15768cabb6
+    git.commit: 6a99c76d28107a78bca0b6ac84affa9209d36102
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -69,12 +69,12 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 7520af25988158057af558e145fdada758c395a1
+    git.commit: c5b192f602e420227b307ba13453dffa98d89118
   odh-maas-api:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: c550a9a43ca3c2dadbcf5bfbfa3e83d1740c72b9
+    git.commit: bad1345b7e638b1b0b99bccb258cee4e374ea9f1
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -117,7 +117,7 @@ additional_meta:
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: f4e86d40ea32e318463fd8531bfad38b3f4072d6
+    git.commit: 3c9c3ca2af73c588d3f44731eab87009046479cb
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: bb2ec04721eb5525ab9f9f9c28bc5b7bbffab5a2
@@ -174,7 +174,7 @@ additional_meta:
     git.commit: 3118eb814db1f97f40f7141ac63367aa3f265206
   odh-maas-controller:
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: c550a9a43ca3c2dadbcf5bfbfa3e83d1740c72b9
+    git.commit: bad1345b7e638b1b0b99bccb258cee4e374ea9f1
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
     git.commit: 983152991b125ef6b78de76f7b6593d5a187affc
@@ -246,7 +246,7 @@ additional_meta:
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
   odh-pipelines-components:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: e7da95b2cee7e4b4d548185100bcfa08a5c26406
+    git.commit: 55e1ee81a79cabe80422d727535c7e3563defadb
   odh-pipeline-runtime-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 2507b7bec7b4249e1cbc094c948d8bb54511cd74
