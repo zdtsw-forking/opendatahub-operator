@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: fe7dfcb64894c222c3a81b91b27d436f42b489d8
+    git.commit: 2d79636478f8caf9502f8c48c22bea23070371bb
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -44,7 +44,7 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: 30fabfdc85395c0f57b53537e0454e39854f5236
+    git.commit: ce99766d9069eb2035efdac882806160c1b458e4
   odh-dashboard:
     src: manifests
     dest: dashboard
@@ -93,7 +93,7 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 9a3827bf1bcfda43e8bd2e5e00563ec5f60662f9
+    git.commit: 6c753f06b2ef3d02bf3a667622889b106f43ba6d
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
     git.commit: 1ec18e6b395243c8997bdea924b58942d456dfa6
@@ -150,7 +150,7 @@ additional_meta:
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
   odh-kube-auth-proxy:
     git.url: https://github.com/red-hat-data-services/kube-auth-proxy
-    git.commit: 750dd3d7541f5f8d49a32c8842e1f7ecb4eeb223
+    git.commit: 7660bf685f1d74f93f0d85d61d04b3384fbd7b66
   odh-kube-rbac-proxy:
     git.url: https://github.com/red-hat-data-services/kube-rbac-proxy
     git.commit: e0c07f288a6052ee59fab09581e69ce32187bf69
