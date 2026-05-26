@@ -110,7 +110,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MOD_ARCH_GEN_AI_IMAGE
   value: quay.io/rhoai/odh-mod-arch-gen-ai-rhel9@sha256:c8e64e19b5a11ec135079d21c7d54cc3a3711a8ebd8ed07a4acd030c83ea951a
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MAAS_IMAGE
-  value: quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:100dcb7ec7c701ee58dc7434e2e7d7c916c43df5c422bc5207b49285581d2c7a
+  value: quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:1e2e5d4bd936fc0a325ee97d9d0e31fdbbc454829abe527ea9a67e45b013a4e4
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MLFLOW_IMAGE
   value: quay.io/rhoai/odh-mod-arch-mlflow-rhel9@sha256:49484269ed857c536f5c9c197c4d36b81ab5205d40ec105ae216bf6d24f67336
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MODEL_REGISTRY_IMAGE
