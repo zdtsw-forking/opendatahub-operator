@@ -327,7 +327,7 @@ additional_meta:
     git.commit: 98d678270419fee9e7792a7a95bff76caa50ff0b
   odh-vllm-cpu:
     git.url: https://github.com/red-hat-data-services/vllm-cpu
-    git.commit: dd7cf39f7c8e75fd4d71f5d027a1ab9a6456a951
+    git.commit: 63cce8ee88a5f9b52e53c4d43816716f44d5561f
   odh-workbench-codeserver-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: a6f56c5ac4a33bd5bd39a05a8b8f4877aece943b
