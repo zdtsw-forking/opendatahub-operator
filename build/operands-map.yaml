@@ -10,7 +10,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
   value: "quay.io/rhoai/odh-built-in-detector-rhel9@sha256:b9e830700704bba618a036a4677d4edfae3e93e034d068fff9b255afbd4033cc"
 - name: RELATED_IMAGE_ODH_CLI_IMAGE
-  value: "quay.io/rhoai/odh-cli-rhel9@sha256:8d29ca906cdbc80a3f7d8177a184b43b657e2e36bf58cb51208a157f0e053a7d"
+  value: "quay.io/rhoai/odh-cli-rhel9@sha256:6d8a22cbba9bb7f38a6069ad980a20deb001a66bfba22bc40ab4711c3aeb258c"
 - name: RELATED_IMAGE_ODH_DASHBOARD_IMAGE
   value: "quay.io/rhoai/odh-dashboard-rhel9@sha256:63b24f80b012df3b3d0ac6fff5fbb1108cdb8938c4e11c82ef7353235f21fbfd"
 - name: RELATED_IMAGE_ODH_DATA_SCIENCE_PIPELINES_ARGO_ARGOEXEC_IMAGE
@@ -102,7 +102,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MODEL_SERVING_API_IMAGE
   value: "quay.io/rhoai/odh-model-serving-api-rhel9@sha256:f2d740278e6cac8b255c3ea1c58c4abf0d157a3869ba804d0f5bf33719c8cbd0"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTOML_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-automl-rhel9@sha256:f2f74da8f288159d7dac27f353112c24bb420223f365535e3625f11d39b654d0"
+  value: "quay.io/rhoai/odh-mod-arch-automl-rhel9@sha256:722e6a48c85e3a1a83b98788a4d628ec1a83a9e0188d4a7bca6345857dd6904c"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTORAG_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-autorag-rhel9@sha256:464a45fc8d69404198b65289d7d7902ce82634c24379ca3df1de9aadf4e94af5"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_EVAL_HUB_IMAGE
@@ -126,7 +126,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_OPENVINO_MODEL_SERVER_IMAGE
   value: "quay.io/rhoai/odh-openvino-model-server-rhel9@sha256:5bb57ef927e7481cfc768993faa8e1e70b27154ecc81a88991bd5428001c1ea6"
 - name: RELATED_IMAGE_ODH_PIPELINES_COMPONENTS_IMAGE
-  value: "quay.io/rhoai/odh-pipelines-components-rhel9@sha256:a7813af11556822e09e67e2315507e6c6aa9ad0936b352a46e2a57b9d66db75d"
+  value: "quay.io/rhoai/odh-pipelines-components-rhel9@sha256:8c15d83341658c4234f728440e88e2c7fea0fae638810594e6f9b6e71e58f4b2"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-datascience-cpu-py312-rhel9@sha256:24dbd0a4b9bd1dcca59ab0c057c8f90a5836d7ab66f9544f9580ae672742c9be"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_MINIMAL_CPU_PY312_IMAGE
