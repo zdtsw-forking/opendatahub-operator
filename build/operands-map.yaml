@@ -4,7 +4,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_AI_GATEWAY_PAYLOAD_PROCESSING_IMAGE
   value: "quay.io/rhoai/odh-ai-gateway-payload-processing-rhel9@sha256:8c5a1e1ff670502863cb9aac0cd9c3fd99c963987d441aba576d8ca5c3f9dbdd"
 - name: RELATED_IMAGE_ODH_AUTOML_IMAGE
-  value: "quay.io/rhoai/odh-automl-rhel9@sha256:5313c348c823308abf436a01699ad1f4a1cbb5f3d559e49f8782fdcd63dcf1cc"
+  value: "quay.io/rhoai/odh-automl-rhel9@sha256:31a612f680631856f0bb536a54149e5e98bb5c0b4eea9b17ef52299b98d4bbd1"
 - name: RELATED_IMAGE_ODH_AUTORAG_IMAGE
   value: "quay.io/rhoai/odh-autorag-rhel9@sha256:ec94f6f2e420545538e8c97e6ddda30026091f81c8e18ae400d13e9be476e467"
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
@@ -194,11 +194,11 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:e42360092f41990ff6d4d11c67272d1363488c2a49a0637173f12e9782bd33a0"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:dda1872535e67830f5a8efa5dba55e8eb8563fe26a87ed61fc1766b4931157dc"
+  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:e0ce8285497acee83f43f8fa23386598c20981fa1e5ba42066700537bd038b0f"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CUDA_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cuda-py312-rhel9@sha256:891e2e1b66fdf9ac9a5488290232f01a4d780da9b9c32aae3f198cd6a547195a"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_ROCM_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-rocm-py312-rhel9@sha256:70c898cecff96aa8b4a2ed423ad3c84401d0064cfe090f3656e53d2e0b7ea99f"
+  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-rocm-py312-rhel9@sha256:56faef993c4a298189c606b821bac37be965cb08847134fd61c44f97db5ec4c3"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_CUDA_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-pytorch-cuda-py312-rhel9@sha256:70e4e508aba5ac9dfd17ddc1642df042ef17d484f9a62ad88ec45c31c7ccd3f7"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_LLMCOMPRESSOR_CUDA_PY312_IMAGE
