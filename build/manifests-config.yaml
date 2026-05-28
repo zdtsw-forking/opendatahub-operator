@@ -69,7 +69,7 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: 91219b4b826027b6265e37311a5cfb11b6a49131
+    git.commit: cf04860b02d9be3c4ad9276151de1ab427024f1a
   odh-maas-api:
     src: deployment
     dest: maas
@@ -117,7 +117,7 @@ additional_meta:
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: 3bfd410929a3bec1056c95d153cfdfdaca9d085f
+    git.commit: ae2a9f087c2caaaf42aa27f8c074842b93b1575d
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: c87449cf1d82ae122589dbb937c989482f084cbe
