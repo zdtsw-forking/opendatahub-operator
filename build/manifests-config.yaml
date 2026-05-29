@@ -24,7 +24,7 @@ map:
     src: config
     dest: datasciencepipelines
     git.url: https://github.com/red-hat-data-services/data-science-pipelines-operator
-    git.commit: 24f6be6537529174affb17c99b5c712eefd266a7
+    git.commit: cf37deecced3805717bcb197c7e6571c114762a5
   odh-kuberay-operator-controller:
     src: ray-operator/config
     dest: ray
@@ -275,7 +275,7 @@ additional_meta:
     git.commit: f599b5165b6c4bf57519909742dd53ad59a1c6d8
   odh-rhaii-cluster-validator:
     git.url: https://github.com/red-hat-data-services/rhaii-cluster-validation
-    git.commit: 91c53ffb5a319fdd67964cad3adfc15be7e0c65b
+    git.commit: d76fa8414e130d67410cfbff46df5790bc76cb48
   odh-rhaii-validator-tools:
     git.url: https://github.com/red-hat-data-services/rhaii-cluster-validation
     git.commit: 91c53ffb5a319fdd67964cad3adfc15be7e0c65b
