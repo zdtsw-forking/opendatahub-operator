@@ -94,7 +94,7 @@ map:
     src: kagenti-operator/config
     dest: agentsoperator
     git.url: https://github.com/red-hat-data-services/agents-operator
-    git.commit: cf065b76803b18da24d3a1c7848796238396a617
+    git.commit: ecf00737481f03a55d19aa5274e504e5e493b146
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
@@ -110,7 +110,7 @@ additional_meta:
     git.commit: cb8f5b9d8e4b501fface4cf9a4d074697ddf7d18
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
-    git.commit: b9800b3885859c2a77beb358488dd2d10c3a47ec
+    git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
     git.commit: 4973fd3aff39540df4c4c3097adc1d81a7b83519
@@ -275,10 +275,10 @@ additional_meta:
     git.commit: f599b5165b6c4bf57519909742dd53ad59a1c6d8
   odh-rhaii-cluster-validator:
     git.url: https://github.com/red-hat-data-services/rhaii-cluster-validation
-    git.commit: 75be27b360d13d4283c69b8f0531accf4db03196
+    git.commit: 91c53ffb5a319fdd67964cad3adfc15be7e0c65b
   odh-rhaii-validator-tools:
     git.url: https://github.com/red-hat-data-services/rhaii-cluster-validation
-    git.commit: 75be27b360d13d4283c69b8f0531accf4db03196
+    git.commit: 91c53ffb5a319fdd67964cad3adfc15be7e0c65b
   odh-ta-lmes-driver:
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
     git.commit: ac6e72eaee57c601b2c8fd0c1c8dfd789961ada2
