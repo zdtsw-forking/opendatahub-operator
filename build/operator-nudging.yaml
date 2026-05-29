@@ -192,7 +192,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_WORKBENCH_CODESERVER_DATASCIENCE_CPU_PY312_IMAGE
   value: quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:4a5d4781cbb299105c517d0b736d61960a7df58029b6836673b3eb815ad0aada
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
-  value: quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:0cd527dbfba8619cdc17b724134fd74ea1400f6eca95fdf38dbd4c329dc62722
+  value: quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:df9c7c7694a56ee3200da20276cec9d76d4b5d0bf4ed5bfd5006fc9f2e6207f3
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE
   value: quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:e0ce8285497acee83f43f8fa23386598c20981fa1e5ba42066700537bd038b0f
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CUDA_PY312_IMAGE
