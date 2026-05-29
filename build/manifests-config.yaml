@@ -90,6 +90,11 @@ map:
     dest: ogx
     git.url: https://github.com/red-hat-data-services/ogx-k8s-operator
     git.commit: bff797dacf1c3e9ad48ddff026730b1a0344134c
+  odh-agents-operator:
+    src: kagenti-operator/config
+    dest: agentsoperator
+    git.url: https://github.com/red-hat-data-services/agents-operator
+    git.commit: cf065b76803b18da24d3a1c7848796238396a617
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
