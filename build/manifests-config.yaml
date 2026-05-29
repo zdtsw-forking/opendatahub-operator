@@ -131,7 +131,7 @@ additional_meta:
     git.commit: 19c6f6d23f03d941f234cb51c7a400b719ea423e
   odh-guardrails-detector-huggingface-runtime:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
-    git.commit: b9800b3885859c2a77beb358488dd2d10c3a47ec
+    git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-kserve-agent:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
