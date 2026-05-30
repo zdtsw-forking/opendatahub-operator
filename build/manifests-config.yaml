@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 77780fe39dd54f665faca3dc60d8bb3cd3d6b662
+    git.commit: 0df72affa8c1876745ed76197dc3eaf958568369
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -98,10 +98,10 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 1b7f84eb4bec8a5e1e811fed4b092f730c039569
+    git.commit: f1dd4c2fda43997d5fd2f929dd64623c13061b7c
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 1b7f84eb4bec8a5e1e811fed4b092f730c039569
+    git.commit: f1dd4c2fda43997d5fd2f929dd64623c13061b7c
   odh-automl:
     git.url: https://github.com/red-hat-data-services/pipelines-components
     git.commit: 1aa4178ac6843669f13efcd3d19d9b843e6b9fbf
