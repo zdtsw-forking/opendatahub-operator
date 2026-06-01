@@ -130,7 +130,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_PIPELINES_COMPONENTS_IMAGE
   value: quay.io/rhoai/odh-pipelines-components-rhel9@sha256:30af6261a0484d573d8d71e401dd21846374e5fe326ed18f4cb5ea6ec9f45efc
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_DATASCIENCE_CPU_PY312_IMAGE
-  value: quay.io/rhoai/odh-pipeline-runtime-datascience-cpu-py312-rhel9@sha256:b0b8427da8303c46f0879b6064ded1aee2de143c756f9211ceb631f05a1c4919
+  value: quay.io/rhoai/odh-pipeline-runtime-datascience-cpu-py312-rhel9@sha256:21f6b9a87f55f08091a97eff6130d0c2d7dcca887809abb71017b9d92513a83c
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_MINIMAL_CPU_PY312_IMAGE
   value: quay.io/rhoai/odh-pipeline-runtime-minimal-cpu-py312-rhel9@sha256:f4fb90c540099ca4339ae85959ccbb6ede17e02de0906e9ace342e52e51cb33a
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_PYTORCH_CUDA_PY312_IMAGE
