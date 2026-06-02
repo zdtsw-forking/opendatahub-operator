@@ -29,7 +29,7 @@ map:
     src: ray-operator/config
     dest: ray
     git.url: https://github.com/red-hat-data-services/kuberay
-    git.commit: d14f765df079719f5d17cd9059571b553e127e44
+    git.commit: f26de718eef59eaeb5a9e5eece5782412f297e63
   odh-trustyai-service-operator:
     src: config
     dest: trustyai
@@ -44,7 +44,7 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: 33d02a84801cc428548b10c4595e0cda1087873b
+    git.commit: 963aba30e9f19a604f94ffc54073c3a024ec4e15
   odh-dashboard:
     src: manifests
     dest: dashboard
@@ -54,7 +54,7 @@ map:
     src: manifests
     dest: trainingoperator
     git.url: https://github.com/red-hat-data-services/training-operator
-    git.commit: 16a06f50513114e94d76149ac32c8e7b4591f291
+    git.commit: 006319021156b9258dd183d5ba6a47f85f97bfcc
   odh-feast-operator:
     src: infra/feast-operator/config
     dest: feastoperator
@@ -158,7 +158,7 @@ additional_meta:
     git.commit: 21ac857ca7f2a005583c8f4560de2fc94f41c425
   odh-kube-rbac-proxy:
     git.url: https://github.com/red-hat-data-services/kube-rbac-proxy
-    git.commit: 2e7f0e617ed0720a2302b78bae1269e6576e0470
+    git.commit: e60c3a0f55e44cd1be27ad7f3424d60f4dc0de9e
   odh-llm-d-batch-gateway-apiserver:
     git.url: https://github.com/red-hat-data-services/batch-gateway
     git.commit: 8d713c9e97b40c03aed6185abcd7b3a50e22b96e
@@ -251,7 +251,7 @@ additional_meta:
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
   odh-pipelines-components:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: fc74d13d304334b5e9b81ab252d609b2bc75a6c5
+    git.commit: 9de3d4016dfabe1c26c19aff987320a6b3531b0a
   odh-pipeline-runtime-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 9f2cf33f34171182dae313b0038c7a42109f8cd2
