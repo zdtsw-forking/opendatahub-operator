@@ -287,13 +287,13 @@ additional_meta:
     git.commit: f81562e18f5bb60d65436254c2bb4e01c0a8cdb9
   odh-th06-cpu-torch210-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: b93a6816e6ba25fbaf1ede38e0bb0a71e5342453
+    git.commit: eaf99a3841cea456b69e3373187cef38ac84fc18
   odh-th06-cuda130-torch210-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: b93a6816e6ba25fbaf1ede38e0bb0a71e5342453
+    git.commit: eaf99a3841cea456b69e3373187cef38ac84fc18
   odh-th06-rocm64-torch291-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: b93a6816e6ba25fbaf1ede38e0bb0a71e5342453
+    git.commit: eaf99a3841cea456b69e3373187cef38ac84fc18
   odh-training-cuda121-torch24-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
     git.commit: b93a6816e6ba25fbaf1ede38e0bb0a71e5342453
