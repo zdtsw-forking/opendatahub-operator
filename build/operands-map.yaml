@@ -112,11 +112,11 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MOD_ARCH_GEN_AI_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-gen-ai-rhel9@sha256:031f5def94bac1015bffc34f9228f7cec55b8e38707055092fd6b9ac09004f9f"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MAAS_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:c7cc528ffd08bd9753946efc54ed3dcb4539f69d17c1ea04aece84371c600d2f"
+  value: "quay.io/rhoai/odh-mod-arch-maas-rhel9@sha256:e8d3ddd4481398718588e077d38a6c05916d19c6e1ab7bb702121aeffe097a80"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MLFLOW_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-mlflow-rhel9@sha256:ae3fd27849b969ba7aa6311588fa1ab4100d8081369ebd6dc98d9f12009ef17a"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_MODEL_REGISTRY_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-model-registry-rhel9@sha256:dd615150000c55a7a0cfc06bef47e9c418f14e53a96b61c05196d293ed01c78c"
+  value: "quay.io/rhoai/odh-mod-arch-model-registry-rhel9@sha256:7c411672023eb04795972ae2fc67374c915d7e37c5f3fdbf55f35506ac7fd484"
 - name: RELATED_IMAGE_ODH_MUST_GATHER_IMAGE
   value: "quay.io/rhoai/odh-must-gather-rhel9@sha256:11e0d2d48a355a5ee50566dcf36782f64ff5240eccf0e6de544f9f16dc560cc8"
 - name: RELATED_IMAGE_ODH_NOTEBOOK_CONTROLLER_IMAGE
