@@ -34,7 +34,7 @@ map:
     src: config
     dest: trustyai
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 2be1ece460169d48e85f8d4e72ead75536324b6c
+    git.commit: 832ccaa00b87884b85b388124a81a52b308f5392
   odh-model-controller:
     src: config
     dest: modelcontroller
@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: bd875ada34e012925e57e8a36746ff8e270d8c44
+    git.commit: ddfe0ba381cdcf13676734d58297e11cbf1158e7
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -122,7 +122,7 @@ additional_meta:
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: b42ccb57abba56131492fbe7fc5c2d92fef141eb
+    git.commit: 85825c41a9e5dedd1c5ce6fa9a51e08cf1602be1
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: c87449cf1d82ae122589dbb937c989482f084cbe
@@ -140,7 +140,7 @@ additional_meta:
     git.commit: 8d11ef7a9149c1b46e3599613d590d25ecd6605d
   odh-kserve-llmisvc-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
+    git.commit: 13fbe5577319859439d0b051211a94ed37d2f8e5
   odh-kserve-localmodelnode-agent:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
@@ -281,7 +281,7 @@ additional_meta:
     git.commit: 0dd8d56d74fbfba89e00dafb99d4fbcc9294fe5a
   odh-ta-lmes-driver:
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 2be1ece460169d48e85f8d4e72ead75536324b6c
+    git.commit: 832ccaa00b87884b85b388124a81a52b308f5392
   odh-ta-lmes-job:
     git.url: https://github.com/red-hat-data-services/lm-evaluation-harness
     git.commit: f81562e18f5bb60d65436254c2bb4e01c0a8cdb9
