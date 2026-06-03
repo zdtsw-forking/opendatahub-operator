@@ -9,7 +9,7 @@ map:
     src: config
     dest: kserve
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 13fbe5577319859439d0b051211a94ed37d2f8e5
+    git.commit: 9e5e1e368c22ee61ffb1f361fb7432bc0932b00a
   odh-kf-notebook-controller:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
@@ -79,7 +79,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: 6d33f21624d6f02bf1405d3d864d044c5a6229b1
+    git.commit: 1728f745d39cabf85a74b2bc7eda24fe93b3e319
   odh-workload-variant-autoscaler-controller:
     src: config
     dest: wva
@@ -134,7 +134,7 @@ additional_meta:
     git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-kserve-agent:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 13fbe5577319859439d0b051211a94ed37d2f8e5
+    git.commit: 9e5e1e368c22ee61ffb1f361fb7432bc0932b00a
   odh-kserve-autogluon-server:
     git.url: https://github.com/red-hat-data-services/kserve-autogluon-server
     git.commit: 8d11ef7a9149c1b46e3599613d590d25ecd6605d
@@ -146,10 +146,10 @@ additional_meta:
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
   odh-kserve-localmodel-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 13fbe5577319859439d0b051211a94ed37d2f8e5
+    git.commit: 9e5e1e368c22ee61ffb1f361fb7432bc0932b00a
   odh-kserve-router:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 13fbe5577319859439d0b051211a94ed37d2f8e5
+    git.commit: 9e5e1e368c22ee61ffb1f361fb7432bc0932b00a
   odh-kserve-storage-initializer:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
