@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 9f2cf33f34171182dae313b0038c7a42109f8cd2
+    git.commit: a7d1c363cbacbd98ea6ecec3792c41bbb5c372f5
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -161,13 +161,13 @@ additional_meta:
     git.commit: dec9d5412ea929913bcdcc7f3b3f75d76d0b5e1e
   odh-llm-d-batch-gateway-apiserver:
     git.url: https://github.com/red-hat-data-services/batch-gateway
-    git.commit: a0c25af8efd540af21410eff380448af37e3b3a9
+    git.commit: 7926d8d3d37ea87d9c780fd8a4c96aebec0b9771
   odh-llm-d-batch-gateway-gc:
     git.url: https://github.com/red-hat-data-services/batch-gateway
-    git.commit: a0c25af8efd540af21410eff380448af37e3b3a9
+    git.commit: 7926d8d3d37ea87d9c780fd8a4c96aebec0b9771
   odh-llm-d-batch-gateway-processor:
     git.url: https://github.com/red-hat-data-services/batch-gateway
-    git.commit: a0c25af8efd540af21410eff380448af37e3b3a9
+    git.commit: 7926d8d3d37ea87d9c780fd8a4c96aebec0b9771
   odh-llm-d-inference-scheduler:
     git.url: https://github.com/red-hat-data-services/llm-d-inference-scheduler
     git.commit: 3118eb814db1f97f40f7141ac63367aa3f265206
@@ -212,7 +212,7 @@ additional_meta:
     git.commit: 11a57aeee1eaa60f400642194074b66d67063d04
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 5c70e216058240f9fb0eebf9f176d93bbb1d473f
+    git.commit: ea53179611dab2e84a43d3b2284ec2e29791ebe8
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: 5c70e216058240f9fb0eebf9f176d93bbb1d473f

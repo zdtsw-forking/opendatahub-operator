@@ -56,11 +56,11 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KUBE_RBAC_PROXY_IMAGE
   value: "quay.io/rhoai/odh-kube-rbac-proxy-rhel9@sha256:84459a75f19a225c932cdff52fd81f21e8cacc1fc48b236b0b82e2f1412da37e"
 - name: RELATED_IMAGE_ODH_LLM_D_BATCH_GATEWAY_APISERVER_IMAGE
-  value: "quay.io/rhoai/odh-llm-d-batch-gateway-apiserver-rhel9@sha256:492ed1d16594344118abaddd65558c6e58542336fc31bbc53c90de27e884676c"
+  value: "quay.io/rhoai/odh-llm-d-batch-gateway-apiserver-rhel9@sha256:9fba793be9a65dab00007c52ebf7e69390c68bfdefa88abddf4ae80d18c912c2"
 - name: RELATED_IMAGE_ODH_LLM_D_BATCH_GATEWAY_GC_IMAGE
-  value: "quay.io/rhoai/odh-llm-d-batch-gateway-gc-rhel9@sha256:e429c0f030cde999d4c60e7e32a50bd62ef97dab734e8a60bbc3510a17488346"
+  value: "quay.io/rhoai/odh-llm-d-batch-gateway-gc-rhel9@sha256:aa970aa231f0f55cbb05582773463250a6f2e8c81bb73c1dbaf581a77ff64bbd"
 - name: RELATED_IMAGE_ODH_LLM_D_BATCH_GATEWAY_PROCESSOR_IMAGE
-  value: "quay.io/rhoai/odh-llm-d-batch-gateway-processor-rhel9@sha256:fe7720ed7cf030613682cfcd59a9f25feaec71e6afe9bf2b68d983e59fa40089"
+  value: "quay.io/rhoai/odh-llm-d-batch-gateway-processor-rhel9@sha256:67add92eccb827dcc7a3ea4f86d38926db3089f3579d486f3b92a30d02e780db"
 - name: RELATED_IMAGE_ODH_LLM_D_INFERENCE_SCHEDULER_IMAGE
   value: "quay.io/rhoai/odh-llm-d-inference-scheduler-rhel9@sha256:d480c1ab191831c358158d1b4e669c71ea975fcc797f20e18e1c0139bda5fbd0"
 - name: RELATED_IMAGE_ODH_LLM_D_KV_CACHE_IMAGE
@@ -96,7 +96,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MODEL_PERFORMANCE_DATA_IMAGE
   value: "quay.io/rhoai/odh-model-performance-data-rhel9@sha256:14773773903d55052ddaef4a0df596d5ae9d214e2cd27e29b6b0e3e932584d16"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_IMAGE
-  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:e3210b29bffd5fda252bc3e9ae0504f16b9bffa37cbb6da34c1227f313c61092"
+  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:4d4959b183ab982489864ac15dd256ea59229eb3a37e2d0b431d2dba25e98d5f"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_JOB_ASYNC_UPLOAD_IMAGE
   value: "quay.io/rhoai/odh-model-registry-job-async-upload-rhel9@sha256:05ad78569651d820eec532025a159c41ec72d290a02cfb301056832d0fd48dc2"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_OPERATOR_IMAGE
