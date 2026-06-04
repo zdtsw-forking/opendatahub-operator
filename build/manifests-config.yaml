@@ -74,7 +74,7 @@ map:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 494f5b2849f8b07a0c903bc5883dc58e3df97bfb
+    git.commit: 2bffd3478abb09372230d9696c312aff4740b637
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -179,7 +179,7 @@ additional_meta:
     git.commit: 3118eb814db1f97f40f7141ac63367aa3f265206
   odh-maas-controller:
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 494f5b2849f8b07a0c903bc5883dc58e3df97bfb
+    git.commit: 2bffd3478abb09372230d9696c312aff4740b637
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
     git.commit: 98d915924b128696cd24c1ec97448fab33e92acb
@@ -215,7 +215,7 @@ additional_meta:
     git.commit: 5c70e216058240f9fb0eebf9f176d93bbb1d473f
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 7a9b38ab2e882ecc6abbbf0bdcaf20030c13c36f
+    git.commit: 5c70e216058240f9fb0eebf9f176d93bbb1d473f
   odh-model-serving-api:
     git.url: https://github.com/red-hat-data-services/odh-model-controller
     git.commit: b6e4afcaaa901ceb5bdb99404701f252441f57b4
