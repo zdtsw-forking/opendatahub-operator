@@ -98,10 +98,10 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 81c88e182de0f04ae763f00238b9a2d60285dcaf
+    git.commit: 00b78a9b89ce374565b061fa4d055f5a26d9665d
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 63c3a4f77993471ce71392cbe234052897ae0033
+    git.commit: 00b78a9b89ce374565b061fa4d055f5a26d9665d
   odh-automl:
     git.url: https://github.com/red-hat-data-services/pipelines-components
     git.commit: d6be65d265a08e565e5bca9aad3e76ebeb3faec6
@@ -113,7 +113,7 @@ additional_meta:
     git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: 08600ca16ba44130f21187a6488fe149f4471028
+    git.commit: 0dfb84d9cd6471b961cd704d7abeebe04feabb60
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
