@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: f19f2971e134e7c0fbc771fc64e1d5a7675a79da
+    git.commit: dbdd4e0a19f865fe1cc9f88e3f01b3fba45341f5
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -221,7 +221,7 @@ additional_meta:
     git.commit: b6e4afcaaa901ceb5bdb99404701f252441f57b4
   odh-mod-arch-automl:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: bd875ada34e012925e57e8a36746ff8e270d8c44
+    git.commit: dbdd4e0a19f865fe1cc9f88e3f01b3fba45341f5
   odh-mod-arch-autorag:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: bd875ada34e012925e57e8a36746ff8e270d8c44
@@ -230,7 +230,7 @@ additional_meta:
     git.commit: 3c3e72aaa21266d6748092a6e829315f79968af3
   odh-mod-arch-gen-ai:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: f19f2971e134e7c0fbc771fc64e1d5a7675a79da
+    git.commit: dbdd4e0a19f865fe1cc9f88e3f01b3fba45341f5
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 3c3e72aaa21266d6748092a6e829315f79968af3
@@ -296,10 +296,10 @@ additional_meta:
     git.commit: eaf99a3841cea456b69e3373187cef38ac84fc18
   odh-training-cuda121-torch24-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: b93a6816e6ba25fbaf1ede38e0bb0a71e5342453
+    git.commit: 034b5deb9e982d71d7fcd2d4afc53058953e8198
   odh-training-cuda124-torch25-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: b93a6816e6ba25fbaf1ede38e0bb0a71e5342453
+    git.commit: 034b5deb9e982d71d7fcd2d4afc53058953e8198
   odh-training-cuda128-torch28-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
     git.commit: eaf99a3841cea456b69e3373187cef38ac84fc18
