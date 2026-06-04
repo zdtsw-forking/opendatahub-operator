@@ -185,7 +185,7 @@ additional_meta:
     git.commit: 98d915924b128696cd24c1ec97448fab33e92acb
   odh-mlmd-grpc-server:
     git.url: https://github.com/red-hat-data-services/ml-metadata
-    git.commit: c912dfc490aa27b76b54bc2d0b03cb963cd93c7c
+    git.commit: f43d56428f42488420c5a86c934258fdf7189ab2
   odh-mlserver:
     git.url: https://github.com/red-hat-data-services/MLServer
     git.commit: 5fdafcf6228ec3f730b0d7b76298dc01d1b9009d
@@ -233,19 +233,19 @@ additional_meta:
     git.commit: b9364c5193c10e1f14e37d61a94fd53ee924d159
   odh-mod-arch-maas:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 3c3e72aaa21266d6748092a6e829315f79968af3
+    git.commit: 36ef5a2be5f93820fdb48c9b7b5767d18f2d1c2c
   odh-mod-arch-mlflow:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 1822ed3536d38c27160e23461391070189acfc0a
   odh-mod-arch-model-registry:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: bd875ada34e012925e57e8a36746ff8e270d8c44
+    git.commit: 36ef5a2be5f93820fdb48c9b7b5767d18f2d1c2c
   odh-must-gather:
     git.url: https://github.com/red-hat-data-services/must-gather
     git.commit: cf95cd38397f5683ce12d5966bafc03894ba3b76
   odh-ogx-core:
     git.url: https://github.com/red-hat-data-services/ogx-distribution
-    git.commit: 7f1ac46d2718164cde953ce349f147a8503e424d
+    git.commit: 874f5bdbb2ac072ec8f63959c5e9b019ada2d3de
   odh-openvino-model-server:
     git.url: https://github.com/red-hat-data-services/openvino_model_server
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
