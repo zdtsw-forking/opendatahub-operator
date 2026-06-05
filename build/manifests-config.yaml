@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 7014094800ae4e25a54e6fbb0bdf2e4cb5f2b333
+    git.commit: 622e2afc012e87285b497aeeb58851e47d534a34
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -209,7 +209,7 @@ additional_meta:
     git.commit: 318d5bae3c7ddb1a8a9f0658f963144d4eabc76c
   odh-model-performance-data:
     git.url: https://github.com/red-hat-data-services/models-perf-benchmark-data
-    git.commit: 11a57aeee1eaa60f400642194074b66d67063d04
+    git.commit: 1f054feb72fe0dc1e3a1059de9c86884e0d21304
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: ea53179611dab2e84a43d3b2284ec2e29791ebe8
@@ -245,7 +245,7 @@ additional_meta:
     git.commit: cf95cd38397f5683ce12d5966bafc03894ba3b76
   odh-ogx-core:
     git.url: https://github.com/red-hat-data-services/ogx-distribution
-    git.commit: 874f5bdbb2ac072ec8f63959c5e9b019ada2d3de
+    git.commit: 59147d5ef9cbb2da29c6bce86d994b778468a489
   odh-openvino-model-server:
     git.url: https://github.com/red-hat-data-services/openvino_model_server
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
@@ -317,7 +317,7 @@ additional_meta:
     git.commit: 034b5deb9e982d71d7fcd2d4afc53058953e8198
   odh-training-rocm64-torch29-py312:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
-    git.commit: 6b8e92e2bea7317af8123cbabc97dab65b8182c5
+    git.commit: 56493110996df2785988cbcc9a44c92b7dc7d0c3
   odh-trustyai-garak-lls-provider-dsp:
     git.url: https://github.com/red-hat-data-services/llama-stack-provider-trustyai-garak
     git.commit: 2691bab088653f297fba89d53de362acae3800df
