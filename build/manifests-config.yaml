@@ -188,7 +188,7 @@ additional_meta:
     git.commit: f43d56428f42488420c5a86c934258fdf7189ab2
   odh-mlserver:
     git.url: https://github.com/red-hat-data-services/MLServer
-    git.commit: 5fdafcf6228ec3f730b0d7b76298dc01d1b9009d
+    git.commit: a103694d4bba84e0e3106abfea897a475a79bac6
   odh-ml-pipelines-api-server-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
     git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
