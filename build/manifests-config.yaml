@@ -98,7 +98,7 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 43680c2f06483a129255614904f5a35ba7ec8d25
+    git.commit: 030ce01e18a7f00d16dd3c9512c778295a231696
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
     git.commit: 43680c2f06483a129255614904f5a35ba7ec8d25
