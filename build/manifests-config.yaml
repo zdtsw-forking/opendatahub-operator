@@ -329,7 +329,7 @@ additional_meta:
     git.commit: 7a1913876d444a11f2498a2c5d73d4c4ee0d50b0
   odh-trustyai-service:
     git.url: https://github.com/red-hat-data-services/trustyai-explainability
-    git.commit: d0247bac1cbadf9d5a36bfe34a783af6b14baef3
+    git.commit: 0aa72d3414290436be153b65a8a94c89178add5e
   odh-trustyai-vllm-orchestrator-gateway:
     git.url: https://github.com/red-hat-data-services/vllm-orchestrator-gateway
     git.commit: 98d678270419fee9e7792a7a95bff76caa50ff0b
