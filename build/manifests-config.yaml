@@ -74,7 +74,7 @@ map:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 2bffd3478abb09372230d9696c312aff4740b637
+    git.commit: cf1ed2f810e68596d3d229ea1e0d09bf620d059e
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -179,7 +179,7 @@ additional_meta:
     git.commit: 22044e0f4deedcaa05a50aedfc6f3b2b15d1e7ab
   odh-maas-controller:
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 2bffd3478abb09372230d9696c312aff4740b637
+    git.commit: cf1ed2f810e68596d3d229ea1e0d09bf620d059e
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
     git.commit: 98d915924b128696cd24c1ec97448fab33e92acb
