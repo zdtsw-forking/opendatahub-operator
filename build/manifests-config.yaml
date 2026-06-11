@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 304245e9460b8150a2374fd937a8213e3c7b3f9c
+    git.commit: 3e0e15eadcd1694ab678fae3c4f688eab2e60760
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -44,7 +44,7 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: ebc195fbb47f360b80c600bf862bb82967382fbf
+    git.commit: b87f784209ed5df8fb5807d4b995c697c217b8c4
   odh-dashboard:
     src: manifests
     dest: dashboard
@@ -64,7 +64,7 @@ map:
     src: manifests
     dest: trainer
     git.url: https://github.com/red-hat-data-services/trainer
-    git.commit: 77010a220eb3be377a7b192f17724959fa1dfaeb
+    git.commit: 0077a53e6579d2e716fd6153cd5055938b07e8a2
   odh-mlflow-operator:
     src: config
     dest: mlflowoperator
@@ -113,7 +113,7 @@ additional_meta:
     git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: b9ab0ecd21c7dbf34548a82824b87f68707b9d13
+    git.commit: 42b7736322a4ddbe504924bc8f23d0b372d212a9
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
@@ -206,7 +206,7 @@ additional_meta:
     git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
   odh-model-metadata-collection:
     git.url: https://github.com/red-hat-data-services/model-metadata-collection
-    git.commit: c79f30bde5c1880e1c1eafe47d1314aee2522a02
+    git.commit: 862e36e17a78ad4dcecdc6db3707bd81b828ebeb
   odh-model-performance-data:
     git.url: https://github.com/red-hat-data-services/models-perf-benchmark-data
     git.commit: 66909ddf8453a88f4233887d2d3d9bce3d15cd0d
@@ -254,7 +254,7 @@ additional_meta:
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
   odh-pipelines-components:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: 9e511252b8cc48c33b078006f43004071db448b2
+    git.commit: 344cbfad7363f58b95c77c2aac1e447be49029e9
   odh-pipeline-runtime-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 84a2776805bb45497957c44b625cc2f6bd59b5a8
