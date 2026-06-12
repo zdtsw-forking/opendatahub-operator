@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: c0538e7a77de0eecc2d955585b88e30864433248
+    git.commit: 0dc966764a24e70e9a911092b4aa83bb7bbef203
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -101,9 +101,6 @@ map:
     git.url: https://github.com/red-hat-data-services/ai-gateway-operator
     git.commit: a094d7d2a068574b07fbbc52e75abee524221135
 additional_meta:
-  odh-ai-gateway-operator:
-    git.url: https://github.com/red-hat-data-services/ai-gateway-operator
-    git.commit: a094d7d2a068574b07fbbc52e75abee524221135
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
     git.commit: 1701d0e7a6d9f86dd4104d5eb920ecb73cd58b3c
@@ -214,7 +211,7 @@ additional_meta:
     git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
   odh-model-metadata-collection:
     git.url: https://github.com/red-hat-data-services/model-metadata-collection
-    git.commit: 862e36e17a78ad4dcecdc6db3707bd81b828ebeb
+    git.commit: 0f397cea6dd959209569fa97b135406c76246737
   odh-model-performance-data:
     git.url: https://github.com/red-hat-data-services/models-perf-benchmark-data
     git.commit: 66909ddf8453a88f4233887d2d3d9bce3d15cd0d
