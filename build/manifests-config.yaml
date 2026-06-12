@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: afae926f6e15420d0b774176f6e99ca9f6fc44bb
+    git.commit: a935270eb0151d2fc0e581fba7f544d6d0e99fd5
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -44,12 +44,12 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: b87f784209ed5df8fb5807d4b995c697c217b8c4
+    git.commit: d79f528f626ed1f5d70ffd46744b63d8f7182d51
   odh-dashboard:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: bf48c1f6ce2ddfcf97bf84bed0581ced9365384b
+    git.commit: 5e9d3b4d02ceadc2a2664e83701ecacc9934b673
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -103,10 +103,10 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 1701d0e7a6d9f86dd4104d5eb920ecb73cd58b3c
+    git.commit: d24304f38877805077bb21ac3a5c88cbb1d1eaaa
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 1701d0e7a6d9f86dd4104d5eb920ecb73cd58b3c
+    git.commit: d24304f38877805077bb21ac3a5c88cbb1d1eaaa
   odh-authbridge-proxy:
     git.url: https://github.com/red-hat-data-services/agents-operator
     git.commit: 5f34c98ba8c5de19994c5a246a1f44bb3a4b3efd
@@ -220,7 +220,7 @@ additional_meta:
     git.commit: 66909ddf8453a88f4233887d2d3d9bce3d15cd0d
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 0c5de5ed305f92719c6cb99d117a85be91ef7fb7
+    git.commit: 007bba43584756af93d289e0717f5f7d9c1352cd
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: ea53179611dab2e84a43d3b2284ec2e29791ebe8
