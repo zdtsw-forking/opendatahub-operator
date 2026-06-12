@@ -95,6 +95,11 @@ map:
     dest: agentsoperator
     git.url: https://github.com/red-hat-data-services/agents-operator
     git.commit: 04d867d4e6aa82aee321b0cb97ca4ffb9e1dff74
+  odh-ai-gateway-operator:
+    src: config/manifests
+    dest: ai-gateway-operator
+    git.url: https://github.com/red-hat-data-services/ai-gateway-operator
+    git.commit: a094d7d2a068574b07fbbc52e75abee524221135
 additional_meta:
   odh-ai-gateway-operator:
     git.url: https://github.com/red-hat-data-services/ai-gateway-operator
