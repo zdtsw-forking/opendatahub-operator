@@ -186,7 +186,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TRAINING_ROCM64_TORCH29_PY312_IMAGE
   value: quay.io/rhoai/odh-training-rocm64-torch29-py312-rhel9@sha256:c051659016a7ac68130e59488edff4f440cd8fa8eee9d99b85796953bd745eb7
 - name: RELATED_IMAGE_ODH_TRUSTYAI_GARAK_LLS_PROVIDER_DSP_IMAGE
-  value: quay.io/rhoai/odh-trustyai-garak-lls-provider-dsp-rhel9@sha256:33d0a88563352662fdc136451fcda5bc5591d97dd7036af5b8c0447c1c655423
+  value: quay.io/rhoai/odh-trustyai-garak-lls-provider-dsp-rhel9@sha256:ae9742b8a7888224ed8eef5a98531a78e249f46513a2a7253b4264db3c0bfe51
 - name: RELATED_IMAGE_ODH_TRUSTYAI_NEMO_GUARDRAILS_SERVER_IMAGE
   value: quay.io/rhoai/odh-trustyai-nemo-guardrails-server-rhel9@sha256:90c57486a96554874f6149cf101db2f6d86c92dec316b270ee36d6c9d03e2b6d
 - name: RELATED_IMAGE_ODH_TRUSTYAI_SERVICE_IMAGE
