@@ -103,10 +103,10 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: d24304f38877805077bb21ac3a5c88cbb1d1eaaa
+    git.commit: 4115390b2555046f1fbc4a9b5cd434727100f9c7
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: d24304f38877805077bb21ac3a5c88cbb1d1eaaa
+    git.commit: 4115390b2555046f1fbc4a9b5cd434727100f9c7
   odh-authbridge-proxy:
     git.url: https://github.com/red-hat-data-services/agents-operator
     git.commit: 5f34c98ba8c5de19994c5a246a1f44bb3a4b3efd
@@ -343,7 +343,7 @@ additional_meta:
     git.commit: 98d678270419fee9e7792a7a95bff76caa50ff0b
   odh-vllm-cpu:
     git.url: https://github.com/red-hat-data-services/vllm-cpu
-    git.commit: 63cce8ee88a5f9b52e53c4d43816716f44d5561f
+    git.commit: c2564662b2f01be644d45307ac80175dfb0d4a2d
   odh-workbench-codeserver-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 0dc966764a24e70e9a911092b4aa83bb7bbef203
