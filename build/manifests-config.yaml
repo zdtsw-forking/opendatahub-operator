@@ -99,7 +99,7 @@ map:
     src: config/manifests
     dest: ai-gateway-operator
     git.url: https://github.com/red-hat-data-services/ai-gateway-operator
-    git.commit: d343145e5608b95495e3bde80fadebdd6606b8e4
+    git.commit: 2f90833fb4055e4d065bf81db5f99a613f4603bd
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
