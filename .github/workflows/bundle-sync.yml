@@ -26,12 +26,12 @@ jobs:
     steps:
       - name: Generate github-app token
         id: app-token
-        uses: getsentry/action-github-app-token@v2
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          app_id: ${{ secrets.RHOAI_DEVOPS_APP_ID }}
-          private_key: ${{ secrets.RHOAI_DEVOPS_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.RHOAI_DEVOPS_APP_ID }}
+          private-key: ${{ secrets.RHOAI_DEVOPS_APP_PRIVATE_KEY }}
       - name: Checkout source repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:
           repository: ${{ env.GITHUB_ORG }}/rhods-operator
           path: source_repo
@@ -39,7 +39,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Checkout target repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:
           repository: ${{ env.GITHUB_ORG }}/RHOAI-Build-Config
           path: target_repo
@@ -77,13 +77,10 @@ jobs:
           fi
 
       - name: Commit and push the changes to release branch
-        uses: actions-js/push@master
         if: ${{ steps.bundle-change-check.outputs.bundle_changes == 'present' }}
-        with:
-          github_token: ${{ steps.app-token.outputs.token }}
-          branch: ${{ github.ref_name }}
-          message: "Sync changes from source repo"
-          repository: ${{ env.GITHUB_ORG }}/RHOAI-Build-Config
-          directory: target_repo
-          author_name: Openshift-AI DevOps
-          author_email: openshift-ai-devops@redhat.com
+        working-directory: target_repo
+        run: |
+          git config user.name "Openshift-AI DevOps"
+          git config user.email "openshift-ai-devops@redhat.com"
+          git add -A
+          git diff --staged --quiet || (git commit -m "Sync changes from source repo" && git push origin ${{ github.ref_name }})

@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout RBC repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: ${{ env.GITHUB_ORG }}/RHOAI-Build-Config
           ref: ${{ github.ref_name }}
@@ -35,7 +35,7 @@ jobs:
             bundle/bundle-patch.yaml
           sparse-checkout-cone-mode: false
       - name: Git checkout utils
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: ${{ env.GITHUB_ORG }}/RHOAI-Konflux-Automation
           ref: main
@@ -44,7 +44,7 @@ jobs:
             utils/processors
           sparse-checkout-cone-mode: false
       - name: Git checkout operator repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: ${{ env.GITHUB_ORG }}/rhods-operator
           ref: ${{ github.ref_name }}
@@ -261,15 +261,12 @@ jobs:
           tree
 
       - name: Commit and push the changes to release branch
-        uses: actions-js/push@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_name }}
-          message: "Updating the operator repo with latest images and manifests"
-          repository: ${{ env.GITHUB_ORG }}/rhods-operator
-          directory: rhods-operator
-          author_name: Openshift-AI DevOps
-          author_email: openshift-ai-devops@redhat.com
+        working-directory: rhods-operator
+        run: |
+          git config user.name "Openshift-AI DevOps"
+          git config user.email "openshift-ai-devops@redhat.com"
+          git add -A
+          git diff --staged --quiet || (git commit -m "Updating the operator repo with latest images and manifests" && git push origin ${{ github.ref_name }})
 
       - name: Upload debug logs
         if: always()
