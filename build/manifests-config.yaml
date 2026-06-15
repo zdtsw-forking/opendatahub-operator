@@ -103,10 +103,10 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 4115390b2555046f1fbc4a9b5cd434727100f9c7
+    git.commit: 36f44a756bac444fd88f09cdc5b35a935936e246
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 4115390b2555046f1fbc4a9b5cd434727100f9c7
+    git.commit: 36f44a756bac444fd88f09cdc5b35a935936e246
   odh-authbridge-proxy:
     git.url: https://github.com/red-hat-data-services/agents-operator
     git.commit: 5f34c98ba8c5de19994c5a246a1f44bb3a4b3efd
