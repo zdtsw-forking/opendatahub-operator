@@ -38,7 +38,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KF_NOTEBOOK_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-kf-notebook-controller-rhel9@sha256:ccbb3a18b792d1fad96e8d57de59b71fb55600ac5bcbe50e28982299929041e2"
 - name: RELATED_IMAGE_ODH_KSERVE_AGENT_IMAGE
-  value: "quay.io/rhoai/odh-kserve-agent-rhel9@sha256:43d9203f10c4579cf6140f4b9a540bc616d5e49ca8252d33e7b6bdbe71d3478e"
+  value: "quay.io/rhoai/odh-kserve-agent-rhel9@sha256:7dba1bb675dd21d17a0ed7278b1ab02512133b4b0130e9e029ea007b6f5583e2"
 - name: RELATED_IMAGE_ODH_KSERVE_AUTOGLUON_SERVER_IMAGE
   value: "quay.io/rhoai/odh-kserve-autogluon-server-rhel9@sha256:6ed43ad6720bcc31a22e4e289700ed9402857acdcad64b28045062c84f4d7ce8"
 - name: RELATED_IMAGE_ODH_KSERVE_CONTROLLER_IMAGE
@@ -108,7 +108,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MODEL_SERVING_API_IMAGE
   value: "quay.io/rhoai/odh-model-serving-api-rhel9@sha256:d31f768337ed89dad3e544f80848fa8a8dfe4ad3fb26742311ee3c793c8d9086"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AGENT_OPS_IMAGE
-  value: "quay.io/rhoai/odh-mod-arch-agent-ops-rhel9@sha256:3eed6ff0316c5dde5caeeefe43411ad9497b08f944f6ebf27a22078b49cc8ba0"
+  value: "quay.io/rhoai/odh-mod-arch-agent-ops-rhel9@sha256:245608f7764d33e8a4a65a89945bdba6ad07b0cdf391b564b785847b4ecf247d"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTOML_IMAGE
   value: "quay.io/rhoai/odh-mod-arch-automl-rhel9@sha256:4bd610b7b27f6f14b9bbde1c1d48568b435857ab67946850cf758f14bdbc1710"
 - name: RELATED_IMAGE_ODH_MOD_ARCH_AUTORAG_IMAGE
@@ -142,7 +142,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_PYTORCH_CUDA_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-pytorch-cuda-py312-rhel9@sha256:5cfa5b4f809ea835cc8f4461097039253566c34cf72a8586fb05ce611d687994"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_PYTORCH_LLMCOMPRESSOR_CUDA_PY312_IMAGE
-  value: "quay.io/rhoai/odh-pipeline-runtime-pytorch-llmcompressor-cuda-py312-rhel9@sha256:26199cc3ac32900062428d310001d3365aa0e260beb8d39ebd430ea260da55aa"
+  value: "quay.io/rhoai/odh-pipeline-runtime-pytorch-llmcompressor-cuda-py312-rhel9@sha256:5b8c08426f87149becaff895555c61e1b5eb7eae8726b93d80e697657198eb2f"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_PYTORCH_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-pipeline-runtime-pytorch-rocm-py312-rhel9@sha256:00b6d36a16ec5fa26cccbb70d89e3fdeafc7129a3c638402d59640b8503fe941"
 - name: RELATED_IMAGE_ODH_PIPELINE_RUNTIME_TENSORFLOW_CUDA_PY312_IMAGE
