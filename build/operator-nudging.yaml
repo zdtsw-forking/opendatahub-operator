@@ -10,7 +10,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_AUTHBRIDGE_PROXY_IMAGE
   value: quay.io/rhoai/odh-authbridge-proxy-rhel9@sha256:74a09104fc4a27b4e354ccbb81d0a2dfc4544f48f78622c76d2303f3b26ba8ba
 - name: RELATED_IMAGE_ODH_AUTOML_IMAGE
-  value: quay.io/rhoai/odh-automl-rhel9@sha256:9b2ca56f25a5fe3217a0edfeee34804fd67625b4185f72ffaaafedbf603a6a52
+  value: quay.io/rhoai/odh-automl-rhel9@sha256:70872a1255515e091c282e6c1a78b86d71cf08497dfc99845786bf44f2907e88
 - name: RELATED_IMAGE_ODH_AUTORAG_IMAGE
   value: quay.io/rhoai/odh-autorag-rhel9@sha256:20c105232f7b19d0537140141af786c3cb68fd40cff0664ae27f42cde1252d20
 - name: RELATED_IMAGE_ODH_BUILT_IN_DETECTOR_IMAGE
