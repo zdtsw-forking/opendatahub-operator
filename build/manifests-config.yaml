@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: a935270eb0151d2fc0e581fba7f544d6d0e99fd5
+    git.commit: 3146704340b97668d4a302d91611bbf788ef0e42
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -44,7 +44,7 @@ map:
     src: config
     dest: modelregistry
     git.url: https://github.com/red-hat-data-services/model-registry-operator
-    git.commit: d79f528f626ed1f5d70ffd46744b63d8f7182d51
+    git.commit: ae0289a7d0cae5e899f7d7416a6ce7d77b503900
   odh-dashboard:
     src: manifests
     dest: dashboard
@@ -163,7 +163,7 @@ additional_meta:
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
   odh-kube-auth-proxy:
     git.url: https://github.com/red-hat-data-services/kube-auth-proxy
-    git.commit: 7eb219bb7d37e3c8c2783c8c4c1c7a591983fba3
+    git.commit: 7c97ffe3197ff4b95e2a81bd672ac8ab1b54fc6e
   odh-kube-rbac-proxy:
     git.url: https://github.com/red-hat-data-services/kube-rbac-proxy
     git.commit: dec9d5412ea929913bcdcc7f3b3f75d76d0b5e1e
@@ -202,10 +202,10 @@ additional_meta:
     git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
   odh-ml-pipelines-driver:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
+    git.commit: 857667adc615b5a6a1696948349fc272156a2054
   odh-ml-pipelines-launcher:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
-    git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
+    git.commit: 857667adc615b5a6a1696948349fc272156a2054
   odh-ml-pipelines-persistenceagent-v2:
     git.url: https://github.com/red-hat-data-services/data-science-pipelines
     git.commit: 0c0b1a425bc9ee3607d056905a65f4cf125e1a00
@@ -220,7 +220,7 @@ additional_meta:
     git.commit: 66909ddf8453a88f4233887d2d3d9bce3d15cd0d
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: 007bba43584756af93d289e0717f5f7d9c1352cd
+    git.commit: f72d2f503c36613cd064c0e89a09a4a345a26a8a
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: ea53179611dab2e84a43d3b2284ec2e29791ebe8
@@ -256,7 +256,7 @@ additional_meta:
     git.commit: cf95cd38397f5683ce12d5966bafc03894ba3b76
   odh-ogx-core:
     git.url: https://github.com/red-hat-data-services/ogx-distribution
-    git.commit: b6458f16ea3c5f54213ed39160f3d8e99ab410bc
+    git.commit: dd21434ed8497fb5bbd66ab1af60cfa01fcdf523
   odh-openvino-model-server:
     git.url: https://github.com/red-hat-data-services/openvino_model_server
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
