@@ -59,7 +59,7 @@ map:
     src: infra/feast-operator/config
     dest: feastoperator
     git.url: https://github.com/red-hat-data-services/feast
-    git.commit: 7ca25ead3594c8c734be9a90f9df18beb071f60e
+    git.commit: 330bc12dd9874d30de57b6d0796b65d69c4be1d8
   odh-trainer:
     src: manifests
     dest: trainer
