@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: wva-system
 
-namePrefix: wva-
+namePrefix: workload-variant-autoscaler-
 
 resources:
 - ../../../base/
@@ -21,6 +21,26 @@ resources:
 
 components:
 - ../../../components/namespace-scoped/
+
+configMapGenerator:
+- name: wva-parameters
+  envs:
+  - params.env
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+- source:
+    kind: ConfigMap
+    version: v1
+    name: wva-parameters
+    fieldPath: data.wva-controller-image
+  targets:
+  - select:
+      kind: Deployment
+      name: workload-variant-autoscaler-controller-manager
+    fieldPaths:
+    - spec.template.spec.containers.[name=manager].image
 
 patches:
 # Point WVA at the in-cluster Thanos Querier (OpenShift's user-workload-monitoring
