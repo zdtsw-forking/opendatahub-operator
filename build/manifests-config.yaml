@@ -9,7 +9,7 @@ map:
     src: config
     dest: kserve
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 87122cef1571a923d0354e234f5a94bde97ec2f8
+    git.commit: e97c512f7f8a161c2eac4abc8a38faf02f14315e
   odh-kf-notebook-controller:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
@@ -34,7 +34,7 @@ map:
     src: config
     dest: trustyai
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 6cea22ae2f9c5a8bdb3dfc29db5eaa9666b672b5
+    git.commit: 114cd12190fe396aea9cd719d0fefa90f5ace125
   odh-model-controller:
     src: config
     dest: modelcontroller
@@ -49,7 +49,7 @@ map:
     src: manifests
     dest: dashboard
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 78759ace3c18379a7517cba2d176576d122ac0e4
+    git.commit: d13df85b983bc5a7ed8705a6f06ef187fbf4d73e
   odh-training-operator:
     src: manifests
     dest: trainingoperator
@@ -142,7 +142,7 @@ additional_meta:
     git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-kserve-agent:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 87122cef1571a923d0354e234f5a94bde97ec2f8
+    git.commit: e97c512f7f8a161c2eac4abc8a38faf02f14315e
   odh-kserve-autogluon-server:
     git.url: https://github.com/red-hat-data-services/kserve-autogluon-server
     git.commit: 8d11ef7a9149c1b46e3599613d590d25ecd6605d
@@ -154,16 +154,16 @@ additional_meta:
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
   odh-kserve-localmodel-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 87122cef1571a923d0354e234f5a94bde97ec2f8
+    git.commit: e97c512f7f8a161c2eac4abc8a38faf02f14315e
   odh-kserve-router:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 87122cef1571a923d0354e234f5a94bde97ec2f8
+    git.commit: e97c512f7f8a161c2eac4abc8a38faf02f14315e
   odh-kserve-storage-initializer:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
   odh-kube-auth-proxy:
     git.url: https://github.com/red-hat-data-services/kube-auth-proxy
-    git.commit: a11821549cc924e0e1833a19aa7641deba4cd62f
+    git.commit: cc7e63886623d117571efedeb760ce1608fa8732
   odh-kube-rbac-proxy:
     git.url: https://github.com/red-hat-data-services/kube-rbac-proxy
     git.commit: 15f5f7da7463afbd2fb9216f6c30869697ba1751
@@ -253,10 +253,10 @@ additional_meta:
     git.commit: 788ef5341f8630fc014827e1494b738b3615f47e
   odh-must-gather:
     git.url: https://github.com/red-hat-data-services/must-gather
-    git.commit: cf95cd38397f5683ce12d5966bafc03894ba3b76
+    git.commit: 6627eb73604cd1bdab3d46d3ce9d003d3b76d79a
   odh-ogx-core:
     git.url: https://github.com/red-hat-data-services/ogx-distribution
-    git.commit: 6799280900e03ae02d7d37f83c616f037f5e6398
+    git.commit: 45dce3ac09b0fa96f3b85099a7d88527e4301710
   odh-openvino-model-server:
     git.url: https://github.com/red-hat-data-services/openvino_model_server
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
