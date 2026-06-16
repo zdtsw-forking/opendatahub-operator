@@ -188,7 +188,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TRUSTYAI_GARAK_LLS_PROVIDER_DSP_IMAGE
   value: quay.io/rhoai/odh-trustyai-garak-lls-provider-dsp-rhel9@sha256:ae9742b8a7888224ed8eef5a98531a78e249f46513a2a7253b4264db3c0bfe51
 - name: RELATED_IMAGE_ODH_TRUSTYAI_NEMO_GUARDRAILS_SERVER_IMAGE
-  value: quay.io/rhoai/odh-trustyai-nemo-guardrails-server-rhel9@sha256:5e4426b722c33946b6f5f4518849eec6727635db64f393d94d9fbd2f914b5636
+  value: quay.io/rhoai/odh-trustyai-nemo-guardrails-server-rhel9@sha256:e980300bf8c9bae0862cce7f6f0dccc24fc229a0aaf818a969ebfda020906ea4
 - name: RELATED_IMAGE_ODH_TRUSTYAI_SERVICE_IMAGE
   value: quay.io/rhoai/odh-trustyai-service-rhel9@sha256:0516d575cc429073c885260615c8cdfc3ef2b149a494dc1b9865dbf4bafdc009
 - name: RELATED_IMAGE_ODH_TRUSTYAI_SERVICE_OPERATOR_IMAGE
