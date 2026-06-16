@@ -186,7 +186,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_TRUSTYAI_SERVICE_IMAGE
   value: quay.io/rhoai/odh-trustyai-service-rhel9@sha256:0516d575cc429073c885260615c8cdfc3ef2b149a494dc1b9865dbf4bafdc009
 - name: RELATED_IMAGE_ODH_TRUSTYAI_SERVICE_OPERATOR_IMAGE
-  value: quay.io/rhoai/odh-trustyai-service-operator-rhel9@sha256:bb2819807977fe772ebb52d3ff76e58fe7720ddbe9f648822e73f9d0513d10d9
+  value: quay.io/rhoai/odh-trustyai-service-operator-rhel9@sha256:e66a10a6cdf45f203ca506f87f3059efb75e820b274765d6837a2d66dea987d3
 - name: RELATED_IMAGE_ODH_TRUSTYAI_VLLM_ORCHESTRATOR_GATEWAY_IMAGE
   value: quay.io/rhoai/odh-trustyai-vllm-orchestrator-gateway-rhel9@sha256:2ea5eb67cf85982ddee5d2b0f8b2bec89819e284245921d9858c2f4a013eafaf
 - name: RELATED_IMAGE_ODH_VLLM_CPU_IMAGE
