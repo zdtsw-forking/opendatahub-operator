@@ -58,7 +58,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KUBE_AUTH_PROXY_IMAGE
   value: quay.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:d6b09fbc5542b7545c19fcd69b818957e9109ba23a787c08ab86a5fcf6765b16
 - name: RELATED_IMAGE_ODH_KUBE_RBAC_PROXY_IMAGE
-  value: quay.io/rhoai/odh-kube-rbac-proxy-rhel9@sha256:da2dedd450ce9125028f16676d7559a0d5f953a40bffeed1f46c3ce39d18f1ac
+  value: quay.io/rhoai/odh-kube-rbac-proxy-rhel9@sha256:82e1354ca06a226aa6bd8d55c71b3d4023edaf893d684b7235853b05d0997859
 - name: RELATED_IMAGE_ODH_LLM_D_BATCH_GATEWAY_APISERVER_IMAGE
   value: quay.io/rhoai/odh-llm-d-batch-gateway-apiserver-rhel9@sha256:5744af9771d8fc1b4a0d2ce61e7facd01e63d86656439567eae346286b67ead2
 - name: RELATED_IMAGE_ODH_LLM_D_BATCH_GATEWAY_GC_IMAGE
