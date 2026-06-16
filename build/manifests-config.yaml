@@ -79,7 +79,7 @@ map:
     src: config
     dest: sparkoperator
     git.url: https://github.com/red-hat-data-services/spark-operator
-    git.commit: 31423087accccb60fb041422a1449e62cfc8ac80
+    git.commit: 71740a35672a5a319944425f1e3844374ac1fd92
   odh-workload-variant-autoscaler-controller:
     src: config
     dest: wva
@@ -346,7 +346,7 @@ additional_meta:
     git.commit: c2564662b2f01be644d45307ac80175dfb0d4a2d
   odh-workbench-codeserver-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 0dc966764a24e70e9a911092b4aa83bb7bbef203
+    git.commit: eca0ab29d457ef725f4ff33b45d9943468cfe664
   odh-workbench-jupyter-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 304245e9460b8150a2374fd937a8213e3c7b3f9c
