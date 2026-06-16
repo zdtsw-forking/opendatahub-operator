@@ -44,7 +44,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KSERVE_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-kserve-controller-rhel9@sha256:4e50f73e131867d03a6792303894a1b0ea95912a8c0fea1fccf20eb5fa1ddbe9"
 - name: RELATED_IMAGE_ODH_KSERVE_LLMISVC_CONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-kserve-llmisvc-controller-rhel9@sha256:ab5dce3c98a089132227afc4e034f205ff7876fc6c2f4bbb985cead1dfa0d41c"
+  value: "quay.io/rhoai/odh-kserve-llmisvc-controller-rhel9@sha256:b3aaf898a4de38bb8e15bae00a91b766ebab0b37de3bc4e3fbf4bba548b20c5b"
 - name: RELATED_IMAGE_ODH_KSERVE_LOCALMODELNODE_AGENT_IMAGE
   value: "quay.io/rhoai/odh-kserve-localmodelnode-agent-rhel9@sha256:31b29024570534fbc6580269f050d396c361546fea15fb14d79b847870a08ae8"
 - name: RELATED_IMAGE_ODH_KSERVE_LOCALMODEL_CONTROLLER_IMAGE
@@ -54,7 +54,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_KSERVE_STORAGE_INITIALIZER_IMAGE
   value: "quay.io/rhoai/odh-kserve-storage-initializer-rhel9@sha256:0cf99daf3963a5b1ef859b6b54b0516e8cb2117874390989889db169ac387a86"
 - name: RELATED_IMAGE_ODH_KUBERAY_OPERATOR_CONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-kuberay-operator-controller-rhel9@sha256:bbd3d3f94bc9eeae580a30845f8cd16c1730e300771ad427feeb1c9952eccdc2"
+  value: "quay.io/rhoai/odh-kuberay-operator-controller-rhel9@sha256:ca0d37c55b1c26feff9eb8cac3cd1a5f4b1deea1f13ce26a61faa2a8a158c76b"
 - name: RELATED_IMAGE_ODH_KUBE_AUTH_PROXY_IMAGE
   value: "quay.io/rhoai/odh-kube-auth-proxy-rhel9@sha256:d6b09fbc5542b7545c19fcd69b818957e9109ba23a787c08ab86a5fcf6765b16"
 - name: RELATED_IMAGE_ODH_KUBE_RBAC_PROXY_IMAGE
@@ -100,7 +100,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_MODEL_PERFORMANCE_DATA_IMAGE
   value: "quay.io/rhoai/odh-model-performance-data-rhel9@sha256:807ac024b3c3cd3eb7f3b72a6d16da763edbbe832cda79a9dd91831dc3cef5ef"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_IMAGE
-  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:d78cc6afc407a0ca304f5eb9368f2319399ca528db599a2870453796e93a1b6f"
+  value: "quay.io/rhoai/odh-model-registry-rhel9@sha256:28e948a7e1069e927acd7cd11e7a7a3e33ddc54e31db23e07a3a8a7be0ab39ea"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_JOB_ASYNC_UPLOAD_IMAGE
   value: "quay.io/rhoai/odh-model-registry-job-async-upload-rhel9@sha256:db611d61fd7bf17d1a7c5e15fc12925b48cf21e08c913bef411f8d411f863098"
 - name: RELATED_IMAGE_ODH_MODEL_REGISTRY_OPERATOR_IMAGE
@@ -154,9 +154,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_RHAII_VALIDATOR_TOOLS_IMAGE
   value: "quay.io/rhoai/odh-rhaii-validator-tools-rhel9@sha256:fa2e294321f14e940a337f3dd893c1514dd1201074228b9a77b27bd67813da2d"
 - name: RELATED_IMAGE_ODH_SPARK_OPERATOR_IMAGE
-  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:da617816175c23aff6141c6637745bf15f84c66e08b2e67e7cec9db0c9072910"
+  value: "quay.io/rhoai/odh-spark-operator-rhel9@sha256:391c529eefedad19e5ef0ca6b230b1d07970588934c104de1f38b46072f9d2d6"
 - name: RELATED_IMAGE_ODH_TA_LMES_DRIVER_IMAGE
-  value: "quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:954aaa640c3d5992006bf16b5f0e47c7e7a2a623b48acacabbd42bb3a9e80821"
+  value: "quay.io/rhoai/odh-ta-lmes-driver-rhel9@sha256:347f3ff70d220e0c73a986a0135f4d198aa116d17ee6733d30468f1a0cac1386"
 - name: RELATED_IMAGE_ODH_TA_LMES_JOB_IMAGE
   value: "quay.io/rhoai/odh-ta-lmes-job-rhel9@sha256:c0dfdbc9634fe28c6f1d033bd009d0103325e27a4aa6001835ae59652491a3a3"
 - name: RELATED_IMAGE_ODH_TRAINER_IMAGE
@@ -192,13 +192,13 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_VLLM_CPU_IMAGE
   value: "quay.io/rhoai/odh-vllm-cpu-rhel9@sha256:63331ca4a35551d6aca8acfada4e78f01cada4c41f68fdffc14cd8605b4534cf"
 - name: RELATED_IMAGE_ODH_WORKBENCH_CODESERVER_DATASCIENCE_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:2c485bd73bda7b17b456e3a75848dd8312ef505b908715ac6969b9308ec299fc"
+  value: "quay.io/rhoai/odh-workbench-codeserver-datascience-cpu-py312-rhel9@sha256:b0f8aeebfda947b2943d2c0988ecb031dbb50bddb0ede8cfc5550c772cfb2ca3"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_DATASCIENCE_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-datascience-cpu-py312-rhel9@sha256:f354e7ae772ff03c96c20cf241b12cfb86d816148e6cdbd2c4437e12fdeb1c0b"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CPU_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cpu-py312-rhel9@sha256:6c5dadcfa2efb644202c16ca3be0cdffe3752c2cc72b5b9ad912b319b8590c2e"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_CUDA_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cuda-py312-rhel9@sha256:64059bd89f76a31a19e7298a09cfb27af7b5d326e07b406488808b803ea182ba"
+  value: "quay.io/rhoai/odh-workbench-jupyter-minimal-cuda-py312-rhel9@sha256:1e7068ca443a4276194eb15205a0e4f90857f2b3909393d2b18becea5a7b6723"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_MINIMAL_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-minimal-rocm-py312-rhel9@sha256:cc73ead7296374452f85bc4374cb5541a9901872ee29005bd77811345d1765f7"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_CUDA_PY312_IMAGE
