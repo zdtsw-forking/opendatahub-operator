@@ -166,7 +166,7 @@ additional_meta:
     git.commit: cc7e63886623d117571efedeb760ce1608fa8732
   odh-kube-rbac-proxy:
     git.url: https://github.com/red-hat-data-services/kube-rbac-proxy
-    git.commit: 15f5f7da7463afbd2fb9216f6c30869697ba1751
+    git.commit: 11f8cef9381cf4e637a23f09cc7dd87ca1a09766
   odh-llm-d-batch-gateway-apiserver:
     git.url: https://github.com/red-hat-data-services/batch-gateway
     git.commit: c1e21ae3737e78a12831dfea1c099e0de242e301
