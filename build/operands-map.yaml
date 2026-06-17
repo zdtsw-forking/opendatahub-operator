@@ -204,15 +204,15 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_CUDA_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-pytorch-cuda-py312-rhel9@sha256:5f9d9fc9e7f32e8a4902b40e7dbc25e6fc6011ba971e17919995a8eb699e4140"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_LLMCOMPRESSOR_CUDA_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-pytorch-llmcompressor-cuda-py312-rhel9@sha256:018d1db219f4e9df72a3903f854cc1839fa0c8f4f9fbcfc1dae208b425996338"
+  value: "quay.io/rhoai/odh-workbench-jupyter-pytorch-llmcompressor-cuda-py312-rhel9@sha256:0b53fd73fc84ff15f4680635ad48e133e4aeec5dd8265283ed04a3af14eb7922"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_PYTORCH_ROCM_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-pytorch-rocm-py312-rhel9@sha256:cb32fb29b793be44368e0497a3c8777319b1adc55075c4479f9de9abf13589ba"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_TENSORFLOW_CUDA_PY312_IMAGE
   value: "quay.io/rhoai/odh-workbench-jupyter-tensorflow-cuda-py312-rhel9@sha256:ff44e6366e792e11bdc16026180ddcd3c13c88d6d121574524e4243264c697b2"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_TENSORFLOW_ROCM_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-tensorflow-rocm-py312-rhel9@sha256:a2198bc932bbd60d294f201c8151fa41da444d1eff1e445dfd6e1927e1ac52dd"
+  value: "quay.io/rhoai/odh-workbench-jupyter-tensorflow-rocm-py312-rhel9@sha256:1e96ef4ca3a3ce60866bf98ed69fbd233322208676a0f71720f6d90cda4b709c"
 - name: RELATED_IMAGE_ODH_WORKBENCH_JUPYTER_TRUSTYAI_CPU_PY312_IMAGE
-  value: "quay.io/rhoai/odh-workbench-jupyter-trustyai-cpu-py312-rhel9@sha256:a66272dd7c1a1fcd1b280163eec021bc7e48e4c67ee6a6d359cf6052d9a3b5f6"
+  value: "quay.io/rhoai/odh-workbench-jupyter-trustyai-cpu-py312-rhel9@sha256:ec0c45aabfb00e2cfda179374e85c09f9dfa90d435fabc960e5ffe42debd5adc"
 - name: RELATED_IMAGE_ODH_WORKLOAD_VARIANT_AUTOSCALER_CONTROLLER_IMAGE
   value: "quay.io/rhoai/odh-workload-variant-autoscaler-controller-rhel9@sha256:185a304446989961d64730ed1aa95bb0d895f6df770f9f572f704de4e8f5c21a"
 - name: RELATED_IMAGE_OSE_KUBE_RBAC_PROXY_IMAGE
