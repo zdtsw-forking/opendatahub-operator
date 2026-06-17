@@ -4,9 +4,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_AI_GATEWAY_OPERATOR_IMAGE
   value: "quay.io/rhoai/odh-ai-gateway-operator-rhel9@sha256:0f7a3bce9ea7d22931b5bcb88ed33d87e5a80024ad9c00d3a73980cc39031d11"
 - name: RELATED_IMAGE_ODH_AI_GATEWAY_PAYLOAD_PROCESSING_E2E_IMAGE
-  value: "quay.io/rhoai/odh-ai-gateway-payload-processing-e2e-rhel9@sha256:ec90f46cf6a37f4e930b448b0e2160da3fe116079f63ca514dd1d71d623bca10"
+  value: "quay.io/rhoai/odh-ai-gateway-payload-processing-e2e-rhel9@sha256:8c0e305a436416e6bd26de88ac2bf3cb9cf187f5347dd6cc6da4b2ea6514dfcd"
 - name: RELATED_IMAGE_ODH_AI_GATEWAY_PAYLOAD_PROCESSING_IMAGE
-  value: "quay.io/rhoai/odh-ai-gateway-payload-processing-rhel9@sha256:74153033b8f6cc6ce8bbc6439f6a4c99f8c4f9f6b22f9a0e79e2d796fae8823f"
+  value: "quay.io/rhoai/odh-ai-gateway-payload-processing-rhel9@sha256:27373532a0e8f6bb49885df2921adf87925635b89f56b07044c75d8dddfab4ac"
 - name: RELATED_IMAGE_ODH_AUTHBRIDGE_PROXY_IMAGE
   value: "quay.io/rhoai/odh-authbridge-proxy-rhel9@sha256:535a25eb0cf3c461ad970ed4f949317ceb200bfd2fd561c2da136eb6fafc1df1"
 - name: RELATED_IMAGE_ODH_AUTOML_IMAGE
