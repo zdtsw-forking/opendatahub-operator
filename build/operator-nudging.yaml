@@ -72,7 +72,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_LLM_D_ROUTING_SIDECAR_IMAGE
   value: quay.io/rhoai/odh-llm-d-routing-sidecar-rhel9@sha256:5db37b2a4ae074b2007d21b99ca3d0d0f657725b0f1bd72fc9155709f3f7cdbc
 - name: RELATED_IMAGE_ODH_MAAS_API_IMAGE
-  value: quay.io/rhoai/odh-maas-api-rhel9@sha256:76230f794d75c920e102ebf969025898035af00ae3b65cec4d43c39816e41d9b
+  value: quay.io/rhoai/odh-maas-api-rhel9@sha256:c54fe6b924e2f85b79750e633cfe4474cca533cca3ce6922af0a0d0ddc85d0d3
 - name: RELATED_IMAGE_ODH_MAAS_CONTROLLER_IMAGE
   value: quay.io/rhoai/odh-maas-controller-rhel9@sha256:8483d7341afd5072ea0a8577b4394b77e7cbff44cfe257765f2df79eeb627a57
 - name: RELATED_IMAGE_ODH_MLFLOW_IMAGE
