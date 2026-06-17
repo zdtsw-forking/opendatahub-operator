@@ -6,6 +6,7 @@ namespace: wva-system
 namePrefix: workload-variant-autoscaler-
 
 resources:
+- ../../../base/crd/
 - ../../../base/
 # Grant the WVA controller cluster-monitoring-view so it can query Thanos
 # Querier with its own SA token.
