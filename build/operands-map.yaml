@@ -72,9 +72,9 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_LLM_D_ROUTING_SIDECAR_IMAGE
   value: "quay.io/rhoai/odh-llm-d-routing-sidecar-rhel9@sha256:ce44d551c58db4c9768e91283a84b36eee8a1189ae07536aaa3bbf49968d04b2"
 - name: RELATED_IMAGE_ODH_MAAS_API_IMAGE
-  value: "quay.io/rhoai/odh-maas-api-rhel9@sha256:76230f794d75c920e102ebf969025898035af00ae3b65cec4d43c39816e41d9b"
+  value: "quay.io/rhoai/odh-maas-api-rhel9@sha256:c54fe6b924e2f85b79750e633cfe4474cca533cca3ce6922af0a0d0ddc85d0d3"
 - name: RELATED_IMAGE_ODH_MAAS_CONTROLLER_IMAGE
-  value: "quay.io/rhoai/odh-maas-controller-rhel9@sha256:8483d7341afd5072ea0a8577b4394b77e7cbff44cfe257765f2df79eeb627a57"
+  value: "quay.io/rhoai/odh-maas-controller-rhel9@sha256:a7dfd7acd25c9a4b4af688ccb0665c676c2337f4a4ce73edaf91e7ca392161d1"
 - name: RELATED_IMAGE_ODH_MLFLOW_IMAGE
   value: "quay.io/rhoai/odh-mlflow-rhel9@sha256:df8acfff1e5f9bdf1d98d32da6fafcb1cdfe539201ca287c5ebd772da653b49e"
 - name: RELATED_IMAGE_ODH_MLFLOW_OPERATOR_IMAGE
