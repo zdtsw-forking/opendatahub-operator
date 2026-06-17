@@ -256,7 +256,7 @@ additional_meta:
     git.commit: 6627eb73604cd1bdab3d46d3ce9d003d3b76d79a
   odh-ogx-core:
     git.url: https://github.com/red-hat-data-services/ogx-distribution
-    git.commit: 45dce3ac09b0fa96f3b85099a7d88527e4301710
+    git.commit: 94c2973c74f26dfbee0a0a755b82388985de94a1
   odh-openvino-model-server:
     git.url: https://github.com/red-hat-data-services/openvino_model_server
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
