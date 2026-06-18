@@ -112,7 +112,7 @@ additional_meta:
     git.commit: 5f34c98ba8c5de19994c5a246a1f44bb3a4b3efd
   odh-automl:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: 801bce884a3b0ed1abc9c7a3b99d5dae7a62cdb0
+    git.commit: b6d70e17a2f8f7767c56b80cd21ce136321160eb
   odh-autorag:
     git.url: https://github.com/red-hat-data-services/pipelines-components
     git.commit: b6d70e17a2f8f7767c56b80cd21ce136321160eb
