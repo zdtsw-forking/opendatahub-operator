@@ -250,7 +250,7 @@ additional_meta:
     git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
   odh-mod-arch-mlflow:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 1afc542d68a9e270e00ae80d4926c86b1c05b4bf
+    git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
   odh-mod-arch-model-registry:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: c492cd733d8db47d8e83599cf021bc83bbccc9bb
@@ -340,7 +340,7 @@ additional_meta:
     git.commit: c2564662b2f01be644d45307ac80175dfb0d4a2d
   odh-workbench-codeserver-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 7f86415a4bdb8985346e406442f25d347ced3a00
+    git.commit: dc331b8ee80be352983b0c74f6379edc7e0ccb91
   odh-workbench-jupyter-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: c97a969c69ded02648cdc137084c5f4c991a6ad9
