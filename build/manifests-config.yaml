@@ -9,7 +9,7 @@ map:
     src: config
     dest: kserve
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
+    git.commit: 21a8b1de197e174a288e7c902077e15fd9615350
   odh-kf-notebook-controller:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
@@ -142,7 +142,7 @@ additional_meta:
     git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
   odh-kserve-agent:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
+    git.commit: 21a8b1de197e174a288e7c902077e15fd9615350
   odh-kserve-autogluon-server:
     git.url: https://github.com/red-hat-data-services/kserve-autogluon-server
     git.commit: 8d11ef7a9149c1b46e3599613d590d25ecd6605d
@@ -154,10 +154,10 @@ additional_meta:
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
   odh-kserve-localmodel-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
+    git.commit: 21a8b1de197e174a288e7c902077e15fd9615350
   odh-kserve-router:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
+    git.commit: 21a8b1de197e174a288e7c902077e15fd9615350
   odh-kserve-storage-initializer:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
@@ -193,7 +193,7 @@ additional_meta:
     git.commit: 1312edee9de6730e315e710aad32d79eebdfe38d
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
-    git.commit: 98d915924b128696cd24c1ec97448fab33e92acb
+    git.commit: f656a722d97c39993cbadccf3edc691f569c1251
   odh-mlmd-grpc-server:
     git.url: https://github.com/red-hat-data-services/ml-metadata
     git.commit: d14c862691b99ae457b8c136f70f99e2439951e5
@@ -298,7 +298,7 @@ additional_meta:
     git.commit: 0ed16c4442aa78f31f916b430a57c50e20d56001
   odh-ta-lmes-job:
     git.url: https://github.com/red-hat-data-services/lm-evaluation-harness
-    git.commit: 66b2e92401f493ec7e420dbbac7e7cf0bbc4df38
+    git.commit: fe7b101c4db758308dfde36e898f44d6787b8a45
   odh-training-cuda121-torch24-py311:
     git.url: https://github.com/red-hat-data-services/distributed-workloads
     git.commit: a330169e45c23621bfb5b20870373f7ba3aacf59
