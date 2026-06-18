@@ -34,12 +34,12 @@ map:
     src: config
     dest: trustyai
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 114cd12190fe396aea9cd719d0fefa90f5ace125
+    git.commit: 0ed16c4442aa78f31f916b430a57c50e20d56001
   odh-model-controller:
     src: config
     dest: modelcontroller
     git.url: https://github.com/red-hat-data-services/odh-model-controller
-    git.commit: d6c5b5d80550fb8a34749bf84bf8f361c4f4f454
+    git.commit: abf8460a75171c47a11d329570cf6521c493dbf9
   odh-model-registry-operator:
     src: config
     dest: modelregistry
@@ -103,7 +103,7 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: 4918f26e4be38b8629005f8adcac707520b6a277
+    git.commit: fc6ffb5624f80d32761444cd402db643cb87654e
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
     git.commit: 7cd6197490292384e9e156509825b1b8d3306f23
@@ -118,7 +118,7 @@ additional_meta:
     git.commit: b6d70e17a2f8f7767c56b80cd21ce136321160eb
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
-    git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
+    git.commit: fb234a2968d064cad416b0ffe8475572e8be79b0
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
     git.commit: b280386b4b7b707af60d2176156a5c8ab0ffcc82
@@ -148,7 +148,7 @@ additional_meta:
     git.commit: 8d11ef7a9149c1b46e3599613d590d25ecd6605d
   odh-kserve-llmisvc-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
+    git.commit: 21a8b1de197e174a288e7c902077e15fd9615350
   odh-kserve-localmodelnode-agent:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
@@ -169,16 +169,16 @@ additional_meta:
     git.commit: 44da821e80b9030ff23c7861a3a7757087442dcc
   odh-llm-d-batch-gateway-apiserver:
     git.url: https://github.com/red-hat-data-services/batch-gateway
-    git.commit: c1e21ae3737e78a12831dfea1c099e0de242e301
+    git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
   odh-llm-d-batch-gateway-gc:
     git.url: https://github.com/red-hat-data-services/batch-gateway
-    git.commit: c1e21ae3737e78a12831dfea1c099e0de242e301
+    git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
   odh-llm-d-batch-gateway-operator:
     git.url: https://github.com/red-hat-data-services/llm-d-batch-gateway-operator
     git.commit: b2d64d04e1b44a2ed1d29c4053d78ce9ea593381
   odh-llm-d-batch-gateway-processor:
     git.url: https://github.com/red-hat-data-services/batch-gateway
-    git.commit: c1e21ae3737e78a12831dfea1c099e0de242e301
+    git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
   odh-llm-d-inference-scheduler:
     git.url: https://github.com/red-hat-data-services/llm-d-inference-scheduler
     git.commit: 22044e0f4deedcaa05a50aedfc6f3b2b15d1e7ab
@@ -223,13 +223,13 @@ additional_meta:
     git.commit: 66909ddf8453a88f4233887d2d3d9bce3d15cd0d
   odh-model-registry:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: c0683fe41abc873026e9729c27f4c23167778ee2
+    git.commit: f3e7368f1ac7fe6e91f23efbef6c471903e7021e
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
     git.commit: 2306608b9b4d6760e45e77c63a80eb555524eef2
   odh-model-serving-api:
     git.url: https://github.com/red-hat-data-services/odh-model-controller
-    git.commit: d6c5b5d80550fb8a34749bf84bf8f361c4f4f454
+    git.commit: abf8460a75171c47a11d329570cf6521c493dbf9
   odh-mod-arch-agent-ops:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
@@ -295,7 +295,7 @@ additional_meta:
     git.commit: 220c9307379a858bbb8fdcfbbca5f7c6f3984728
   odh-ta-lmes-driver:
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: f39f424d5e309c7228a7a55ec9d8bb457225e063
+    git.commit: 0ed16c4442aa78f31f916b430a57c50e20d56001
   odh-ta-lmes-job:
     git.url: https://github.com/red-hat-data-services/lm-evaluation-harness
     git.commit: 66b2e92401f493ec7e420dbbac7e7cf0bbc4df38
