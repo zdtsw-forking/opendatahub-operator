@@ -115,7 +115,7 @@ additional_meta:
     git.commit: 0d19a0539a9980a1a5323f5829bb4cedf95c05fc
   odh-autorag:
     git.url: https://github.com/red-hat-data-services/pipelines-components
-    git.commit: b832b63096fc043f305430e4d319c19c05d19a08
+    git.commit: 801bce884a3b0ed1abc9c7a3b99d5dae7a62cdb0
   odh-built-in-detector:
     git.url: https://github.com/red-hat-data-services/guardrails-detectors
     git.commit: 7c41a71d12973eeaae248f42a807b230c2857d5e
@@ -154,10 +154,10 @@ additional_meta:
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
   odh-kserve-localmodel-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: e97c512f7f8a161c2eac4abc8a38faf02f14315e
+    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
   odh-kserve-router:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: e97c512f7f8a161c2eac4abc8a38faf02f14315e
+    git.commit: 9c7ad4c9fe8223266154931fd81545a7b8d25c3c
   odh-kserve-storage-initializer:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
