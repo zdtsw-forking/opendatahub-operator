@@ -343,7 +343,7 @@ additional_meta:
     git.commit: dc331b8ee80be352983b0c74f6379edc7e0ccb91
   odh-workbench-jupyter-datascience-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: c97a969c69ded02648cdc137084c5f4c991a6ad9
+    git.commit: dc331b8ee80be352983b0c74f6379edc7e0ccb91
   odh-workbench-jupyter-minimal-cpu-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: dc331b8ee80be352983b0c74f6379edc7e0ccb91
