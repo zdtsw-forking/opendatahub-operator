@@ -367,7 +367,7 @@ additional_meta:
     git.commit: 4860fb6172516496bd4924eda094711e142135e6
   odh-workbench-jupyter-tensorflow-cuda-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 4860fb6172516496bd4924eda094711e142135e6
+    git.commit: 346fe14c395fa09956283e72ffb8a64e589dffd6
   odh-workbench-jupyter-tensorflow-rocm-py312:
     git.url: https://github.com/red-hat-data-services/notebooks
     git.commit: 4860fb6172516496bd4924eda094711e142135e6
