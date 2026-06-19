@@ -130,7 +130,7 @@ additional_meta:
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
   odh-eval-hub:
     git.url: https://github.com/red-hat-data-services/eval-hub
-    git.commit: 5b83c2dc55ed4fed7a7fe45aff019170a2ad2ba8
+    git.commit: 9e6ae073cfc7afbd0f73dd0f80f9425578b3f83e
   odh-feature-server:
     git.url: https://github.com/red-hat-data-services/feast
     git.commit: c87449cf1d82ae122589dbb937c989482f084cbe
@@ -268,7 +268,7 @@ additional_meta:
     git.commit: 6627eb73604cd1bdab3d46d3ce9d003d3b76d79a
   odh-ogx-core:
     git.url: https://github.com/red-hat-data-services/ogx-distribution
-    git.commit: 8ff99d2847184ce72e5c232403b49c4a670bceaf
+    git.commit: 6fca89005cdb043c1f423d7fbae04d86209a9c1b
   odh-openvino-model-server:
     git.url: https://github.com/red-hat-data-services/openvino_model_server
     git.commit: 0ea965eaf83b4c817ae2fa9ed1f7e873f5a4617a
