@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: e10954004a98dbb0e6c0ed24661e5ed939ae4dfc
+    git.commit: de89650c3546a09e615536adf0669f3af4a75636
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -34,7 +34,7 @@ map:
     src: config
     dest: trustyai
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 0ed16c4442aa78f31f916b430a57c50e20d56001
+    git.commit: d0f8bb863a998f8a7840f9573a5e65abbb9a84c2
   odh-model-controller:
     src: config
     dest: modelcontroller
@@ -69,7 +69,7 @@ map:
     src: config
     dest: mlflowoperator
     git.url: https://github.com/red-hat-data-services/mlflow-operator
-    git.commit: e17cb2f44a6cb0542b64cfac98466c9280d91b56
+    git.commit: 2116e3d405199597f386fae5c3335676837a0f82
   odh-maas-api:
     src: deployment
     dest: maas
@@ -89,7 +89,7 @@ map:
     src: config
     dest: ogx
     git.url: https://github.com/red-hat-data-services/ogx-k8s-operator
-    git.commit: e43e17b52faa32b759fb360b2eda4538f57c38fd
+    git.commit: 3b1b27851bf989f2729d55842ffe015e0519b740
   odh-agents-operator:
     src: kagenti-operator/config
     dest: agentsoperator
@@ -121,7 +121,7 @@ additional_meta:
     git.commit: fb234a2968d064cad416b0ffe8475572e8be79b0
   odh-cli:
     git.url: https://github.com/red-hat-data-services/odh-cli
-    git.commit: 2625fd03e0f756958b0888c03d16eadb6449bcf4
+    git.commit: 3be2145655046a58ea23cab94241f14cbfde4104
   odh-data-science-pipelines-argo-argoexec:
     git.url: https://github.com/red-hat-data-services/argo-workflows
     git.commit: e82bf498c075625864749b1242ef45e7ed1310ca
@@ -178,7 +178,7 @@ additional_meta:
     git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
   odh-llm-d-batch-gateway-operator:
     git.url: https://github.com/red-hat-data-services/llm-d-batch-gateway-operator
-    git.commit: b2d64d04e1b44a2ed1d29c4053d78ce9ea593381
+    git.commit: 9e0d210db1c52a5ca78b8e25ddbcfa00338c67e7
   odh-llm-d-batch-gateway-processor:
     git.url: https://github.com/red-hat-data-services/batch-gateway
     git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
@@ -298,7 +298,7 @@ additional_meta:
     git.commit: 220c9307379a858bbb8fdcfbbca5f7c6f3984728
   odh-ta-lmes-driver:
     git.url: https://github.com/red-hat-data-services/trustyai-service-operator
-    git.commit: 0ed16c4442aa78f31f916b430a57c50e20d56001
+    git.commit: d0f8bb863a998f8a7840f9573a5e65abbb9a84c2
   odh-ta-lmes-job:
     git.url: https://github.com/red-hat-data-services/lm-evaluation-harness
     git.commit: fe7b101c4db758308dfde36e898f44d6787b8a45
