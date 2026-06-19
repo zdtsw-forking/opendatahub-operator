@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 4860fb6172516496bd4924eda094711e142135e6
+    git.commit: 346fe14c395fa09956283e72ffb8a64e589dffd6
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -163,7 +163,7 @@ additional_meta:
     git.commit: 1d5c7301190c316c7de942590680bb6ed50c138c
   odh-kube-auth-proxy:
     git.url: https://github.com/red-hat-data-services/kube-auth-proxy
-    git.commit: cc7e63886623d117571efedeb760ce1608fa8732
+    git.commit: ea17886bbf4d881119ed1309dc7989227015cb23
   odh-kube-rbac-proxy:
     git.url: https://github.com/red-hat-data-services/kube-rbac-proxy
     git.commit: 44da821e80b9030ff23c7861a3a7757087442dcc
@@ -235,10 +235,10 @@ additional_meta:
     git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
   odh-mod-arch-automl:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
+    git.commit: 714345996aac3141bb53899f5e3551154bf5048c
   odh-mod-arch-autorag:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
-    git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
+    git.commit: 714345996aac3141bb53899f5e3551154bf5048c
   odh-mod-arch-eval-hub:
     git.url: https://github.com/red-hat-data-services/odh-dashboard
     git.commit: 9afb23d15ed31337b66a1f9096b6efced8f2d621
