@@ -134,7 +134,7 @@ relatedImages:
 - name: RELATED_IMAGE_ODH_OGX_CORE_IMAGE
   value: quay.io/rhoai/odh-ogx-core-rhel9@sha256:8cca913e20b0f22de690ad0975365d933beccadf5110b698832fad3c5124518b
 - name: RELATED_IMAGE_ODH_OGX_K8S_OPERATOR_IMAGE
-  value: quay.io/rhoai/odh-ogx-k8s-operator-rhel9@sha256:80643f37f63ddd9179df2ea6c26ac296a37cb907a030b97fdb8ebfb9439f55e0
+  value: quay.io/rhoai/odh-ogx-k8s-operator-rhel9@sha256:b1f5729aea25239a9498f19275dc9be007f26de43cffe5cee61540d9cbb77edd
 - name: RELATED_IMAGE_ODH_OPENVINO_MODEL_SERVER_IMAGE
   value: quay.io/rhoai/odh-openvino-model-server-rhel9@sha256:5bb57ef927e7481cfc768993faa8e1e70b27154ecc81a88991bd5428001c1ea6
 - name: RELATED_IMAGE_ODH_PIPELINES_COMPONENTS_IMAGE
