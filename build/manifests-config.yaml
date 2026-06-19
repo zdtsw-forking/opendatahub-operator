@@ -1,7 +1,7 @@
 map:
   notebooks:
     git.url: https://github.com/red-hat-data-services/notebooks
-    git.commit: 346fe14c395fa09956283e72ffb8a64e589dffd6
+    git.commit: e10954004a98dbb0e6c0ed24661e5ed939ae4dfc
     src: manifests
     dest: workbenches/notebooks
     ref_type: branch
@@ -14,12 +14,12 @@ map:
     src: components/notebook-controller/config
     dest: workbenches/kf-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 1b626b14f2ece8c617ff75886bf4b9c348a8516c
+    git.commit: b288fcbbc9e90cace234e0961eb7c53be090d20c
   odh-notebook-controller:
     src: components/odh-notebook-controller/config
     dest: workbenches/odh-notebook-controller
     git.url: https://github.com/red-hat-data-services/kubeflow
-    git.commit: 1b626b14f2ece8c617ff75886bf4b9c348a8516c
+    git.commit: b288fcbbc9e90cace234e0961eb7c53be090d20c
   odh-data-science-pipelines-operator-controller:
     src: config
     dest: datasciencepipelines
@@ -64,7 +64,7 @@ map:
     src: manifests
     dest: trainer
     git.url: https://github.com/red-hat-data-services/trainer
-    git.commit: 1c8507b9562e526709da3594397486de757731b0
+    git.commit: e701af6dab987b71943149d53f69cc73db70c4d8
   odh-mlflow-operator:
     src: config
     dest: mlflowoperator
@@ -99,7 +99,7 @@ map:
     src: config/manifests
     dest: ai-gateway-operator
     git.url: https://github.com/red-hat-data-services/ai-gateway-operator
-    git.commit: 2f90833fb4055e4d065bf81db5f99a613f4603bd
+    git.commit: 7c43aaf192a178069cda75de1f9722591001cb75
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
