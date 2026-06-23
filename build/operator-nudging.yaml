@@ -1,6 +1,4 @@
 relatedImages:
-- name: RELATED_IMAGE_ODH_AGENTS_OPERATOR_IMAGE
-  value: quay.io/rhoai/odh-agents-operator-rhel9@sha256:beac855e76ebf62de1ab78c8bc4455baaa9deadaeb306bd8e6d061769552686e
 - name: RELATED_IMAGE_ODH_AI_GATEWAY_OPERATOR_IMAGE
   value: quay.io/rhoai/odh-ai-gateway-operator-rhel9@sha256:216df4702696b7a69f7fd174ab4f867d4e2a5d70e181f296ceb573ad88172f7f
 - name: RELATED_IMAGE_ODH_AI_GATEWAY_PAYLOAD_PROCESSING_E2E_IMAGE
