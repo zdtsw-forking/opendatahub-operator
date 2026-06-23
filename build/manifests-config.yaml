@@ -90,11 +90,6 @@ map:
     dest: ogx
     git.url: https://github.com/red-hat-data-services/ogx-k8s-operator
     git.commit: 3b1b27851bf989f2729d55842ffe015e0519b740
-  odh-agents-operator:
-    src: kagenti-operator/config
-    dest: agentsoperator
-    git.url: https://github.com/red-hat-data-services/agents-operator
-    git.commit: 04d867d4e6aa82aee321b0cb97ca4ffb9e1dff74
   odh-ai-gateway-operator:
     src: config/manifests
     dest: ai-gateway-operator
