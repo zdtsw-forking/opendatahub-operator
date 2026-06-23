@@ -91,8 +91,8 @@ map:
     git.url: https://github.com/red-hat-data-services/ogx-k8s-operator
     git.commit: 3b1b27851bf989f2729d55842ffe015e0519b740
   odh-ai-gateway-operator:
-    src: config/manifests
-    dest: ai-gateway-operator
+    src: config
+    dest: aigateway
     git.url: https://github.com/red-hat-data-services/ai-gateway-operator
     git.commit: 7c43aaf192a178069cda75de1f9722591001cb75
 additional_meta:
