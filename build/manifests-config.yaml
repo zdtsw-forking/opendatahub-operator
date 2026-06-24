@@ -74,7 +74,7 @@ map:
     src: deployment
     dest: maas
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 1312edee9de6730e315e710aad32d79eebdfe38d
+    git.commit: 943006ea98231ebbc10e9b262faa34f948a849fb
   odh-spark-operator:
     src: config
     dest: sparkoperator
@@ -98,10 +98,10 @@ map:
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: ccf0339435a5e48551bedb3e73a2e13e6b125577
+    git.commit: 7e12b2cddd871daf37fca40d3acfdd8369c38e3a
   odh-ai-gateway-payload-processing:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
-    git.commit: ccf0339435a5e48551bedb3e73a2e13e6b125577
+    git.commit: 7e12b2cddd871daf37fca40d3acfdd8369c38e3a
   odh-authbridge-proxy:
     git.url: https://github.com/red-hat-data-services/agents-operator
     git.commit: 5f34c98ba8c5de19994c5a246a1f44bb3a4b3efd
@@ -188,7 +188,7 @@ additional_meta:
     git.commit: 2427cca4d98b1a04bfa249b16cfbf6bec981e3eb
   odh-maas-controller:
     git.url: https://github.com/red-hat-data-services/models-as-a-service
-    git.commit: 1312edee9de6730e315e710aad32d79eebdfe38d
+    git.commit: 943006ea98231ebbc10e9b262faa34f948a849fb
   odh-mlflow:
     git.url: https://github.com/red-hat-data-services/mlflow
     git.commit: c0806d1326cf7038777d0dadde3e2ce81b380bf7
