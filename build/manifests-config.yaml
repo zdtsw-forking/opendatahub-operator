@@ -84,7 +84,7 @@ map:
     src: config
     dest: wva
     git.url: https://github.com/red-hat-data-services/workload-variant-autoscaler
-    git.commit: 93c9e78bd1671f577e5efe6ec9248b32d25f8124
+    git.commit: 826b6099cdcb271e19f260331d4c3f4fe93a74f5
   odh-ogx-k8s-operator:
     src: config
     dest: ogx
@@ -149,7 +149,7 @@ additional_meta:
     git.commit: f255870c94541c0c9c333100b40d4e4096b276a4
   odh-kserve-localmodel-controller:
     git.url: https://github.com/red-hat-data-services/kserve
-    git.commit: ede08d6fa735d5155428b6dc3a1c318447055ddb
+    git.commit: 5c246d073a99c2a672882cd7aa92b1473ee858ef
   odh-kserve-router:
     git.url: https://github.com/red-hat-data-services/kserve
     git.commit: 5c246d073a99c2a672882cd7aa92b1473ee858ef
