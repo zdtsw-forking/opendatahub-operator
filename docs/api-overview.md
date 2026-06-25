@@ -2410,6 +2410,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
+| `aigateway` _[ManagementSpec](#managementspec)_ | AIGateway controls the ai-gateway-operator module lifecycle. |  |  |
 | `monitoring` _[ManagementSpec](#managementspec)_ | Monitoring controls the monitoring module operator lifecycle. |  |  |
 
 
