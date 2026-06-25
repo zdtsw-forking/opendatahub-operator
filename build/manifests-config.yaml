@@ -224,7 +224,7 @@ additional_meta:
     git.commit: c214dc84bb2368cf7963c56985e843d5ca8041b1
   odh-model-registry-job-async-upload:
     git.url: https://github.com/red-hat-data-services/model-registry
-    git.commit: f3e7368f1ac7fe6e91f23efbef6c471903e7021e
+    git.commit: ccc59b1ad183633e5049af2567757780980ffbcd
   odh-model-serving-api:
     git.url: https://github.com/red-hat-data-services/odh-model-controller
     git.commit: 66565894a8b6e16c135bd64d43b142c8739b9502
@@ -326,7 +326,7 @@ additional_meta:
     git.commit: e93fff4f92f455fc661540fbc7461a01e58857bd
   odh-trustyai-nemo-guardrails-server:
     git.url: https://github.com/red-hat-data-services/NeMo-Guardrails
-    git.commit: 4c8d6eb039f58d1231aa273272e60109664088d6
+    git.commit: a964fd518fcddcab838c5a53581f604a6d220a1c
   odh-trustyai-service:
     git.url: https://github.com/red-hat-data-services/trustyai-explainability
     git.commit: e3a0ea0af8818b67691c8dab331953ceaf3931f0
