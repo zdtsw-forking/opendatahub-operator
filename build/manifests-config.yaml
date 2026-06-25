@@ -94,7 +94,7 @@ map:
     src: config
     dest: aigateway
     git.url: https://github.com/red-hat-data-services/ai-gateway-operator
-    git.commit: 7c43aaf192a178069cda75de1f9722591001cb75
+    git.commit: c2d5714415f0bb77112a535ee332738707c8fbb8
 additional_meta:
   odh-ai-gateway-payload-processing-e2e:
     git.url: https://github.com/red-hat-data-services/ai-gateway-payload-processing
@@ -173,7 +173,7 @@ additional_meta:
     git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
   odh-llm-d-batch-gateway-operator:
     git.url: https://github.com/red-hat-data-services/llm-d-batch-gateway-operator
-    git.commit: 9e0d210db1c52a5ca78b8e25ddbcfa00338c67e7
+    git.commit: e73bfdd4db8ba0a05c8c4bde96fd4c04f633cc66
   odh-llm-d-batch-gateway-processor:
     git.url: https://github.com/red-hat-data-services/batch-gateway
     git.commit: a578c647dafcc29b9a17768bae1343b638b187fe
